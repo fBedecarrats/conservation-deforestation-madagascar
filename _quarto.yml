@@ -11,10 +11,25 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
-    - summary.qmd
-    - references.qmd
+    - part: "Préparation des données"
+      chapters: 
+        - 01-aires_protegees.qmd
+        - 02-caracteristiques_AP.qmd
+        - 03-donnees_deforestation.qmd
+        - 04-donnees_en_mailles.qmd
+    - part: "Évaluation d'impact"
+      chapters: 
+        - 05-assignation_aleatoire.qmd
+        - 06-matching_AP.qmd
+        - 07-avant_apres.qmd
+        - 08-diff_in_diff.qmd
+    - part: "Ressources"
+      chapters:
+        - 09-bibliographie.qmd
+        - 10-fondamentaux_R.qmd
+    
 
-bibliography: references.bib
+bibliography: bibliographie.bib
 
 format:
   html:

@@ -1,6 +1,9 @@
-# Introduction
+# Introduction {.unnumbered}
 
 ## Outils utilisés
+
+
+### Notebook Quarto
 
 Les éléments ci-dessous constituent le support pour les sessions pratiques de cet atelier. Ils sont réalisés en suivant une approche ouverte et reproductible fondée sur un document de type "notebook" [@bedecarrats_alternative_2017]. Un notebook rassemble à la fois :
 
@@ -20,11 +23,22 @@ L'intérêt du format notebook, par rapport à l'utilisation de documents distin
 
 Les traitements sont réalisés en R, qui est à la fois un logiciel et un langage open sources dédiés à l'analyse de données. Les traitements R sont inclus dans un document Quarto, un format qui exécute aussi bien des codes en R, Python, e rendus dans différents formats (LaTeX/PDF, HTML ou Word).
 
+La mise en forme des rendus Quarto est paramétrable. Ici, on a notamment placé un argument `code-fold: true` dans le fichier `_quarto.yml`. Cela fait que les blocs de code ne sont pas visible dans le rendu web par défaut : il faut cliquer sur "code" pour les déplier.
+
+### Mapme.biodiversity
+
 On s'appuie sur le package R {mapme.biodiversity}, développé par la KfW dans le cadre de l'initiative commune MAPME qui associe la KfW et l'AFD. Le package {mapme.biodiversity} facilite l'acquisition et la préparation d'un grand nombre de données (CHIRPS, Global Forest Watch, FIRMS, SRTM, Worldpop...) et calculer un grand nombre d'indicateurs de manière harmonisée (active_fire_counts, biome classification, land cover classification, population count, precipitation, soil properties, tree cover loss, travel time...). Une documentation riche est disponible sur le portail dédié du package en question [@kluve_kfw_2022].
 
 On mobilise aussi les codes d'analyse d'impact développés par la même équipe et mises à disposition dans le dépôt Github: <https://github.com/openkfw/mapme.protectedareas>. Le code développé par l'équipe est assez complexe. A des fins pédagogiques et pour s'assurer qu'on l'a bien compris, on propose ici une version simplifiée (en cours de développement).
 
-Les sources pour l'ensemble du code source et du texte du présent document est accessible sur Github à l'adresse suivante : <https://github.com/fBedecarrats/deforestation_madagascar>. Les analyses sont menées sur la plateforme SSP Cloud, mises à disposition par l'INSEE pour les data scientists travaillant pour des administrations publiques. Il s'agit d'une instance de stockage de données massif (S3) et de calcul haute performance (cluster Kubernetes) disposant d'une interface simplifiée permettant à l'utilisateur de configurer, lancer et administrer facilement des environnements de traitement de données (RStudio server, Jupyter lab ou autres...). Le code est conçu pour s'exécuter de la même manière en local sur un PC, mais la préparation des données sera certainement beaucoup plus longue à exécuter.
+### Onyxia/SSP Cloud
+
+Les sources pour l'ensemble du code source et du texte du présent document est accessible sur Github à l'adresse suivante : <https://github.com/fBedecarrats/conservation-deforestation-madagascar>. Les analyses sont menées sur la plateforme SSP Cloud, mises à disposition par l'INSEE pour les data scientists travaillant pour des administrations publiques. Il s'agit d'une instance de stockage de données massif (S3) et de calcul haute performance (cluster Kubernetes) disposant d'une interface simplifiée permettant à l'utilisateur de configurer, lancer et administrer facilement des environnements de traitement de données (RStudio server, Jupyter lab ou autres...). Le code est conçu pour s'exécuter de la même manière en local sur un PC, mais la préparation des données sera certainement beaucoup plus longue à exécuter.
+
+
+### Librairies R
+
+Outre Mapme.biodiversity, on mobilise une série de librairies (appelées "packages" en R), qui facilitent grandement l'analyse. Elles sont listées dans le bloc ci-dessous.
 
 ```{r Installation et chargement des librairies requises}
 # # Le package est en cours de développement, toujours installer la version en cours

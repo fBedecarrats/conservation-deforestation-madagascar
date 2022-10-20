@@ -1,0 +1,12 @@
+# Fondamentaux pour l'utilisation de R
+
+Ressources en français : 
+
+- juba
+
+
+## Principes élémentaires de manipulation de données en R
+
+## Produire des cartes simples avec R
+
+## Produire des graphiques avec R
