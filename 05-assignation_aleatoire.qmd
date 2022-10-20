@@ -1,2 +1,132 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Méthode randomisée
+
+
+> ATTENTION : Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si" pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
+
+Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types "multi-polygones". Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses agrégées, on va agrégéer les statistiques d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
+
+```{r}
+library(tidyverse)
+library(gt)
+library(broom)
+library(stargazer)
+library(sf)
+library(lubridate)
+
+load("data/AP_Vahatra_Carvalho.rds")
+
+rct_AP_Mada <- AP_Vahatra_Carvalho %>%
+  st_drop_geometry() %>%
+  rename(`Déforestation 1996-2006 (%)` = 
+           `Forest loss (ha) between 1996-2006 (percent loss)`,
+         `Déforestation 2006-2016 (%)` = 
+           `Forest loss (ha) between 2006-2016 (percent loss)`,
+         `Surface (ha)` = hectares) %>%
+  mutate(Groupe = ifelse(year(date_creation) < 2015, "Traitement", "Controle"),
+         `Couvert forestier en 1996 (%)` = `Forest cover (ha) in 1996` / 
+                                              `Surface (ha)` * 100,
+         `Déforestation 1996-2016 (%)` = 
+           (`Forest loss (ha) between 1996-2006 (absolute loss)` + 
+             `Forest loss (ha) between 2006-2016 (absolute loss)`) /
+           `Forest cover (ha) in 1996` * 100)
+
+# On fait une série de tests de comparaison de moyenne
+t_tests <- rct_AP_Mada %>% 
+  # On applique aux variables de déforestation, couvert en 96 et taille
+  summarise(across(ends_with("(%)") | ends_with("(ha)"),# toutes finissent ainsi
+                   ~ t.test(.[Groupe == "Controle"], # on applique un t.test
+                            .[Groupe == "Traitement"])$p.value)) %>%
+  mutate(Groupe = "t-test")
+
+equilibre_avant <- rct_AP_Mada %>%
+  group_by(Groupe) %>%
+  summarise(`Nombre d'aires` = n(),
+            `Sans forêt` = sum(is.na(`Couvert forestier en 1996 (%)`)), 
+            `Surface (ha)` = mean(`Surface (ha)`),
+            `Couvert forestier en 1996 (%)` = 
+              mean(`Couvert forestier en 1996 (%)`, na.rm = TRUE)) %>%
+  bind_rows(t_tests) %>% # On colle tous les t-tests 
+  mutate(across(!Groupe, ~round(., 2))) %>%# arrondit tout sauf colonne "Groupe"
+  select(-starts_with("Déforestation"))# On ne garde que les t-tests de baseline
+
+# Ce qui suit est une série d'opération pour formater le rendu en tableau
+equilibre_avant %>%
+  t() %>% # On transpose lignes <=> colonnes
+  as.data.frame() %>% # La transposition a altéré le format, on remet en tableau
+  tibble::rownames_to_column() %>% # On met le nom des lignes en 1° colonne
+  # "Truc pour renommer avec le contenu de la première ligne
+  `colnames<-` (filter(., row_number() == 1)) %>% 
+  filter(row_number() != 1)%>% # Enlève la 1° ligne qui est maintenant en entête
+  gt() %>%
+  tab_header(title = "Equilibre des variables avant intervention",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
+```
+
+On a à première vue des équilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Stydent ne permet pas de rejeter l'hypothèse nulle.
+
+On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement.
+
+```{r}
+comparaison_apres <- rct_AP_Mada %>%
+  group_by(Groupe) %>%
+  summarise(across(starts_with("Déforestation"), ~ mean(., na.rm = TRUE))) %>%
+  bind_rows(t_tests) %>% # On colle tous les t-tests 
+  mutate(across(!Groupe, ~round(., 2))) %>%# arrondit tout sauf colonne "Groupe"
+  select(Groupe, starts_with("Déforestation"))# On ne garde que les t-tests de baseline
+
+
+# Même procédure que plus haut pour formater le rendu en tableau
+comparaison_apres  %>%
+  t() %>% # On transpose lignes <=> colonnes
+  as.data.frame() %>% # La transposition a altéré le format, on remet en tableau
+  tibble::rownames_to_column() %>% # On met le nom des lignes en 1° colonne
+  # "Truc pour renommer avec le contenu de la première ligne
+  `colnames<-` (filter(., row_number() == 1)) %>% 
+  filter(row_number() != 1)%>% # Enlève la 1° ligne qui est maintenant en entête
+  gt() %>%
+  tab_header(title = "Moyennes après intervention",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
+```
+
+On peut également réaliser une régression simple.
+
+```{r}
+def_96_06 <- lm(`Déforestation 1996-2006 (%)`  ~ Groupe, data = rct_AP_Mada)
+def_06_16 <- lm(`Déforestation 2006-2016 (%)`  ~ Groupe, data = rct_AP_Mada)
+def_96_16 <- lm(`Déforestation 1996-2016 (%)`  ~ Groupe, data = rct_AP_Mada)
+
+tidy(def_96_06) %>%
+  gt() %>%
+  tab_header(title = "Déforestation 1996-2006 (%)",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
+
+tidy(def_06_16) %>%
+  gt() %>%
+  tab_header(title = "Déforestation 2006-2016 (%)",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
+
+tidy(def_96_16) %>%
+  gt() %>%
+  tab_header(title = "Déforestation 1996-2016 (%)",
+             subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
+  tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
+
+```
+
+On tente une autre mise en forme
+
+```{r}
+stargazer(def_96_06, def_06_16, def_96_16, type = "text",
+          title = "Impact de la conservation sur la perte de couvert forestier",
+          notes = "Données : Association Vahatra et Carvalho et al. 2018")
+```
 

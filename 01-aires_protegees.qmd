@@ -138,9 +138,16 @@ AP_Vahatra <- AP_Vahatra %>%
 Le bloc de code suivant génère une carte interactive. On a également inclus des lignes de code qui permettent de formater la carte joliment pour un rendu figé (pdf/LaTeX, html statique, word), mais ce code est "commenté", c'est-à-dire qu'on a placé des dièses au début de chaque ligne, de sorte qu'il ne s'exécute pas (R n'exécute jamais ce qui se trouve à droite d'un \# sur une ligne). Pour plus de détails sur la manière dont on produit des cartes, voire l'annexe : Cartes simples en R
 
 ```{r}
-contour_mada <- gadm(country = "Madagascar", resolution = 1, level = 0,
+if (file.exists("data/contour_mada.rds")) {
+  load("data/contour_mada.rds")
+} else {
+  contour_mada <- gadm(country = "Madagascar", resolution = 1, level = 0,
                      path = "data/GADM") %>%
   st_as_sf()
+# On enregistre contour_mada pour s'en servir par la suite
+save(contour_mada, file = "data/contour_mada.rds")
+}
+
 # On génère un rendu cartographique
 tmap_mode("view") # En mode interactif
 tm_shape(contour_mada) +
@@ -222,6 +229,8 @@ Il faut aussi s'assurer qu'on filtre bien les entités analysées selon un crit�
 On commence par télécharger et présenter ces données. 
 
 ```{r}
+# Il y a un bug dans l'environnement Quarto, on installe la version de dévelop-
+# pemment car ça résoud le problème.
 # Downloading Protected areas from Madagascar
 WDPA_Mada <- wdpa_fetch("Madagascar", wait = TRUE,
                       download_dir = "data/WDPA") 
@@ -268,6 +277,9 @@ AP_Vahatra <- AP_Vahatra %>%
     TRUE ~ nom)) %>%
   arrange(nom_wdpa) %>%
   mutate(rownum = row_number())
+
+# On sauvegarde le résultat
+save(AP_Vahatra, file = "data/AP_Vahatra.rds")
 
 # On ne garde que les aires de WDPA qui apparaissent dans Vahatra
 WDPA_commun <- WDPA_Mada %>%

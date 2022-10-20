@@ -59,3 +59,40 @@ Vahatra2 <- Vahatra_poly %>%
 ```
 
 Données d'accessibilité : attention car elles présentent un possible biais d'endogénéité. La construction de route au cours des dernières décennies peut être lié à l'établissement ou non d'aires protégées. L'inclusion d'une variable de contrôle qui peut être en partie affectée par notre variable de traitement (la conservation) est susceptible de problème. Il existe une carte de 2000 qui pourrait être mobilisée : 
+
+
+On notera que plusieurs autres indicateurs peuvent être calculés à partir du pabkage mapme.biodiversity:
+
+-   active_fire_counts: Calculate active fire counts based on NASA FIRMS polygonsactive_fire_properties: Calculate active fire properties based on NASA FIRMS polygons
+
+-   biome: Calculate biomes statistics (TEOW) based on WWF
+
+-   drought_indicator: Calculate drought indicator statistics
+
+-   ecoregion: Calculate terrestrial ecoregions statistics (TEOW) based on WWF
+
+-   landcover: Calculate area of different landcover classes
+
+-   mangroves_area: Calculate mangrove extent based on Global Mangrove Watch (GMW)
+
+-   population_count: Calculate population count statistics (Worldpop)
+
+-   precipitation_chirps: Calculate precipitation statistics based on CHIRPS
+
+-   precipitation_wc: Calculate precipitation statistics
+
+-   soilproperties: Calculate Zonal Soil Properties
+
+-   temperature_max_wc: Calculate maximum temperature statistics
+
+-   temperature_min_wc: Calculate minimum temperature statistics based on WorldClim
+
+-   traveltime: Calculate accessibility statistics
+
+-   treecover_area: Calculate treecover statistics
+
+-   treecover_area_and_emissions: Calculate treeloss statistics
+
+-   treecoverloss_emissions: Calculate emission statistics
+
+-   tri: Calculate Terrain Ruggedness Index (TRI) statistics

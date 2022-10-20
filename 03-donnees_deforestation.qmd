@@ -5,6 +5,51 @@ editor_options:
 ---
 # Couvert forestier
 
+## Carvalho et al.
+
+
+Pour commencer, on récupère le travail réalisé par Carvalho et al. [-@carvalho_methods_2020] qui complète les informations physiques de Goodman et al. [-@goodman_les_2018] avec des données relatives au couvert forestier en 1996, 2006 et 2016 et la diversité d'espèces présentes.
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+sup2 <- read_xlsx("data/Carvalho2018sup2.xlsx", skip = 8, 
+                  n_max = 101, col_types = c("text", "text", "text", "text", 
+        "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", "numeric"))
+sup4 <- read_xlsx("data/Carvalho2018sup4.xlsx", skip = 6,
+                  col_types = c("text", "numeric", "text", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", "numeric", "numeric"))
+        
+
+# Carvalho et al. 2008 document in their supp. material 2: "The three parcels that made up
+# Andohahela (Parcels I, II and III) comprised different types of dominant vegetation and
+# associated animal species, and were exposed to distinct pressures. Andohahela was analysed
+# in its entirety (site number 57), as well as separated"
+
+sup2 <- sup2 %>% 
+  mutate(PA = recode(PA, `Andohahela complete` = "Andohahela"),
+         num_atlas_ = as.integer(`Site number`))
+
+sup4 <- sup4 %>%
+  filter(`Habitat type` == "TOTAL") %>%
+  mutate(num_atlas_ = as.numeric(Parcel))
+
+load("data/AP_Vahatra.rds")
+
+AP_Vahatra_Carvalho <- AP_Vahatra %>%
+  left_join(sup2, by = "num_atlas_") %>%
+  relocate(PA, .after = nom) %>%
+  left_join(sup4, by = "num_atlas_")
+
+save(AP_Vahatra_Carvalho, file = "data/AP_Vahatra_Carvalho.rds")
+
+```
+
+On complète cette information avec des données de couvert forestier.
+
+
 ## Mapme
 
 ## Google Earth Engine

@@ -1,0 +1,14 @@
+{
+  "hash": "b4c54052e9046c609dac15349c1cfe80",
+  "result": {
+    "markdown": "---\noutput: html_document\neditor_options: \n  chunk_output_type: console\n---\n\n# Couvert forestier\n\n## Mapme\n\n## Google Earth Engine\n\n\nPour aller plus loin : https://r-earthengine.com/rgeebook/\n\n## TMF\n\nFichiers préparés en python  (code à venir), directement sur les rasters.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(readxl)\nbase <- \"https://github.com/fBedecarrats/conservation-deforestation-madagascar\"\nfile1 <- \"files/9828838/TMFdegradationYear_AP_Vahatra.xlsx\"\nfile2 <- \"files/9828842/TMFdeforestationYear_AP_Vahatra.xlsx\"\n\ndownload.file(url = paste(base, file1, sep = \"/\"),\n              destfile = \"data/TMFdegradationYear_AP_Vahatra.xlsx\")\ndownload.file(url = paste(base, file1, sep = \"/\"),\n              destfile = \"data/TMFdeforestationYear_AP_Vahatra.xlsx\")\n\ntmf_vahatra <- read_excel(\"data/TMFdeforestationYear_AP_Vahatra.xlsx\")\ntmf_vahatra_deg <- read_excel(\"data/TMFdegradationYear_AP_Vahatra.xlsx\")\n```\n:::\n\n\n\n\n## Alternatives",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
