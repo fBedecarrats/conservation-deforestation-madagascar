@@ -1,10 +1,18 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Caractéristiques spatiales
 
 Elle finit termine par enregistrer le jeu de données produit sur la machine qui exécute le code. Ce bloc ne s'exécute que si le jeu de données résultant n'est pas détecté sur la machine. Si le jeu de données résultant du script précédent est déjà disponible sur la machine, alors le bloc précédent ne s'exécute pas et celui qui s'exécute est le suivant
 
 ```{r}
-if (file.exists("data_s3/Vahatra_poly.rds")) {
-  load("data_s3/Vahatra_poly.rds")
+library(tidyverse)
+library(mapme.biodiversity)
+
+if (file.exists("data/Vahatra_poly.rds")) {
+  load("data/Vahatra_poly.rds")
 } else {
 
   Vahatra_poly <- AP_Vahatra %>%
@@ -14,7 +22,7 @@ if (file.exists("data_s3/Vahatra_poly.rds")) {
   # Constitution d'un portefeuille (voir la documentation)
   Vahatra_poly <- init_portfolio(x = Vahatra_poly, 
                                  years = 2000:2020,
-                                 outdir = "data_s3/mapme_Vahatra",
+                                 outdir = "data/mapme_Vahatra",
                                  cores = 24,
                                  add_resources = TRUE,
                                  verbose = TRUE)
@@ -34,22 +42,19 @@ if (file.exists("data_s3/Vahatra_poly.rds")) {
                                   indicators = c("tri", "elevation"),
                                   stats_tri = "mean", stats_elevation = "mean")
   
-    # On récupère aussi les données de Global Forest Watch sur le couver forestier
-  Vahatra_poly <- get_resources(x = Vahatra_poly, 
-                                resources = c("gfw_treecover", "gfw_lossyear"))
-    # Indicateurs de couvert forestier
-  Vahatra_poly <- calc_indicators(x = Vahatra_poly,
-                                  indicators = "treecover_area", 
-                                  min_cover = 30, min_size = 1)
+  #   # On récupère aussi les données de Global Forest Watch sur le couver forestier
+  # Vahatra_poly <- get_resources(x = Vahatra_poly, 
+  #                               resources = c("gfw_treecover", "gfw_lossyear"))
+  #   # Indicateurs de couvert forestier
+  # Vahatra_poly <- calc_indicators(x = Vahatra_poly,
+  #                                 indicators = "treecover_area", 
+  #                                 min_cover = 30, min_size = 1)
   
-  save(Vahatra_poly, file = "data_s3/Vahatra_poly.rds")
+  save(Vahatra_poly, file = "data/Vahatra_poly.rds")
 }
 
 Vahatra2 <- Vahatra_poly %>%
-  unnest(cols = c(tri, elevation, traveltime)) %>%
-  unnest(treecover_area) %>%
-  pivot_wider(names_from = "years", names_prefix = "treecover_area_",
-              values_from = "treecover") 
+  unnest(cols = c(tri, elevation, traveltime)) 
 
 ```
 

@@ -8,7 +8,7 @@ sudo gdebi quarto-linux-amd64.deb -n
 
 
 # Create variables
-WORK_DIR=/home/onyxia/work/impact_aires_protegees_madagascar
+WORK_DIR=/home/onyxia/work/conservation-deforestation-madagascar
 REPO_URL=https://${GIT_PERSONAL_ACCESS_TOKEN}@github.com/fBedecarrats/conservation-deforestation-madagascar.git # As initial
 
 # Git
