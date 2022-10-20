@@ -5,3 +5,4 @@
 data/*
 data_s3/*
 /.quarto/
+*.pdf
