@@ -9,16 +9,28 @@ editor_options:
 
 ## Google Earth Engine
 
-```{r}
-library(dplyr)
-library(rgee)
-remotes::install_github("https://github.com/r-earthengine/rgeeExtra")
-library(rgeeExtra)
-
-ee_Initialize()
-```
 
 Pour aller plus loin : https://r-earthengine.com/rgeebook/
+
+## TMF
+
+Fichiers préparés en python  (code à venir), directement sur les rasters.
+
+```{r}
+library(readxl)
+base <- "https://github.com/fBedecarrats/conservation-deforestation-madagascar"
+file1 <- "files/9828838/TMFdegradationYear_AP_Vahatra.xlsx"
+file2 <- "files/9828842/TMFdeforestationYear_AP_Vahatra.xlsx"
+
+download.file(url = paste(base, file1, sep = "/"),
+              destfile = "data/TMFdegradationYear_AP_Vahatra.xlsx")
+download.file(url = paste(base, file1, sep = "/"),
+              destfile = "data/TMFdeforestationYear_AP_Vahatra.xlsx")
+
+tmf_vahatra <- read_excel("data/TMFdeforestationYear_AP_Vahatra.xlsx")
+tmf_vahatra_deg <- read_excel("data/TMFdegradationYear_AP_Vahatra.xlsx")
+```
+
 
 
 ## Alternatives

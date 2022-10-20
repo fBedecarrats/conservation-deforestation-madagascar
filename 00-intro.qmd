@@ -46,14 +46,10 @@ Outre Mapme.biodiversity, on mobilise une série de librairies (appelées "packa
 #                         upgrade = "always")
 
 librairies_requises <- c( # On liste les librairies dont on a besoin
-  "dplyr", # Pour faciliter la manipulation de données tabulaires
+  "tidyverse", # Une série de packages pour faciliter la manipulation de données
   "readxl", # Pour lire les fichiers excel (Carvalho et al. 2018)
-  "tidyr", # Pour reformater les données (pivots...)
-  "stringr", # Pour manipuler des chaînes de caractères
-  "ggplot2", # Pour faire des graphiques
   "cowplot", # Pour arranger des graphiques en illustrations composées
   "gt", # Pour des rendus graphiques harmonisés html et pdf/LaTeX
-  "lubridate", # Pour manipuler des dates
   "sf", # Pour faciliter la manipulation de données géographiques
   "wdpar", # Pour télécharger simplement la base d'aires protégées WDPA
   "webdriver", # requis pour installer phantomjs pour wdpar
@@ -61,7 +57,6 @@ librairies_requises <- c( # On liste les librairies dont on a besoin
   "geodata", # Pour télécharger simplement les frontières administratives
   "tidygeocoder", # pour obtenir les coordo GPS d'un point à partir de son nom
   "maptiles", # Pour télécharger des fonds de carte 
-  "purrr", # Pour utiliser des formes fonctionnelles de programmation (ex. map)
   "mapme.biodiversity", # Acquisition et traitement des données du projet
   "plm", # Linear Models for Panel Data and robust covariance matrices
   "broom", # pour reformater simplement les rendus de tests statistiques
@@ -77,9 +72,12 @@ librairies_requises <- c( # On liste les librairies dont on a besoin
 manquantes <- !(librairies_requises %in% installed.packages())
 # On installe celles qui manquent
 if(any(manquantes)) install.packages(librairies_requises[manquantes])
-# On charge toutes les librairies requises
-invisible(lapply(librairies_requises, require, character.only= TRUE))
 
+## On charge toutes les librairies requises
+## On fera le chargement dans le chapitres pour expliciter les manips
+# invisible(lapply(librairies_requises, require, character.only= TRUE))
+
+# TODO : repasser les paramètres ci-dessous en clair dans les chapitres
 # Système de coordonnées géographiques utilisées pour le projet : EPSG:29739
 mon_scr <- "EPSG:29739" # correspondant à Tananarive / UTM zone 39S
 # Surface des hexagones en km2
