@@ -69,6 +69,8 @@ librairies_requises <- c( # On liste les librairies dont on a besoin
   "MatchIt", # Pour le matching
   #"glm", # Modèles linéaires généralisés (pour le PSM)
   "optmatch", # Fonctions d'optimisation du matching
+  "rgee",
+  "rgeeExtra",
   "cobalt") # Tables et graphs d'équilibre des groupes de matching
   
 # On regarde parmi ces librairies lesquelles ne sont pas installées

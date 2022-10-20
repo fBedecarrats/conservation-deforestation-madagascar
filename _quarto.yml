@@ -9,8 +9,8 @@ book:
   repo-url: https://github.com/fBedecarrats/conservation-deforestation-madagascar
   cover-image: figs/IRD_010664_ORI_small.png
   chapters:
-    - index.qmd
-    - intro.qmd
+    - 00-index.qmd
+    - 00-intro.qmd
     - part: "Préparation des données"
       chapters: 
         - 01-aires_protegees.qmd
