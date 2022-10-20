@@ -2,16 +2,23 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "conservation-deforestation-madagascar",
+    "title": "Impact des aires protégées sur la déforestation : guide de formation pratique",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books."
+    "text": "Préface\nCe contenu a été développé afin de servir de support pédagogique pour l’atelier “évaluation des politiques” de la session 2022 des Universités en sciences sociales Tany Vao. Les universités Tany Vao visent à dispenser une formation à la recherche de haut niveau à l’attention de doctorants et jeunes chercheurs de Madagascar et d’Afrique de l’Ouest. Après deux jours de plénières, les participants se répartissent pendant cinq jours entre quatre ateliers parallèles : socioéconomie, éthnoégologie, anthropologie et évaluation des politiques.\nL’atelier “évaluation des politiques” adopte une approche axée l’économétrie et la science des données. Il alterne des sessions théorique et pratique. Conformément au thème phare de Tany Vao pour 2022 (“environnement et sociétés”), le cas d’étude choisi pour servir de fil rouge à ces travaux est l’impact des aires protégées sur la déforestation.\nPhoto couverture : “Déforestation à Madagascar” © IRD - Bernard Moizo"
   },
   {
-    "objectID": "intro.html",
-    "href": "intro.html",
+    "objectID": "intro.html#outils-utilisés",
+    "href": "intro.html#outils-utilisés",
     "title": "1  Introduction",
-    "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee (knuth84?) for additional discussion of literate programming."
+    "section": "1.1 Outils utilisés",
+    "text": "1.1 Outils utilisés\nLes éléments ci-dessous constituent le support pour les sessions pratiques de cet atelier. Ils sont réalisés en suivant une approche ouverte et reproductible fondée sur un document de type “notebook” (bedecarrats_alternative_2017?). Un notebook rassemble à la fois :\n\nles lignes de code du programme statistique qui traite les données ;\nles résultats (calculs, tableaux, graphiques…) produits lors de l’exécution de ce programme ;\nle texte rédigé par les auteurs pour expliquer le processus d’analyse et en interpréter les résultats.\n\nL’intérêt du format notebook, par rapport à l’utilisation de documents distincts pour traiter les données d’une part, et en analyser les résultats d’autre part, est multiple :\n\nfavoriser la reproductibité de la recherche (tout le processus de traitement, analyse, interprétation peut être inspecté et dupliqué) ;\nfaciliter le travail du chercheur (une interface pour tout faire) ; et\nassurer les meilleures pratiques de collaboration (utilisation pour le versionnage, partage et fusion des travaux les outils performants développés en programmation informatique).\n\nLes traitements sont réalisés en R, qui est à la fois un logiciel et un langage open sources dédiés à l’analyse de données. Les traitements R sont inclus dans un document Quarto, un format qui exécute aussi bien des codes en R, Python, e rendus dans différents formats (LaTeX/PDF, HTML ou Word).\nOn s’appuie sur le package R {mapme.biodiversity}, développé par la KfW dans le cadre de l’initiative commune MAPME qui associe la KfW et l’AFD. Le package {mapme.biodiversity} facilite l’acquisition et la préparation d’un grand nombre de données (CHIRPS, Global Forest Watch, FIRMS, SRTM, Worldpop…) et calculer un grand nombre d’indicateurs de manière harmonisée (active_fire_counts, biome classification, land cover classification, population count, precipitation, soil properties, tree cover loss, travel time…). Une documentation riche est disponible sur le portail dédié du package en question (Kluve et al. 2022).\nOn mobilise aussi les codes d’analyse d’impact développés par la même équipe et mises à disposition dans le dépôt Github: https://github.com/openkfw/mapme.protectedareas. Le code développé par l’équipe est assez complexe. A des fins pédagogiques et pour s’assurer qu’on l’a bien compris, on propose ici une version simplifiée (en cours de développement).\nLes sources pour l’ensemble du code source et du texte du présent document est accessible sur Github à l’adresse suivante : https://github.com/fBedecarrats/deforestation_madagascar. Les analyses sont menées sur la plateforme SSP Cloud, mises à disposition par l’INSEE pour les data scientists travaillant pour des administrations publiques. Il s’agit d’une instance de stockage de données massif (S3) et de calcul haute performance (cluster Kubernetes) disposant d’une interface simplifiée permettant à l’utilisateur de configurer, lancer et administrer facilement des environnements de traitement de données (RStudio server, Jupyter lab ou autres…). Le code est conçu pour s’exécuter de la même manière en local sur un PC, mais la préparation des données sera certainement beaucoup plus longue à exécuter.\n\n\nCode\n# # Le package est en cours de développement, toujours installer la version en cours\n# remotes::install_github(\"mapme-initiative/mapme.biodiversity\", \n#                         upgrade = \"always\")\n\nlibrairies_requises <- c( # On liste les librairies dont on a besoin\n  \"dplyr\", # Pour faciliter la manipulation de données tabulaires\n  \"readxl\", # Pour lire les fichiers excel (Carvalho et al. 2018)\n  \"tidyr\", # Pour reformater les données (pivots...)\n  \"stringr\", # Pour manipuler des chaînes de caractères\n  \"ggplot2\", # Pour faire des graphiques\n  \"cowplot\", # Pour arranger des graphiques en illustrations composées\n  \"gt\", # Pour des rendus graphiques harmonisés html et pdf/LaTeX\n  \"lubridate\", # Pour manipuler des dates\n  \"sf\", # Pour faciliter la manipulation de données géographiques\n  \"wdpar\", # Pour télécharger simplement la base d'aires protégées WDPA\n  \"webdriver\", # requis pour installer phantomjs pour wdpar\n  \"tmap\", # Pour produire de jolies carte\n  \"geodata\", # Pour télécharger simplement les frontières administratives\n  \"tidygeocoder\", # pour obtenir les coordo GPS d'un point à partir de son nom\n  \"maptiles\", # Pour télécharger des fonds de carte \n  \"purrr\", # Pour utiliser des formes fonctionnelles de programmation (ex. map)\n  \"mapme.biodiversity\", # Acquisition et traitement des données du projet\n  \"plm\", # Linear Models for Panel Data and robust covariance matrices\n  \"broom\", # pour reformater simplement les rendus de tests statistiques\n  \"stargazer\", # Reformater de manière plus lisible les résumé des régressions\n  \"MatchIt\", # Pour le matching\n  #\"glm\", # Modèles linéaires généralisés (pour le PSM)\n  \"optmatch\", # Fonctions d'optimisation du matching\n  \"cobalt\") # Tables et graphs d'équilibre des groupes de matching\n  \n# On regarde parmi ces librairies lesquelles ne sont pas installées\nmanquantes <- !(librairies_requises %in% installed.packages())\n# On installe celles qui manquent\nif(any(manquantes)) install.packages(librairies_requises[manquantes])\n# On charge toutes les librairies requises\ninvisible(lapply(librairies_requises, require, character.only= TRUE))\n\n# Système de coordonnées géographiques utilisées pour le projet : EPSG:29739\nmon_scr <- \"EPSG:29739\" # correspondant à Tananarive / UTM zone 39S\n# Surface des hexagones en km2\ntaille_hex <- 5\n# Taille des titres des cartes\ntaille_titres_cartes = 1\n# on crée un dossier de données si pas déjà disponible\ndir.create(\"data\")\n# Désactiver les notations scientifiques\noptions(scipen =999)"
+  },
+  {
+    "objectID": "intro.html#mode-demploi",
+    "href": "intro.html#mode-demploi",
+    "title": "1  Introduction",
+    "section": "1.2 Mode d’emploi",
+    "text": "1.2 Mode d’emploi\n\n\n\n\nKluve, Jochen, Johannes Schielain, Melvin Wong, and Yota Eilers. 2022. “The KfW Protected Areas Portfolio: A Rigorous Impact Evaluation.” Frankfürt."
   },
   {
     "objectID": "summary.html",
@@ -19,5 +26,12 @@
     "title": "2  Summary",
     "section": "",
     "text": "In summary, this book has no content whatsoever."
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Kluve, Jochen, Johannes Schielain, Melvin Wong, and Yota Eilers. 2022.\n“The KfW Protected Areas\nPortfolio: A Rigorous Impact\nEvaluation.” Frankfürt."
   }
 ]
