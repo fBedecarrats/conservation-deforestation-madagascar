@@ -9,7 +9,7 @@ editor_options:
 
 Les études sur les aires protégées s'appuient fréquemment sur la base WDPA (World Database on Protected Area), consultable en ligne sur https://protectedplanet.net. On s'aperçoit dans le cas de Madagascar que cette base de données comporte de nombreuses erreurs (qu'on étudiera plus bas). La base rassemblée par l'association Vahatra dans le cadre de la monographie qu'elle a coordonnée sur l'ensemble des aires protégées terrestres malgaches semble beaucoup plus fiable [@goodman_les_2018]. Les données en question sont disponibles sur le portail https://protectedareas.mg avec une licence creative commons (CC-BY).
 
-Le bloc de code ci-dessous (cliquer sur "code" pour visualiser), présente la séquence d'opérations réalisées pour préparer les données.Pour comprendre certaines opérations contenues dans le bloc de code, il est utile d'être familier de la syntaxe de R et des packages du tidyverse. Voir le chapitre @10_fondamentaux_R.  
+Le bloc de code ci-dessous (cliquer sur "code" pour visualiser), présente la séquence d'opérations réalisées pour préparer les données.Pour comprendre certaines opérations contenues dans le bloc de code, il est utile d'être familier de la syntaxe de R et des packages du tidyverse. Voir le chapitre @fondamentaux_R.  
 
 ```{r Préparation aires protégées}
 library(tidyverse)
@@ -311,7 +311,8 @@ tmap_mode("plot")
 min_recoup %>%
   tm_shape() +
   tm_polygons() +
-  tm_facets(by = c("nom_wdpa", "source"))
+  tm_facets(by = c("nom_wdpa", "source")) +
+  tm_layout(panel.label.size=3)
 ```
 
 On peut également comparer ceux pour lesquels on a des différences de date ou de statut.

@@ -17,6 +17,7 @@ book:
         - 02-caracteristiques_AP.qmd
         - 03-donnees_deforestation.qmd
         - 04-donnees_en_mailles.qmd
+        - 04b-recap_donnees_dispo.qmd
     - part: "Évaluation d'impact"
       chapters: 
         - 05-assignation_aleatoire.qmd

@@ -1,4 +1,4 @@
-# Fondamentaux pour l'utilisation de R {#sec-10_fondamentaux_R}
+# Fondamentaux pour l'utilisation de R {#sec-fondamentaux_R}
 
 Ressources en français : 
 

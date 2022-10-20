@@ -1,2 +1,56 @@
 # Caractéristiques spatiales
 
+Elle finit termine par enregistrer le jeu de données produit sur la machine qui exécute le code. Ce bloc ne s'exécute que si le jeu de données résultant n'est pas détecté sur la machine. Si le jeu de données résultant du script précédent est déjà disponible sur la machine, alors le bloc précédent ne s'exécute pas et celui qui s'exécute est le suivant
+
+```{r}
+if (file.exists("data_s3/Vahatra_poly.rds")) {
+  load("data_s3/Vahatra_poly.rds")
+} else {
+
+  Vahatra_poly <- AP_Vahatra %>%
+    filter(st_geometry_type(.) == "MULTIPOLYGON") %>%
+    st_cast("POLYGON")
+  
+  # Constitution d'un portefeuille (voir la documentation)
+  Vahatra_poly <- init_portfolio(x = Vahatra_poly, 
+                                 years = 2000:2020,
+                                 outdir = "data_s3/mapme_Vahatra",
+                                 cores = 24,
+                                 add_resources = TRUE,
+                                 verbose = TRUE)
+  
+  # Données d'accessibilité de Nelson et al. (2018)
+  Vahatra_poly <-  get_resources(x = Vahatra_poly, resource = "nelson_et_al",  
+                                 range_traveltime = "5k_110mio")
+  # Modèle numérique de terrain SRTM de la NASA
+  Vahatra_poly <- get_resources(x = Vahatra_poly , resource = "nasa_srtm")
+  
+    # Indicateurs d'accessibilité
+  Vahatra_poly <- calc_indicators(x = Vahatra_poly,
+                                  "traveltime",  stats_accessibility = "mean",
+                                  engine = "extract")
+  # Indicateurs de relief de terrain
+  Vahatra_poly <- calc_indicators(x = Vahatra_poly,
+                                  indicators = c("tri", "elevation"),
+                                  stats_tri = "mean", stats_elevation = "mean")
+  
+    # On récupère aussi les données de Global Forest Watch sur le couver forestier
+  Vahatra_poly <- get_resources(x = Vahatra_poly, 
+                                resources = c("gfw_treecover", "gfw_lossyear"))
+    # Indicateurs de couvert forestier
+  Vahatra_poly <- calc_indicators(x = Vahatra_poly,
+                                  indicators = "treecover_area", 
+                                  min_cover = 30, min_size = 1)
+  
+  save(Vahatra_poly, file = "data_s3/Vahatra_poly.rds")
+}
+
+Vahatra2 <- Vahatra_poly %>%
+  unnest(cols = c(tri, elevation, traveltime)) %>%
+  unnest(treecover_area) %>%
+  pivot_wider(names_from = "years", names_prefix = "treecover_area_",
+              values_from = "treecover") 
+
+```
+
+Données d'accessibilité : attention car elles présentent un possible biais d'endogénéité. La construction de route au cours des dernières décennies peut être lié à l'établissement ou non d'aires protégées. L'inclusion d'une variable de contrôle qui peut être en partie affectée par notre variable de traitement (la conservation) est susceptible de problème. Il existe une carte de 2000 qui pourrait être mobilisée : 
