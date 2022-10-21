@@ -287,53 +287,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapme.biodiversity)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/Vahatra_poly.rds"</span>)) {</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">load</span>(<span class="st">"data/Vahatra_poly.rds"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">st_geometry_type</span>(.) <span class="sc">==</span> <span class="st">"MULTIPOLYGON"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_cast</span>(<span class="st">"POLYGON"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Constitution d'un portefeuille (voir la documentation)</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">init_portfolio</span>(<span class="at">x =</span> Vahatra_poly, </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">years =</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2020</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">outdir =</span> <span class="st">"data/mapme_Vahatra"</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">cores =</span> <span class="dv">24</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">add_resources =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Données d'accessibilité de Nelson et al. (2018)</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span>  <span class="fu">get_resources</span>(<span class="at">x =</span> Vahatra_poly, <span class="at">resource =</span> <span class="st">"nelson_et_al"</span>,  </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">range_traveltime =</span> <span class="st">"5k_110mio"</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Modèle numérique de terrain SRTM de la NASA</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">get_resources</span>(<span class="at">x =</span> Vahatra_poly , <span class="at">resource =</span> <span class="st">"nasa_srtm"</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Indicateurs d'accessibilité</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">calc_indicators</span>(<span class="at">x =</span> Vahatra_poly,</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"traveltime"</span>,  <span class="at">stats_accessibility =</span> <span class="st">"mean"</span>,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">engine =</span> <span class="st">"extract"</span>)</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicateurs de relief de terrain</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">calc_indicators</span>(<span class="at">x =</span> Vahatra_poly,</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">indicators =</span> <span class="fu">c</span>(<span class="st">"tri"</span>, <span class="st">"elevation"</span>),</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">stats_tri =</span> <span class="st">"mean"</span>, <span class="at">stats_elevation =</span> <span class="st">"mean"</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   # On récupère aussi les données de Global Forest Watch sur le couver forestier</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vahatra_poly &lt;- get_resources(x = Vahatra_poly, </span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                               resources = c("gfw_treecover", "gfw_lossyear"))</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   # Indicateurs de couvert forestier</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vahatra_poly &lt;- calc_indicators(x = Vahatra_poly,</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                                 indicators = "treecover_area", </span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                                 min_cover = 30, min_size = 1)</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save</span>(Vahatra_poly, <span class="at">file =</span> <span class="st">"data/Vahatra_poly.rds"</span>)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>Vahatra2 <span class="ot">&lt;-</span> Vahatra_poly <span class="sc">%&gt;%</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(tri, elevation, traveltime)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/Vahatra_poly.rds"</span>)) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">load</span>(<span class="st">"data/Vahatra_poly.rds"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">st_geometry_type</span>(.) <span class="sc">==</span> <span class="st">"MULTIPOLYGON"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_cast</span>(<span class="st">"POLYGON"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Constitution d'un portefeuille (voir la documentation)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">init_portfolio</span>(<span class="at">x =</span> Vahatra_poly, </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">years =</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2020</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">outdir =</span> <span class="st">"data/mapme_Vahatra"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">cores =</span> <span class="dv">24</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">add_resources =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Données d'accessibilité de Nelson et al. (2018)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span>  <span class="fu">get_resources</span>(<span class="at">x =</span> Vahatra_poly, <span class="at">resource =</span> <span class="st">"nelson_et_al"</span>,  </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">range_traveltime =</span> <span class="st">"5k_110mio"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Modèle numérique de terrain SRTM de la NASA</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">get_resources</span>(<span class="at">x =</span> Vahatra_poly , <span class="at">resource =</span> <span class="st">"nasa_srtm"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Indicateurs d'accessibilité</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">calc_indicators</span>(<span class="at">x =</span> Vahatra_poly,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"traveltime"</span>,  <span class="at">stats_accessibility =</span> <span class="st">"mean"</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">engine =</span> <span class="st">"extract"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Indicateurs de relief de terrain</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  Vahatra_poly <span class="ot">&lt;-</span> <span class="fu">calc_indicators</span>(<span class="at">x =</span> Vahatra_poly,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">indicators =</span> <span class="fu">c</span>(<span class="st">"tri"</span>, <span class="st">"elevation"</span>),</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">stats_tri =</span> <span class="st">"mean"</span>, <span class="at">stats_elevation =</span> <span class="st">"mean"</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   # On récupère aussi les données de Global Forest Watch sur le couver forestier</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vahatra_poly &lt;- get_resources(x = Vahatra_poly, </span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                               resources = c("gfw_treecover", "gfw_lossyear"))</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   # Indicateurs de couvert forestier</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Vahatra_poly &lt;- calc_indicators(x = Vahatra_poly,</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                                 indicators = "treecover_area", </span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                                 min_cover = 30, min_size = 1)</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save</span>(Vahatra_poly, <span class="at">file =</span> <span class="st">"data/Vahatra_poly.rds"</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Mapme produit des colonnes imbriquées pour chaque observation, car dans bien des cas, on peut avoir plusieurs valeurs (par année) pour une même observation, voire plusieurs variables (par exemple, le calcul de l’indicateur <code>traveltime</code> produit des estimations de distance par rapport à une ville pour plusieurs tailles de ville possible. Lorsqu’on spécifie une taille, il produit deux variables : la distance estimée et la taille de la ville prise en compte pour l’estimation.</p>
+<p>Cette imbrication n’est pas indispensable pour les trois variables calculées ici (indice de terrain accidenté, distance à une ville et altitude), car on ne cherche qu’une valeur par observation. On va donc dés-imbriquer les variables.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Valeur agrégées par AP (moyennes pondérées par la surface)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Vahatra_vars_terrain <span class="ot">&lt;-</span> Vahatra_poly <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(tri, elevation, traveltime)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, hectares, <span class="at">indice_accidente =</span> tri_mean, <span class="at">dist_ville =</span> minutes_mean, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">altitude =</span> elevation_mean) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nom) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">indice_accidente =</span> <span class="fu">weighted.mean</span>(indice_accidente, hectares,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">dist_ville =</span> <span class="fu">weighted.mean</span>(dist_ville, hectares,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">altitude =</span> <span class="fu">weighted.mean</span>(altitude, hectares,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Valeurs qu'on insère dans le jeu de données de travail</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/AP_Vahatra.rds"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_ch2 <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Vahatra_vars_terrain, <span class="at">by =</span> <span class="st">"nom"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(AP_Vahatra_ch2, <span class="at">file =</span> <span class="st">"AP_Vahatra_ch2.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>On doit aussi se rappeler que les aires protégées sont parfois composées de plusieurs polygones disjoints et que <code>mapme.biodiversity</code> a calculé chaque indicateur pour chaque polygone séparément. Pour chaque aire protégée, on va donc faire la moyenne de ces indicateurs, pondérée par la surface respective de chaque polygone.</p>
 <p>Données d’accessibilité : attention car elles présentent un possible biais d’endogénéité. La construction de route au cours des dernières décennies peut être lié à l’établissement ou non d’aires protégées. L’inclusion d’une variable de contrôle qui peut être en partie affectée par notre variable de traitement (la conservation) est susceptible de problème. Il existe une carte de 2000 qui pourrait être mobilisée :</p>
 <p>On notera que plusieurs autres indicateurs peuvent être calculés à partir du pabkage mapme.biodiversity:</p>
 <ul>

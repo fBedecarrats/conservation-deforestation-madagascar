@@ -7,6 +7,28 @@ Ressources en français :
 
 ## Principes élémentaires de manipulation de données en R
 
+On se focalise ici sur quelques aspects qui peuvent être requis pour la manipulation du code et à la marge. Points à traiter :
+
+- <- / =
+- %>%
+- fonctions
+- na.rm : Les valeurs manquantes, notées NA dans R (certaines peuvent avoir pour valeur NaN). On utilise na.rm pour les éluder dans les opérations simples.
+- verbes : select, filter, mutate, group_by / summarise
+
+Deux opérations particulière requièrent une étude plus approfondies
+
+- Jointures
+- Pivots
+- map
+- unnest
+
+Un point important est relatif aux types des variables : numérique, catégorielles, textes, dates, spatiales... En général, les opérations ne peuvent concerner que des variables du même type. Les fonctions sont souvent contraignantes quant aux types des variables qu'elles prennent comme arguments.
+
+
+
+
+Pour une analyse plus approfondie, voir juba.
+
 ## Produire des cartes simples avec R
 
 ## Produire des graphiques avec R

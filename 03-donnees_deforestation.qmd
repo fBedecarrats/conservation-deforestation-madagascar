@@ -36,6 +36,7 @@ sup4 <- sup4 %>%
   filter(`Habitat type` == "TOTAL") %>%
   mutate(num_atlas_ = as.numeric(Parcel))
 
+
 load("data/AP_Vahatra.rds")
 
 AP_Vahatra_Carvalho <- AP_Vahatra %>%

@@ -10,6 +10,7 @@ Elle finit termine par enregistrer le jeu de données produit sur la machine qui
 ```{r}
 library(tidyverse)
 library(mapme.biodiversity)
+library(sf)
 
 if (file.exists("data/Vahatra_poly.rds")) {
   load("data/Vahatra_poly.rds")
@@ -52,11 +53,38 @@ if (file.exists("data/Vahatra_poly.rds")) {
   
   save(Vahatra_poly, file = "data/Vahatra_poly.rds")
 }
-
-Vahatra2 <- Vahatra_poly %>%
-  unnest(cols = c(tri, elevation, traveltime)) 
-
 ```
+
+Mapme produit des colonnes imbriquées pour chaque observation, car dans bien des cas, on peut avoir plusieurs valeurs (par année) pour une même observation, voire plusieurs variables (par exemple, le calcul de l'indicateur `traveltime` produit des estimations de distance par rapport à une ville pour plusieurs tailles de ville possible. Lorsqu'on spécifie une taille, il produit deux variables : la distance estimée et la taille de la ville prise en compte pour l'estimation.
+
+Cette imbrication n'est pas indispensable pour les trois variables calculées ici (indice de terrain accidenté, distance à une ville et altitude), car on ne cherche qu'une valeur par observation. On va donc dés-imbriquer les variables. 
+
+```{r}
+# Valeur agrégées par AP (moyennes pondérées par la surface)
+Vahatra_vars_terrain <- Vahatra_poly %>%
+  unnest(cols = c(tri, elevation, traveltime)) %>%
+  st_drop_geometry() %>%
+  select(nom, hectares, indice_accidente = tri_mean, dist_ville = minutes_mean, 
+         altitude = elevation_mean) %>%
+  group_by(nom) %>%
+  summarise(indice_accidente = weighted.mean(indice_accidente, hectares,
+                                             na.rm = TRUE),
+            dist_ville = weighted.mean(dist_ville, hectares,
+                                       na.rm = TRUE),
+            altitude = weighted.mean(altitude, hectares,
+                                     na.rm = TRUE))
+# Valeurs qu'on insère dans le jeu de données de travail
+load("data/AP_Vahatra.rds")
+AP_Vahatra_ch2 <- AP_Vahatra %>%
+  left_join(Vahatra_vars_terrain, by = "nom")
+
+save(AP_Vahatra_ch2, file = "data/AP_Vahatra_ch2.rds")
+```
+
+
+On doit aussi se rappeler que les aires protégées sont parfois composées de plusieurs polygones disjoints et que `mapme.biodiversity` a calculé chaque indicateur pour chaque polygone séparément. Pour chaque aire protégée, on va donc faire la moyenne de ces indicateurs, pondérée par la surface respective de chaque polygone.
+
+
 
 Données d'accessibilité : attention car elles présentent un possible biais d'endogénéité. La construction de route au cours des dernières décennies peut être lié à l'établissement ou non d'aires protégées. L'inclusion d'une variable de contrôle qui peut être en partie affectée par notre variable de traitement (la conservation) est susceptible de problème. Il existe une carte de 2000 qui pourrait être mobilisée : 
 
