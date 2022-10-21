@@ -102,12 +102,17 @@ if (file.exists("data/grille_mada_donnees_raster.rds")) {
 Le maillage est trop fin pour être visible à l'échelle du pays, mais on peut l'observer en zoomant sur une zone spécifique.
 
 ```{r Carte grille mada}
+
+
 sf_use_s2(TRUE) 
 
 # On compte le nombre d'hexagones
 n_hex <- nrow(grille_mada)
 # Carte pour visualiser le résultat ------------------------------------------
 
+if (file.exists("data/carte_zoom.rds")) {
+  load("data/carte_zoom.rds")
+} else {
 ## Carte de droite : zoom sur une zone spécifique-----------------------------
 # On part d'un dataframe contenant une adresse
 nom_centre_zoom <- "Maroantsetra"
@@ -151,6 +156,9 @@ carte_zoom <- tm_shape(fond_carte_zoom) +
              bg.color = "white",
              align = "right",
              position = c("right", "BOTTOM"))
+save(carte_zoom, file = "data/carte_zoom.rds")
+}
+
 
 ## Carte de gauche : simple à réaliser mais hexagones non visibles -------------
 load("data/contour_mada.rds")
@@ -163,8 +171,13 @@ carte_grille <- tm_shape(contour_mada) +
                                "hexagones de", taille_hex, "km2"),
             main.title.size = taille_titres_cartes)
 
+
+
 # Assemblage des deux cartes ---------------------------------------------------
 tmap_arrange(carte_grille, carte_zoom, ncol = 2) 
+
+
+
 ```
 
 On peut également représenter les différentes valeurs des indicateurs générés à partir des données satellitaires.
@@ -327,4 +340,3 @@ tm_shape(grille_mada_summary_AP) +
             legend.outside = FALSE)
 ```
 
-En plus d'un format natif R (rds), on a aussi enregistré l'export au format Stata (.dta)
