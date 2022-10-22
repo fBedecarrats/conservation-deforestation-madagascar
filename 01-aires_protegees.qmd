@@ -230,7 +230,7 @@ Il faut aussi s'assurer qu'on filtre bien les entités analysées selon un crit�
 On commence par télécharger et présenter ces données.
 
 ```{r}
-#| eval: false
+
 # On regarde si les données WDPA sont disponibles sur l'ordinateur qui exécute
 if (file.exists("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")) {
   # Si oui, on charge
@@ -240,8 +240,6 @@ if (file.exists("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")) {
   WDPA_Mada <- wdpa_fetch("Madagascar", wait = TRUE,
                       download_dir = "data/WDPA") 
 }
-
-
 
 
 
@@ -287,7 +285,7 @@ AP_Vahatra <- AP_Vahatra %>%
   mutate(rownum = row_number())
 
 # On sauvegarde le résultat
-save(AP_Vahatra, file = "data/AP_Vahatra.rds")
+save(AP_Vahatra, file = "data/ch1_AP_Vahatra.rds")
 
 # On ne garde que les aires de WDPA qui apparaissent dans Vahatra
 WDPA_commun <- WDPA_Mada %>%

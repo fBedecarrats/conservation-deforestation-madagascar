@@ -350,11 +350,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">altitude =</span> <span class="fu">weighted.mean</span>(altitude, hectares,</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Valeurs qu'on insère dans le jeu de données de travail</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/AP_Vahatra.rds"</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>AP_Vahatra_ch2 <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch1_AP_Vahatra.rds"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(Vahatra_vars_terrain, <span class="at">by =</span> <span class="st">"nom"</span>)</span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(AP_Vahatra_ch2, <span class="at">file =</span> <span class="st">"data/AP_Vahatra_ch2.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(AP_Vahatra, <span class="at">file =</span> <span class="st">"data/ch2_AP_Vahatra.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>On doit aussi se rappeler que les aires protégées sont parfois composées de plusieurs polygones disjoints et que <code>mapme.biodiversity</code> a calculé chaque indicateur pour chaque polygone séparément. Pour chaque aire protégée, on va donc faire la moyenne de ces indicateurs, pondérée par la surface respective de chaque polygone.</p>
