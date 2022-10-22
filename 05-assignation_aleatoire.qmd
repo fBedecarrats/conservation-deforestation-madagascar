@@ -18,9 +18,9 @@ library(stargazer)
 library(sf)
 library(lubridate)
 
-load("data/AP_Vahatra_Carvalho.rds")
+load("data/ch3_AP_Vahatra.rds")
 
-rct_AP_Mada <- AP_Vahatra_Carvalho %>%
+rct_AP_Mada <- AP_Vahatra %>%
   st_drop_geometry() %>%
   rename(`Déforestation 1996-2006 (%)` = 
            `Forest loss (ha) between 1996-2006 (percent loss)`,
