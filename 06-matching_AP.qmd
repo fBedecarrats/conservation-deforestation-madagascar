@@ -1,1 +1,22 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Méthode d'appariement
+
+On a vu dans le chapitre précédent que les comparaisons simples réalisées entre les premières et les dernières aires à avoir été formellement protégées pose problème. Ce type dLe type d'espace qui ont
+
+```{r}
+library(tidyverse)
+library(sf)
+library(MatchIt)
+# On recharge les données préparées dans le chapitre 3
+load("data/ch3_AP_Vahatra.rds")
+
+# Harmoniser les données entre avant et après.
+
+
+
+```
+
