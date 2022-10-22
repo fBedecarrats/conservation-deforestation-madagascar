@@ -230,6 +230,7 @@ Il faut aussi s'assurer qu'on filtre bien les entités analysées selon un crit�
 On commence par télécharger et présenter ces données.
 
 ```{r}
+#| eval: false
 # On regarde si les données WDPA sont disponibles sur l'ordinateur qui exécute
 if (file.exists("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")) {
   # Si oui, on charge

@@ -11,6 +11,7 @@ editor_options:
 Pour commencer, on récupère le travail réalisé par Carvalho et al. [-@carvalho_methods_2020] qui complète les informations physiques de Goodman et al. [-@goodman_les_2018] avec des données relatives au couvert forestier en 1996, 2006 et 2016 et la diversité d'espèces présentes.
 
 ```{r}
+#| eval: false
 library(tidyverse)
 library(readxl)
 
@@ -164,6 +165,7 @@ Le langage utilisé sur cet interface est du Javascript. Ci-dessous un exemple d
 Fichiers préparés en python (code à venir), directement sur les rasters.
 
 ```{r}
+#| eval: false
 # On charge les fichiers préparés par Marc en python.
 
 
