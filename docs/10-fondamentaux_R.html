@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.174">
+<meta name="generator" content="quarto-1.1.189">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,6 +19,25 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
 }
 </style>
 
@@ -199,9 +218,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#principes-élémentaires-de-manipulation-de-données-en-r" id="toc-principes-élémentaires-de-manipulation-de-données-en-r" class="nav-link active" data-scroll-target="#principes-élémentaires-de-manipulation-de-données-en-r"><span class="toc-section-number">10.1</span>  Principes élémentaires de manipulation de données en R</a></li>
-  <li><a href="#produire-des-cartes-simples-avec-r" id="toc-produire-des-cartes-simples-avec-r" class="nav-link" data-scroll-target="#produire-des-cartes-simples-avec-r"><span class="toc-section-number">10.2</span>  Produire des cartes simples avec R</a></li>
-  <li><a href="#produire-des-graphiques-avec-r" id="toc-produire-des-graphiques-avec-r" class="nav-link" data-scroll-target="#produire-des-graphiques-avec-r"><span class="toc-section-number">10.3</span>  Produire des graphiques avec R</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation"><span class="toc-section-number">10.1</span>  Installation</a></li>
+  <li><a href="#import-des-données" id="toc-import-des-données" class="nav-link" data-scroll-target="#import-des-données"><span class="toc-section-number">10.2</span>  Import des données</a></li>
+  <li><a href="#principes-élémentaires-de-manipulation-de-données-en-r" id="toc-principes-élémentaires-de-manipulation-de-données-en-r" class="nav-link" data-scroll-target="#principes-élémentaires-de-manipulation-de-données-en-r"><span class="toc-section-number">10.3</span>  Principes élémentaires de manipulation de données en R</a></li>
+  <li><a href="#produire-des-cartes-simples-avec-r" id="toc-produire-des-cartes-simples-avec-r" class="nav-link" data-scroll-target="#produire-des-cartes-simples-avec-r"><span class="toc-section-number">10.4</span>  Produire des cartes simples avec R</a></li>
+  <li><a href="#produire-des-graphiques-avec-r" id="toc-produire-des-graphiques-avec-r" class="nav-link" data-scroll-target="#produire-des-graphiques-avec-r"><span class="toc-section-number">10.5</span>  Produire des graphiques avec R</a></li>
   </ul>
 </nav>
     </div>
@@ -210,7 +231,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="fondamentaux_R" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></span></h1>
+<h1 class="title"><span id="sec-fondamentaux" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></span></h1>
 </div>
 
 
@@ -218,7 +239,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
@@ -227,18 +247,78 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Ressources en français :</p>
 <ul>
-<li>juba</li>
+<li><a href="https://juba.github.io/tidyverse/index.html">Introduction à R et au Tidyverse</a><span class="citation" data-cites="barnier2022">(<a href="09-bibliographie.html#ref-barnier2022" role="doc-biblioref">Barnier 2022</a>)</span></li>
+<li><a href="https://www.book.utilitr.org/index.html">utilitR: documentation collaborative sur R de l’INSEE</a> <span class="citation" data-cites="utilitr:2022">(<a href="09-bibliographie.html#ref-utilitr:2022" role="doc-biblioref">Galiana and Meslin 2022</a>)</span></li>
 </ul>
-<section id="principes-élémentaires-de-manipulation-de-données-en-r" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="principes-élémentaires-de-manipulation-de-données-en-r"><span class="header-section-number">10.1</span> Principes élémentaires de manipulation de données en R</h2>
+<p>Ressources en anglais Les bonnes ressources anglophones gratuites sont très nombreuses, très facile à trouver sur le Web. Les grands classiques est R for data science, de Grolemund et Wickham <span class="citation" data-cites="grolemund2022">(<a href="09-bibliographie.html#ref-grolemund2022" role="doc-biblioref">2022</a>)</span>. On se focalise ici avec elles qui sont le plus en lien avec nos sujets.</p>
+<ul>
+<li><a href="https://geocompr.robinlovelace.net/">Geocomputation with R, a book on geographic data analysis, visualization and modeling</a> <span class="citation" data-cites="lovelace2022">(<a href="09-bibliographie.html#ref-lovelace2022" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2022</a>)</span>.</li>
+<li><a href="https://mapme-initiative.github.io/mapme.biodiversity/index.html">Mapme.biodiversity: Efficient Monitoring of Global Biodiversity Portfolios</a> <span class="citation" data-cites="görgen2022">(<a href="09-bibliographie.html#ref-görgen2022" role="doc-biblioref">Görgen and Bhandari 2022</a>)</span></li>
+</ul>
+<section id="installation" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="installation"><span class="header-section-number">10.1</span> Installation</h2>
+<p>On installe R et RStudio :</p>
+<ul>
+<li>Télécharger et installer R (<a href="https://cloud.r-project.org/">page officielle proposant les installateurs et instructions d’installation</a>)</li>
+<li>Télécharger et installer RStudio (<a href="https://www.rstudio.com/products/rstudio/download/#download">page officielle proposant les installateurs et instructions d’installation</a>)</li>
+</ul>
+<blockquote class="blockquote">
+<p>A noter : un nombre croissant d’utilisteurs utilise VS Code. C’est une alternative intéressante, pour des utilisateurs déjà confirmés :</p>
+</blockquote>
 </section>
-<section id="produire-des-cartes-simples-avec-r" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="produire-des-cartes-simples-avec-r"><span class="header-section-number">10.2</span> Produire des cartes simples avec R</h2>
+<section id="import-des-données" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="import-des-données"><span class="header-section-number">10.2</span> Import des données</h2>
+<p>En très bref :</p>
+<ul>
+<li>Pour les fichiers excle ou csv, dans le volet “files” du panneau en bas à droite de l’interface Rstudio, cliquer sur le fichier en question et utiliser l’assistant d’import.</li>
+<li>Pour les autres fichiers, se référer à l’aide ou chercher sur internet.</li>
+</ul>
+<p>Voir <a href="https://juba.github.io">cette page</a> pour un topo sur les imports. [#TODO:Préciser l’url]</p>
 </section>
-<section id="produire-des-graphiques-avec-r" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="produire-des-graphiques-avec-r"><span class="header-section-number">10.3</span> Produire des graphiques avec R</h2>
+<section id="principes-élémentaires-de-manipulation-de-données-en-r" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="principes-élémentaires-de-manipulation-de-données-en-r"><span class="header-section-number">10.3</span> Principes élémentaires de manipulation de données en R</h2>
+<p>On se focalise ici sur quelques aspects qui peuvent être requis pour la manipulation du code et à la marge. Points à traiter :</p>
+<ul>
+<li>&lt;- / =</li>
+<li>%&gt;%</li>
+<li>fonctions</li>
+<li>na.rm : Les valeurs manquantes, notées NA dans R (certaines peuvent avoir pour valeur NaN). On utilise na.rm pour les éluder dans les opérations simples.</li>
+<li>verbes : select, filter, mutate, group_by / summarise</li>
+</ul>
+<p>Deux opérations particulière requièrent une étude plus approfondies</p>
+<ul>
+<li>Jointures</li>
+<li>Pivots</li>
+<li>map</li>
+<li>unnest</li>
+</ul>
+<p>Un point important est relatif aux types des variables : numérique, catégorielles, textes, dates, spatiales… En général, les opérations ne peuvent concerner que des variables du même type. Les fonctions sont souvent contraignantes quant aux types des variables qu’elles prennent comme arguments.</p>
+<p>Pour une analyse plus approfondie, voir juba.</p>
+</section>
+<section id="produire-des-cartes-simples-avec-r" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="produire-des-cartes-simples-avec-r"><span class="header-section-number">10.4</span> Produire des cartes simples avec R</h2>
+</section>
+<section id="produire-des-graphiques-avec-r" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="produire-des-graphiques-avec-r"><span class="header-section-number">10.5</span> Produire des graphiques avec R</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-barnier2022" class="csl-entry" role="doc-biblioentry">
+Barnier, Julien. 2022. <span>“Introduction à r Et Au Tidyverse.”</span> <a href="https://juba.github.io/tidyverse/index.html">https://juba.github.io/tidyverse/index.html</a>.
+</div>
+<div id="ref-utilitr:2022" class="csl-entry" role="doc-biblioentry">
+Galiana, Lino, and Olivier Meslin, eds. 2022. <span>“utilitR: Documentation Collaborative Sur r.”</span> <a href="https://www.book.utilitr.org/">https://www.book.utilitr.org/</a>.
+</div>
+<div id="ref-görgen2022" class="csl-entry" role="doc-biblioentry">
+Görgen, Darius A., and Om Prakash Bhandari. 2022. <em>Mapme.biodiversity: Efficient Monitoring of Global Biodiversity Portfolios</em>. <a href="https://CRAN.R-project.org/package=mapme.biodiversity">https://CRAN.R-project.org/package=mapme.biodiversity</a>.
+</div>
+<div id="ref-grolemund2022" class="csl-entry" role="doc-biblioentry">
+Grolemund, Garrett, and Hadley Wickham. 2022. <em>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</em>. 1st edition. Sebastopol, CA: O’Reilly Media. <a href="https://r4ds.had.co.nz/">https://r4ds.had.co.nz/</a>.
+</div>
+<div id="ref-lovelace2022" class="csl-entry" role="doc-biblioentry">
+Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2022. <em>Geocomputation with R</em>. Boca Raton London New York: Routledge. <a href="https://geocompr.robinlovelace.net/">https://geocompr.robinlovelace.net/</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -283,24 +363,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -336,42 +399,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script>

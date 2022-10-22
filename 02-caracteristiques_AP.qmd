@@ -3,7 +3,7 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
-# Caractéristiques spatiales
+# Caractéristiques spatiales {#sec-caracteristiques}
 
 Elle finit termine par enregistrer le jeu de données produit sur la machine qui exécute le code. Ce bloc ne s'exécute que si le jeu de données résultant n'est pas détecté sur la machine. Si le jeu de données résultant du script précédent est déjà disponible sur la machine, alors le bloc précédent ne s'exécute pas et celui qui s'exécute est le suivant
 

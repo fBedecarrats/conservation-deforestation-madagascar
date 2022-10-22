@@ -3,10 +3,10 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
 # Couvert forestier
 
-## Carvalho et al.
-
+## Carvalho et al. (source MODIS)
 
 Pour commencer, on récupère le travail réalisé par Carvalho et al. [-@carvalho_methods_2020] qui complète les informations physiques de Goodman et al. [-@goodman_les_2018] avec des données relatives au couvert forestier en 1996, 2006 et 2016 et la diversité d'espèces présentes.
 
@@ -14,8 +14,11 @@ Pour commencer, on récupère le travail réalisé par Carvalho et al. [-@carval
 library(tidyverse)
 library(readxl)
 
-sup2 <- read_xlsx("data/Carvalho2018sup2.xlsx", skip = 8, 
-                  n_max = 101, col_types = c("text", "text", "text", "text", 
+# Voir le chapitre "Fondamentaux R" pour une aide à l'import.
+sup2 <- read_xlsx("data/Carvalho2018sup2.xlsx", # Enplacement du fichier
+                  skip = 8, # Premières lignes du tableau excel à ne pas lire
+                  n_max = 101,  # on ne lit pas les dernières lignes (notes)
+                  col_types = c("text", "text", "text", "text", 
         "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", 
         "numeric", "numeric", "numeric", "numeric"))
 sup4 <- read_xlsx("data/Carvalho2018sup4.xlsx", skip = 6,
@@ -50,33 +53,126 @@ save(AP_Vahatra_Carvalho, file = "data/AP_Vahatra_Carvalho.rds")
 
 On complète cette information avec des données de couvert forestier.
 
+## Mapme (exemple GFC)
 
-## Mapme
+La procédure de traitement de ces fichiers sur Mapme est analogue à celle employée dans la section @sec-caracteristiques.
 
-## Google Earth Engine
+## Google Earth Engine (exemple GFC)
 
+La plateforme Google Earth Engine est un outil particulièrement pratique et performant pour mobiliser et traiter des données satellitaires. Google Earth Engine peut être utilisé :
 
-Pour aller plus loin : https://r-earthengine.com/rgeebook/
+-   en interrogeant son API, et notamment :
+    -   en python, avec la librairie `gee` permet d'interroger l'API de Google Earth Engine.
+    -   en R, au travers de la librairie `rgee`. Cette dernière est relativement facile d'usage, mais elle est difficile à configurer. Pour aller plus loin : https://r-earthengine.com/rgeebook/
+-   directement sur la plateforme https://code.earthengine.google.com/
 
-## TMF
+La consolde de codage de Google Earth Engine prend la forme suivante :
 
-Fichiers préparés en python  (code à venir), directement sur les rasters.
+[![Diagramme des composants de la console Google Earth Engine](figs/Code_editor_diagram.png){fig-alt="Une capture annotée de l'interface de google earth engine"}](https://developers.google.com/earth-engine/guides/playground)
 
-```{r}
-library(readxl)
-base <- "https://github.com/fBedecarrats/conservation-deforestation-madagascar"
-file1 <- "files/9828838/TMFdegradationYear_AP_Vahatra.xlsx"
-file2 <- "files/9828842/TMFdeforestationYear_AP_Vahatra.xlsx"
+Le langage utilisé sur cet interface est du Javascript. Ci-dessous un exemple de code qui génère les surface (en hectares) de perte de couvert forestier. Pour fonctionner, ce code doit être collé dans un script sur la plateforme Google Earth Engine lancé en cliquant sur "Run", puis en cliquant sur "Tasks" pour exécuter le code.
 
-download.file(url = paste(base, file1, sep = "/"),
-              destfile = "data/TMFdegradationYear_AP_Vahatra.xlsx")
-download.file(url = paste(base, file1, sep = "/"),
-              destfile = "data/TMFdeforestationYear_AP_Vahatra.xlsx")
+```{js}
+#| eval: false
 
-tmf_vahatra <- read_excel("data/TMFdeforestationYear_AP_Vahatra.xlsx")
-tmf_vahatra_deg <- read_excel("data/TMFdegradationYear_AP_Vahatra.xlsx")
+ scale = 30
+	
+	// PREPARE DATA
+	//look at tree cover, find the area
+	var treeCover = gfc2021.select(['treecover2000']);
+	var areaCover = treeCover.multiply(ee.Image.pixelArea())
+					.divide(10000).select([0],["areacover"])
+	// total loss area
+	var loss = gfc2021.select(['loss']);
+	var areaLoss = loss.gt(0).multiply(ee.Image.pixelArea())
+				   .divide(10000).select([0],["arealoss"]);
+	// total gain area
+	var gain = gfc2021.select(['gain'])
+	var areaGain = gain.gt(0).multiply(ee.Image.pixelArea())
+				   .divide(10000).select([0],["areagain"]);
+	// final image
+	var total = gfc2021.addBands(areaCover)
+				.addBands(areaLoss)
+				.addBands(areaGain)
+
+	// TOTAL COVER
+	// Map cover area per feature
+	var districtSums = areaCover.reduceRegions({
+	  collection: testgu,
+	  reducer: ee.Reducer.sum(),
+	  scale: scale,
+	});			
+	
+	var addVar = function(feature) {
+
+	  // function to iterate over the sequence of years
+	  var addVarYear = function(year, feat) {
+		// cast var
+		year = ee.Number(year).toInt()
+		feat = ee.Feature(feat)
+
+		// actual year to write as property
+		var actual_year = ee.Number(2000).add(year)
+
+		// filter year:
+		// 1st: get mask
+		var filtered = total.select("lossyear").eq(year)
+		// 2nd: apply mask
+		filtered = total.updateMask(filtered)
+
+		// reduce variables over the feature
+		var reduc = filtered.reduceRegion({
+		  geometry: feature.geometry(),
+		  reducer: ee.Reducer.sum(),
+		  scale: scale,
+		  maxPixels: 1e9
+		})
+
+		// get results
+		var loss = ee.Number(reduc.get("arealoss"))
+		var gain = ee.Number(reduc.get("areagain"))
+
+		// set names
+		var nameloss = ee.String("loss_").cat(actual_year)
+		var namegain = ee.String("gain_").cat(actual_year)
+
+		// set properties to the feature
+		return feat.set(nameloss, loss, namegain, gain)
+	  }
+
+	  // iterate over the sequence
+	  var newfeat = ee.Feature(years.iterate(addVarYear, feature));
+
+	  // return feature with new properties
+	  return newfeat
+	}
+
+	// Map over the FeatureCollection
+	var areas = districtSums.map(addVar);
+	
+	// Export PA deforestation to a CSV file.
+	Export.table.toDrive({
+	  collection: areas,
+	  description: 'forest_loss_WDPA_Madagascar',
+	  fileFormat: 'CSV'
+	});
+
 ```
 
+## Python (exemple TMF)
 
+Fichiers préparés en python (code à venir), directement sur les rasters.
+
+```{r}
+# On charge les fichiers préparés par Marc en python.
+
+
+tmf_vahatra_def <- read_excel("data/TMFdeforestationYear_AP_Vahatra.xlsx",
+                              sheet = "TMFdeforestationYear")
+tmf_vahatra_deg <- read_excel("data/TMFdegradationYear_AP_Vahatra.xlsx",
+                              sheet = "TMFdegradationYear")
+```
 
 ## Alternatives
+
+Si on n'est pas à l'aise avec les outils mentionnés plus haut, [l'outil Geoquery d'AidData](http://geo.aiddata.org/query/ "Geoquery : un outil simple pour télécharger des statistiques élaborées à partir d'image satellitaires pour des aires administratives.") permet d'obtenir des statistiques par aire administrative. Il est également possible de formuler des demandes spécifiques pour d'autres polygones que des aires administratives [au travers d'un formulaire dédié](https://www.aiddata.org/geoquery/custom-requests "Un formulaire pour demander à AidData de réaliser des calculs sur des polygones autres que des aires administratives").

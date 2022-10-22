@@ -3,13 +3,14 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
 # Aires protégées
 
 ## Données de l'association Vahatra
 
 Les études sur les aires protégées s'appuient fréquemment sur la base WDPA (World Database on Protected Area), consultable en ligne sur https://protectedplanet.net. On s'aperçoit dans le cas de Madagascar que cette base de données comporte de nombreuses erreurs (qu'on étudiera plus bas). La base rassemblée par l'association Vahatra dans le cadre de la monographie qu'elle a coordonnée sur l'ensemble des aires protégées terrestres malgaches semble beaucoup plus fiable [@goodman_les_2018]. Les données en question sont disponibles sur le portail https://protectedareas.mg avec une licence creative commons (CC-BY).
 
-Le bloc de code ci-dessous (cliquer sur "code" pour visualiser), présente la séquence d'opérations réalisées pour préparer les données.Pour comprendre certaines opérations contenues dans le bloc de code, il est utile d'être familier de la syntaxe de R et des packages du tidyverse. Voir le chapitre @fondamentaux_R.  
+Le bloc de code ci-dessous (cliquer sur "code" pour visualiser), présente la séquence d'opérations réalisées pour préparer les données.Pour comprendre certaines opérations contenues dans le bloc de code, il est utile d'être familier de la syntaxe de R et des packages du tidyverse. Voir le chapitre @sec-fondamentaux.
 
 ```{r Préparation aires protégées}
 library(tidyverse)
@@ -226,19 +227,25 @@ Il faut aussi s'assurer qu'on filtre bien les entités analysées selon un crit�
 
 ## World Database on Protected Areas
 
-On commence par télécharger et présenter ces données. 
+On commence par télécharger et présenter ces données.
 
 ```{r}
-# Il y a un bug dans l'environnement Quarto, on installe la version de dévelop-
-# pemment car ça résoud le problème.
-# Downloading Protected areas from Madagascar
-WDPA_Mada <- wdpa_fetch("Madagascar", wait = TRUE,
+# On regarde si les données WDPA sont disponibles sur l'ordinateur qui exécute
+if (file.exists("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")) {
+  # Si oui, on charge
+  WDPA_Mada <- wdpa_read("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")
+} else {
+  # Si non, on télécharge depuis protectedplanet
+  WDPA_Mada <- wdpa_fetch("Madagascar", wait = TRUE,
                       download_dir = "data/WDPA") 
+}
+
+
+
+
 
 # TODO: inclure graph et description des données.
 ```
-
-
 
 ## Comparaison des données Vahatra et WDPA
 
@@ -403,6 +410,6 @@ On a visiblement des aires protégées qu'il serait pertinent d'inclure et qui n
 
 ## Enjeux de fiabilité des données d'aires protégées
 
-Important pour l'analyse : si périmètres pas juste => phénomènes de leakage, faux positifs ou faux négatifs.
+Important pour l'analyse : si périmètres pas juste =\> phénomènes de leakage, faux positifs ou faux négatifs.
 
 Enjeu aussi des métadonnées : date ou type sont importants pour l'analyse et celle-ci perd en fiabilité si ces informations ne sont pas correctes.
