@@ -8,6 +8,7 @@ book:
   date: "10/3/2022"
   repo-url: https://github.com/fBedecarrats/conservation-deforestation-madagascar
   cover-image: figs/IRD_010664_ORI_small.png
+  cover-image-alt: Déforestation à Madagascar © IRD - Bernard Moizo
   chapters:
     - index.qmd
     - 00-intro.qmd
