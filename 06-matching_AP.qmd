@@ -11,6 +11,8 @@ On a vu dans le chapitre précédent que les comparaisons simples réalisées en
 library(tidyverse)
 library(sf)
 library(MatchIt)
+# Désactiver les notations scientifiques
+options(scipen =999)
 # On recharge les données préparées dans le chapitre 3
 load("data/ch3_AP_Vahatra.rds")
 

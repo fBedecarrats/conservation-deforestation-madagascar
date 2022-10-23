@@ -14,6 +14,8 @@ library(tidyverse)
 library(lubridate)
 library(sf)
 library(gt)
+# Désactiver les notations scientifiques
+options(scipen =999)
 
 # On reprend les données telles que préparées au chapitre 3
 load("data/ch3_AP_Vahatra.rds")

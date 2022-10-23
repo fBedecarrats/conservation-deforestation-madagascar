@@ -6,7 +6,7 @@ editor_options:
 # Méthode randomisée
 
 
-> ATTENTION : Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si" pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
+> **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
 
 Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types "multi-polygones". Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses agrégées, on va agrégéer les statistiques d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
 
@@ -17,6 +17,9 @@ library(broom)
 library(stargazer)
 library(sf)
 library(lubridate)
+
+# Désactiver les notations scientifiques
+options(scipen =999)
 
 load("data/ch3_AP_Vahatra.rds")
 
