@@ -8,15 +8,31 @@ editor_options:
 
 > **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
 
-Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types "multi-polygones". Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses agrégées, on va agrégéer les statistiques d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
+L'intuition initiale de cette stratégie est que **le meilleur contrefactuel de l'AP est elle-même avant la mise en place du statut**. 
+
+Ainsi, nous allons comparer pour chaque AP, les taux de déforestation entre les années qui précèdent la création de l'AP et les années qui suivent la création. 
+
+En revanche, comme vu dans la partie théorique, cette approche repose sur **l'hypothèse que la seule différence entre les périodes est la mise en place de la politique**. 
+
+Autrement dit, le seul facteur entre ces différentes périodes qui impactent le taux de dégradation des forêts est la mise en place de l'AP. 
+
+Ci-dessous, un tableau représentant les dates de création des AP. 
 
 ```{r}
-library(tidyverse)
-library(gt)
-library(broom)
-library(stargazer)
-library(sf)
-library(lubridate)
+# Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries
+# de types "multi-polygones". Certaines de ces aires protégées étaient en effet 
+# composées de plusieurs polygones disjoints. Ces polygones disjoints ont été 
+# scindés pour être traités séparément dans le jeu de données AP_poly. Avant 
+# de repasser sur des analyses agrégées, on va agrégéer les statistiques 
+# d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
+
+# On charge les librairies utiles pour cette analyse
+library(tidyverse) # Facilite la manipulation de données
+library(gt) # Aide à formater de jolis tableaux de rendu
+library(broom) # Aide à formater les rendus de régressions
+library(stargazer) # idem
+library(sf) # Pour les données spatiales
+library(lubridate) # Pour gérer des dates
 
 # Désactiver les notations scientifiques
 options(scipen =999)
@@ -71,9 +87,21 @@ equilibre_avant %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-On a à première vue des équilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Stydent ne permet pas de rejeter l'hypothèse nulle.
+Les données mobilisées sont celles de TMF pour lesquelles on dispose d'un historique allant de 1990 à 2020. On se concentre sur les aires protégées dont le statut a été décrété entre ces deux dates. 
 
-On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement.
+En revanche, afin d'avoir non pas un unique taux de dégradation du couvert forestier mais une tendance (i.e l'évolution) de celui-ci, nous restreignons notre échantillon aux AP dont le statut a été octroyé entre 1995 et 2015. 
+
+En effet, si on se focalise uniquement sur le taux de déforestation juste avant et juste après, il se peut qu'un évènement ait impacté le taux de dégradation et ne représente pas réellement la dégradation du couvert forestier dans l'AP. 
+
+Par exemple, si en t-1, il y a eu un énorme feu lié à un évènement naturel, alors nous risquons de surestimer la perte de couvert forestier avant et donc d'inférer à l'AP, un impact beaucoup plus bénéfique que ce qu'il est réellement. 
+
+Notre échantillon final contient 72 AP (sur les 98 initiales de la base de données Vahatra _ en jaune sur le graphique). 
+
+Nous normalisons les dates d'octroi du statut d'AP c'est à dire qu'on transforme les années calendaires (1995, 1996,...) en année relative à la mise en place de l'AP. 
+
+Par exemple, si une AP est créée en 2000 (qui correspondra à l'année 0), toutes les autres années seront exprimées relativement à celle-ci et donc, 1995 sera égale à -5 et 2005 à 5. 
+
+Cette transformation nous permet de pouvoir visualiser les données. Dans le tableau suivant, nous avons la moyenne annuelle de la surface (exprimée en hectare et en pourcentage) de l'AP qui a été dégradé sur les 5 années précédents et suivants la mise en place de l'AP. 
 
 ```{r}
 comparaison_apres <- rct_AP_Mada %>%
@@ -98,7 +126,7 @@ comparaison_apres  %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-On peut également réaliser une régression simple.
+D'après le tableau ci-dessous, quelles conclusions pouvons-nous tirer ? 
 
 ```{r}
 def_96_06 <- lm(`Déforestation 1996-2006 (%)`  ~ Groupe, data = rct_AP_Mada)
@@ -125,7 +153,7 @@ tidy(def_96_16) %>%
 
 ```
 
-On tente une autre mise en forme
+(variante avec une autre mise en forme)
 
 ```{r}
 stargazer(def_96_06, def_06_16, def_96_16, type = "text",
