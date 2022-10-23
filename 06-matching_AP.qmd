@@ -5,7 +5,7 @@ editor_options:
 ---
 # Méthode d'appariement
 
-On a vu dans le chapitre précédent que les comparaisons simples réalisées entre les premières et les dernières aires à avoir été formellement protégées pose problème. Ce type dLe type d'espace qui ont
+On a vu dans le chapitre précédent que les comparaisons simples réalisées entre les premières et les dernières aires à avoir été formellement protégées pose problème. 
 
 ```{r}
 library(tidyverse)
