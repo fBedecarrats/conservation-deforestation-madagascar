@@ -161,3 +161,32 @@ stargazer(def_96_06, def_06_16, def_96_16, type = "text",
           notes = "Données : Association Vahatra et Carvalho et al. 2018")
 ```
 
+Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajer aux villes :
+
+```{r}
+
+
+t_tests_autres <- rct_AP_Mada %>% 
+  # On applique aux variables d'altitude, TRI et temps de trajet aux villes.
+  summarise(across(indice_accidente:altitude,# toutes finissent ainsi
+                   ~ t.test(.[Groupe == "Controle"], # on applique un t.test
+                            .[Groupe == "Traitement"])$p.value)) %>% 
+  mutate(Groupe = "t-test")
+
+
+equilibre_autres <- rct_AP_Mada %>%
+  group_by(Groupe) %>%
+  summarise(`Nombre d'aires` = n(),
+            indice_accidente = mean(indice_accidente, na.rm = TRUE), 
+            dist_ville = mean(dist_ville, na.rm = TRUE),
+            altitude = mean(altitude, na.rm = TRUE)) %>%
+  bind_rows(t_tests_autres) %>% # On colle tous les t-tests 
+  mutate(across(!Groupe, ~round(., 2))) %>%# arrondit tout sauf colonne "Groupe"
+  select(-starts_with("Déforestation"))# On ne garde que les t-tests de baseline
+
+
+```
+
+Temps de trajet aux villes significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d'endogénéité.
+
+
