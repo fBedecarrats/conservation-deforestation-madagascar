@@ -1,6 +1,13 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Données en mailles
 
 Une approche courante consiste à diviser le territoires en mailles, carrées ou en forme d'alvéoles d'abeilles (hexagones), et à calculer des indicateurs pour chacune de ces mailles.
+
+## Constitution d'un maillage
 
 On montre ci-dessous comment cette approche fonctionne.
 
@@ -39,6 +46,94 @@ if (file.exists("data/grille_mada_donnees_raster.rds")) {
     unlist()
   grille_mada <- grille_mada[sort(cellules_emergees)] %>%
     st_sf()
+} 
+```
+
+Le maillage est trop fin pour être visible à l'échelle du pays, mais on peut l'observer en zoomant sur une zone spécifique.
+
+```{r Carte grille mada}
+
+
+sf_use_s2(TRUE) 
+
+# On compte le nombre d'hexagones
+n_hex <- nrow(grille_mada)
+# Carte pour visualiser le résultat ------------------------------------------
+
+if (file.exists("data/carte_zoom.rds")) {
+  load("data/carte_zoom.rds")
+  load("data/elements_carte_zoom.rds")
+} else {
+## Carte de droite : zoom sur une zone spécifique-----------------------------
+# On part d'un dataframe contenant une adresse
+nom_centre_zoom <- "Maroantsetra"
+zoom_centre <- data.frame(address = nom_centre_zoom) %>%
+  geocode(address, method = "osm") %>% # on retrouve sa localisation xy
+  select(long, lat) %>% # on ne garde que le xy
+  as.numeric() %>% # qu'on passe en format numérique attendu par st_point
+  st_point() %>% # On le spécifie en point
+  st_sfc(crs = "EPSG:4326") 
+
+# On crée une boîte de 100km 
+zoom_boite <- zoom_centre %>% # On repart du centre
+  st_buffer(dist = 50000) %>% # On crée un cercle de 50km de rayon
+  st_make_grid(n = 1) 
+
+# On filtre les alvéoles pour ne garder que celles qui sont dans le zoom
+grille_zoom <- st_intersection(grille_mada, zoom_boite)
+
+# On télécharge un fond de carte pour la carte de droite
+fond_carte_zoom <- get_tiles(zoom_boite, provider = "Stamen.Terrain", 
+                             zoom = 10, crop = TRUE) 
+
+save(n_hex, nom_centre_zoom, zoom_centre, zoom_boite, grille_zoom, 
+     fond_carte_zoom, file = "data/elements_carte_zoom.rds")
+
+# On était restés en mode interactif, on repasse en mode statique pour les 
+# cartes
+tmap_mode("plot")
+
+# On génère la carte de droite
+carte_zoom <- tm_shape(fond_carte_zoom) + 
+  tm_rgb() +
+  tm_shape(grille_zoom) +
+  tm_borders() +
+  tm_shape(zoom_boite) + 
+  tm_borders(col = "red") +
+  tm_layout(frame = FALSE,
+            main.title = paste("Zoom sur la zone de", nom_centre_zoom),
+            main.title.size = taille_titres_cartes) +
+  tm_credits(get_credit("Stamen.Toner"),
+             bg.color = "white",
+             align = "right",
+             position = c("right", "BOTTOM"))
+save(carte_zoom, zoom_boite, file = "data/carte_zoom.rds")
+}
+
+
+## Carte de gauche : simple à réaliser mais hexagones non visibles -------------
+load("data/contour_mada.rds")
+carte_grille <- tm_shape(contour_mada) +
+  tm_polygons(col = "grey") + 
+  tm_shape(zoom_boite) +
+  tm_borders(col = "red") +
+  tm_layout(frame = FALSE) +
+  tm_layout(main.title = paste("Découpage en", n_hex,
+                               "hexagones de", taille_hex, "km2"),
+            main.title.size = taille_titres_cartes)
+
+
+```
+
+## Récupération des données pour le maillage
+
+``` {r}
+#| eval: false
+
+
+if (file.exists("data/grille_mada_donnees_raster.rds")) {
+  load("data/grille_mada_donnees_raster.rds")
+} else {
   
   # Traitement des données satellitaires avec {mapme.bidiversity}---------------
   
@@ -97,86 +192,9 @@ if (file.exists("data/grille_mada_donnees_raster.rds")) {
   # Sauvegarde du résultat
   save(grille_mada, file = "data_s3/grille_mada_donnees_raster.rds")
 }
-```
-
-Le maillage est trop fin pour être visible à l'échelle du pays, mais on peut l'observer en zoomant sur une zone spécifique.
-
-```{r Carte grille mada}
-
-
-sf_use_s2(TRUE) 
-
-# On compte le nombre d'hexagones
-n_hex <- nrow(grille_mada)
-# Carte pour visualiser le résultat ------------------------------------------
-
-if (file.exists("data/carte_zoom.rds")) {
-  load("data/carte_zoom.rds")
-} else {
-## Carte de droite : zoom sur une zone spécifique-----------------------------
-# On part d'un dataframe contenant une adresse
-nom_centre_zoom <- "Maroantsetra"
-zoom_centre <- data.frame(address = nom_centre_zoom) %>%
-  geocode(address, method = "osm") %>% # on retrouve sa localisation xy
-  select(long, lat) %>% # on ne garde que le xy
-  as.numeric() %>% # qu'on passe en format numérique attendu par st_point
-  st_point() %>% # On le spécifie en point
-  st_sfc(crs = "EPSG:4326") 
-
-# On crée une boîte de 100km 
-zoom_boite <- zoom_centre %>% # On repart du centre
-  st_buffer(dist = 50000) %>% # On crée un cercle de 50km de rayon
-  st_make_grid(n = 1) 
-
-# On filtre les alvéoles pour ne garder que celles qui sont dans le zoom
-grille_zoom <- st_intersection(grille_mada, zoom_boite)
-
-# On télécharge un fond de carte pour la carte de droite
-fond_carte_zoom <- get_tiles(zoom_boite, provider = "Stamen.Terrain", 
-                             zoom = 10, crop = TRUE) 
-
-save(n_hex, nom_centre_zoom, zoom_centre, zoom_boite, grille_zoom, 
-     fond_carte_zoom, file = "data_s3/elements_carte_zoom.rds")
-
-# On était restés en mode interactif, on repasse en mode statique pour les 
-# cartes
-tmap_mode("plot")
-
-# On génère la carte de droite
-carte_zoom <- tm_shape(fond_carte_zoom) + 
-  tm_rgb() +
-  tm_shape(grille_zoom) +
-  tm_borders() +
-  tm_shape(zoom_boite) + 
-  tm_borders(col = "red") +
-  tm_layout(frame = FALSE,
-            main.title = paste("Zoom sur la zone de", nom_centre_zoom),
-            main.title.size = taille_titres_cartes) +
-  tm_credits(get_credit("Stamen.Toner"),
-             bg.color = "white",
-             align = "right",
-             position = c("right", "BOTTOM"))
-save(carte_zoom, file = "data/carte_zoom.rds")
-}
-
-
-## Carte de gauche : simple à réaliser mais hexagones non visibles -------------
-load("data/contour_mada.rds")
-carte_grille <- tm_shape(contour_mada) +
-  tm_polygons(col = "grey") + 
-  tm_shape(zoom_boite) +
-  tm_borders(col = "red") +
-  tm_layout(frame = FALSE) +
-  tm_layout(main.title = paste("Découpage en", n_hex,
-                               "hexagones de", taille_hex, "km2"),
-            main.title.size = taille_titres_cartes)
-
-
 
 # Assemblage des deux cartes ---------------------------------------------------
 tmap_arrange(carte_grille, carte_zoom, ncol = 2) 
-
-
 
 ```
 
@@ -288,7 +306,7 @@ tmap_arrange(carte_acces, carte_sol,
 
 Ces approches permettent de mieux capter la variabilité des relations entre les variables spatiales. Elle est utile si les estimations qu'on va ensuite réaliser se font aussi au niveau des aires.
 
-### Croisement des données d'aires protégées et satellitaires
+## Croisement des données d'aires protégées et satellitaires
 
 On peut maintenant associer les données d'aires protégées aux hexagones afin de les croiser avec les indicateurs issus des données satellitaires déjà calculés pour ces hexagones.
 
@@ -340,3 +358,4 @@ tm_shape(grille_mada_summary_AP) +
             legend.outside = FALSE)
 ```
 
+La suite de l'analyse au chapitre @sec-matching_mailles

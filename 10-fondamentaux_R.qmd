@@ -1,14 +1,21 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Fondamentaux pour l'utilisation de R {#sec-fondamentaux}
 
-Ressources en français :
+Il existe de plusieurs ressources en français pour apprendre à utiliser R. Nous vous recommandons en particulier :
 
 -   [Introduction à R et au Tidyverse](https://juba.github.io/tidyverse/index.html)[@barnier2022]
 -   [utilitR: documentation collaborative sur R de l'INSEE](https://www.book.utilitr.org/index.html) [@utilitr:2022]
 
-Ressources en anglais Les bonnes ressources anglophones gratuites sont très nombreuses, très facile à trouver sur le Web. Les grands classiques est R for data science, de Grolemund et Wickham [-@grolemund2022]. On se focalise ici avec elles qui sont le plus en lien avec nos sujets.
+Les bonnes ressources anglophones gratuites sont très nombreuses, très facile à trouver sur le Web. Les grands classiques est R for data science, de Grolemund et Wickham [-@grolemund2022]. On se focalise ici avec deux autres qui sont le plus en lien avec nos sujets :
 
 -   [Geocomputation with R, a book on geographic data analysis, visualization and modeling](https://geocompr.robinlovelace.net/) [@lovelace2022].
 -   [Mapme.biodiversity: Efficient Monitoring of Global Biodiversity Portfolios](https://mapme-initiative.github.io/mapme.biodiversity/index.html) [@görgen2022]
+
+N'hésitez pas à chercher directement sur le Web en cas de problème. Vous serez souvent conduits vers les forums stackoverflow ou RStudio, qui sont aussi des ressources très précieuses pour résoudre des problèmes très spécifiques.
 
 ## Installation
 
@@ -32,18 +39,119 @@ Voir [cette page](https://juba.github.io) pour un topo sur les imports. \[#TODO:
 
 On se focalise ici sur quelques aspects qui peuvent être requis pour la manipulation du code et à la marge. Points à traiter :
 
--   \<- / =
--   %\>%
--   fonctions
+-   Le signe `<-` correspond à l'assignation d'une valeur à une variable. Il est presque équivalent à `=`, avec quelques différences dans certaines circonstances particulières, qui fait qu'on privilégie toujours `<-`.
+
+```{r}
+# Ce qui suit un dièze n'est pas exécuté. On appelle ça un commentaire.
+
+# On commence par faire une opération simple
+3 + 4
+
+# Ce qui équivaut à :
+a <- 3
+b <- 4
+a + b
+
+# Et on peut également stocker le résultat dans une nouvelle variable 
+c <- a + b
+c
+```
+
+-   R est constitué de fonctions. De nombreuses fonctions prédéfinies sont contenues dans la base de R ou dans des packages qu'on ajoute (qu'on verra plus tard).  La meilleure manière de comprendre ce qu'est une fonction est d'en créer une soi même. 
+
+```{r}
+# On crée une fonction "ajoute" qui prend deux paramètres. 
+# x est Un premier et y est celui qu'on ajoute
+ajoute <- function(x, y) {
+  x + y
+}
+
+# On peut maintenant utiliser cette foncction
+ajoute(3, 4)
+
+# On peut effectuer les mêmes opérations. Les valeurs a et b sont encore 
+# en mémoire, donc on peut faire :
+ajoute(a, b)
+
+c <- ajoute(a, b)
+c
+ajoute(c, a)
+```
+
+Les fonctions disposent d'une documentation qu'on peut explorer en utilisant l'aide.
+
+> Exercice pratique sur la recherche d 'aide.
+
+- Le signe `%>%` est un "tuyau". On peut le lire à haute voix comme "ensuite". Par exemple :
+
+```{r}
+library(tidyverse)
+
+d <- a %>%
+  ajoute(b) %>%
+  ajoute(c)
+
+d
+```
+
+
 -   na.rm : Les valeurs manquantes, notées NA dans R (certaines peuvent avoir pour valeur NaN). On utilise na.rm pour les éluder dans les opérations simples.
--   verbes : select, filter, mutate, group_by / summarise
+
+
+```{r}
+# On commence par créer les variables (les colonnes du tableau)
+noms <- c("John", "Jack", "Cindy", "Samantha")
+sexe <- c("homme", "homme", "femme", "femme")
+ages <- c(42, 57, 24, NA)
+poids <- c(87, 73, NA, NA)
+tailles <- c(174, 198, 192, 164)
+
+# On les rassemble dans un tableau 
+ma_table <- data.frame(noms, sexe, ages, poids, tailles)
+
+# On peut faire une moyenne sur les tailles car on a toutes les variables
+mean(ma_table$tailles)
+sum(ma_table$tailles)
+# Mais la moyenne ne fonctionne pas immédiatement sur les poids ou les âges
+# car il manque des variables
+mean(ma_table$ages)
+sum(ma_table$poids)
+
+# Il faut préciser qu'il faut omettre les variables manquantes
+mean(ma_table$ages, na.rm = TRUE)
+sum(ma_table$poids, na.rm = TRUE)
+
+```
+
+
+-   verbes :
+
+    - select : choisir des colonnes 
+    - filter : choisir des lignes
+    - mutate : modifier des valeurs
+    - group_by : variables pour des tris 
+    - créer des filtres : summarise
+
+```{r}
+# Un exemple qui combine ces opérations
+ma_table %>%
+  filter(!is.na(ages)) %>%
+  select(sexe, ages, tailles, poids) %>%
+  group_by(sexe) %>%
+  summarise(nb_pers = n(),
+            somme_poids = sum(poids, na.rm = TRUE),
+            taille_max = max(tailles, na.rm = TRUE),
+            age_moy = mean(ages, na.rm = TRUE))
+  
+```
+
 
 Deux opérations particulière requièrent une étude plus approfondies
 
--   Jointures
--   Pivots
--   map
--   unnest
+-   Jointures : fusionner deux tableaux par une variable d'identification ("clé")
+-   Pivots : passer un tableau de long en large
+-   map : appliquer des opérations successives
+-   unnest : déplier des listes imbriquées
 
 Un point important est relatif aux types des variables : numérique, catégorielles, textes, dates, spatiales... En général, les opérations ne peuvent concerner que des variables du même type. Les fonctions sont souvent contraignantes quant aux types des variables qu'elles prennent comme arguments.
 
@@ -51,4 +159,39 @@ Pour une analyse plus approfondie, voir juba.
 
 ## Produire des cartes simples avec R
 
+```{r}
+# Les librairies requises 
+library(sf) # pour traiter des données spatiales
+library(tmap) # pour faire des cartes
+
+# Charger une carte des 
+carte <- st_read("data/Vahatra/Vahatra98AP.shp") %>%
+  st_make_valid()
+
+# On projette la carte
+tm_shape(carte) +
+  tm_polygons(col = "cat__iucn") +
+  tmap_options(check.and.fix = TRUE) + # Parce qu'on a quelques erreurs topo
+  tm_layout(legend.outside = TRUE)
+
+```
+
+
 ## Produire des graphiques avec R
+
+On utilise le package ggplot, avec la syntaxe suivante.
+
+```{r}
+# On 
+carte %>%
+  ggplot(aes(x = cat__iucn, y = hectares)) +
+  geom_col()
+
+carte %>%
+  ggplot(aes(x = cat__iucn, y = hectares)) +
+  geom_col() +
+  theme(axis.text.x.bottom =  element_text(angle = 45, hjust = 1))
+
+
+```
+

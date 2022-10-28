@@ -100,9 +100,9 @@ AP_Vahatra <- AP_Vahatra %>%
          date_creationA = map(date_creation, 1), # La 1ère date
          date_creationB = map(date_creation, 2)) %>% # Si 2 dates, la seconde
   # On traduit les mois en anglais pour une conversion au format date
-  mutate(across(c("date_creationA", "date_creationB"), trad_dates)) %>%
-  mutate(across(c("date_creationA", "date_creationB"), complete_liste_dates)) %>%
-  mutate(across(c("date_creationA", "date_creationB"), dmy)) %>%
+  mutate(across(c(date_creationA, date_creationB), trad_dates)) %>%
+  mutate(across(c(date_creationA, date_creationB), complete_liste_dates)) %>%
+  mutate(across(c(date_creationA, date_creationB), dmy)) %>%
   mutate(date_creation = case_when(is.na(date_creationB) ~ date_creationA,
                                     date_creationA > date_creationB ~ date_creationB,
                                     date_creationA <= date_creationB ~ date_creationA),

@@ -23,6 +23,7 @@ book:
       chapters: 
         - 05-assignation_aleatoire.qmd
         - 06-matching_AP.qmd
+        - 06b-matching_mailles.qmd
         - 07-avant_apres.qmd
         - 08-diff_in_diff.qmd
     - part: "Ressources"

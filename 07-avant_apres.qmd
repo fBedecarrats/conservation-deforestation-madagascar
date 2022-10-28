@@ -5,9 +5,15 @@ editor_options:
 ---
 # Comparaison avant-après
 
-On va comparer pour chaque AP les taux de déforestation entre les années qui précèdent la création de l'aire protégée et les années qui suivent la création. Les données utilisées sont celles de TMF, pour lesqueles on dispoe d'un historique allant de 1990 à 2020. On va donc se concentrer sur les aires protégées dont la création est survenue entre ces dates, en prenant un peu de marge pour avoir des données avant et après.
+L'intuition initiale de cette stratégie est que **le meilleur contrefactuel de l'AP est elle-même avant la mise en place du statut**. 
 
-Pour rappel, on représente ici les dates de création des aires protégées.
+Ainsi, nous allons comparer pour chaque AP, les taux de déforestation entre les années qui précèdent la création de l'AP et les années qui suivent la création. 
+
+En revanche, comme vu dans la partie théorique, cette approche repose sur **l'hypothèse que la seule différence entre les périodes est la mise en place de la politique**. 
+
+Autrement dit, le seul facteur entre ces différentes périodes qui impactent le taux de dégradation des forêts est la mise en place de l'AP. 
+
+Ci-dessous, un tableau représentant les dates de création des aires protégées. 
 
 ```{r}
 library(tidyverse)
@@ -33,7 +39,21 @@ AP_Vahatra %>%
   ggtitle("Dates de création des AP et de disponibilité\ndes données TMF")
 ```
 
-Afin de disposer de suffisamment d'historique avant et après la création des AP, on va sélectionner celles créées à partir de 1995 et jusqu'en 2015 (plage en jaune ci-dessus). Cela correspond à 72 aires protégées sur les 98 que contenaient la base Vahatra. Pour ces aires protégées, on va normaliser les dates pour les exprimées non plus en année calendaires (2002, 2003, 2004...), Mais en années par rapport à la date de création de l'aire protégée (-3, -2, -1, 0, 1, 2...).
+Les données mobilisées sont celles de TMF pour lesquelles on dispose d'un historique allant de 1990 à 2020. On se concentre sur les aires protégées dont le statut a été décrété entre ces deux dates. 
+
+En revanche, afin d'avoir non pas un unique taux de dégradation du couvert forestier mais une tendance (i.e l'évolution) de celui-ci, nous restreignons notre échantillon aux AP dont le statut a été octroyé entre 1995 et 2015. 
+
+En effet, si on se focalise uniquement sur le taux de déforestation juste avant et juste après, il se peut qu'un évènement ait impacté le taux de dégradation et ne représente pas réellement la dégradation du couvert forestier dans l'AP. 
+
+Par exemple, si en t-1, il y a eu un énorme feu lié à un évènement naturel, alors nous risquons de surestimer la perte de couvert forestier avant et donc d'inférer à l'AP, un impact beaucoup plus bénéfique que ce qu'il est réellement. 
+
+Notre échantillon final contient 72 AP (sur les 98 initiales de la base de données Vahatra _ en jaune sur le graphique). 
+
+Nous normalisons les dates d'octroi du statut d'AP c'est à dire qu'on transforme les années calendaires (1995, 1996,...) en année relative à la mise en place de l'AP. 
+
+Par exemple, si une AP est créée en 2000 (qui correspondra à l'année 0), toutes les autres années seront exprimées relativement à celle-ci et donc, 1995 sera égale à -5 et 2005 à 5. 
+
+Cette transformation nous permet de pouvoir visualiser les données. Dans le tableau suivant, nous avons la moyenne annuelle de la surface (exprimée en hectare et en pourcentage) de l'AP qui a été dégradé sur les 5 années précédents et suivants la mise en place de l'AP. 
 
 ```{r}
 # Une fonction pour créer un jeu avec des dates normalisées
@@ -84,7 +104,8 @@ gt(moy_deg_avap) %>%
                     "Calculs des auteurs."))
 ```
 
-D'après ces éléments, il semble que la déforestation augmente dans les aires protégées après l'instauration de la protection.
+
+D'après le tableau ci-dessous, quelles conclusions pouvons-nous tirer ? 
 
 On peut aussi visualiser cette information sur les 10 plus grandes aires.
 

@@ -236,8 +236,8 @@ tmf_vahatra_degrad <- read_excel(tableur_tmf,
   select(nom, starts_with("TMF")) # Onn ne garde que les feuilles pertinentes
 
 AP_Vahatra <- AP_Vahatra %>%
-  left_join(tmf_vahatra_degrad, by = "nom")
-  # left_join(tmf_vahatra_defor, by = "nom") %>%
+  left_join(tmf_vahatra_degrad, by = "nom") %>%
+  left_join(tmf_vahatra_defor, by = "nom") 
 
 
 TMF_ratios <- AP_Vahatra %>%
@@ -256,6 +256,9 @@ TMF_ratios <- AP_Vahatra %>%
   select(nom, variable, surface_ratio) %>%
   pivot_wider(names_from = variable, values_from = surface_ratio) %>%
   select(nom, starts_with("TMF"))
+
+AP_Vahatra <- AP_Vahatra %>%
+  left_join(TMF_ratios, by = "nom")
 
 save(AP_Vahatra, file = "data/ch3_AP_Vahatra.rds")
 ```
