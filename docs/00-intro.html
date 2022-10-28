@@ -243,12 +243,17 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-avant_apres.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></a>
+  <a href="./06b-matching_mailles.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appariement de mailles dans/hors aires protégées</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-diff_in_diff.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Doubles différences</span></a>
+  <a href="./07-avant_apres.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-diff_in_diff.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Doubles différences</span></a>
   </div>
 </li>
       </ul>
@@ -268,7 +273,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-fondamentaux_R.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></a>
+  <a href="./10-fondamentaux_R.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></a>
   </div>
 </li>
       </ul>
@@ -282,7 +287,11 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#outils-utilisés" id="toc-outils-utilisés" class="nav-link active" data-scroll-target="#outils-utilisés">Outils utilisés</a>
+  <li><a href="#démarche" id="toc-démarche" class="nav-link active" data-scroll-target="#démarche">Démarche</a>
+  <ul class="collapse">
+  <li><a href="#améliorations-à-venir" id="toc-améliorations-à-venir" class="nav-link" data-scroll-target="#améliorations-à-venir">Améliorations à venir</a></li>
+  </ul></li>
+  <li><a href="#outils-utilisés" id="toc-outils-utilisés" class="nav-link" data-scroll-target="#outils-utilisés">Outils utilisés</a>
   <ul class="collapse">
   <li><a href="#notebook-quarto" id="toc-notebook-quarto" class="nav-link" data-scroll-target="#notebook-quarto">Notebook Quarto</a></li>
   <li><a href="#mapme.biodiversity" id="toc-mapme.biodiversity" class="nav-link" data-scroll-target="#mapme.biodiversity">Mapme.biodiversity</a></li>
@@ -313,6 +322,28 @@ div.csl-indent {
 
 </header>
 
+<section id="démarche" class="level2">
+<h2 class="anchored" data-anchor-id="démarche">Démarche</h2>
+<p>Il s’agit d’un support de formation conçu pour initier des étudiants et jeunes chercheurs non familier de l’économétrie spatiales, avec un objet très concret. Ce document a été élaboré avec les priorités suivantes :</p>
+<ul>
+<li>Familiariser avec la démarche scientifique : recherche bibliographique, revue d’articles économétriques ;</li>
+<li>Formulaion d’une question de recherche relevant de l’évaluation économétrique et recherche des donnéees permettant d’y répondre ;</li>
+<li>Compréhension des différentes approches pour constituer un contrefactuel : randomisation, appariement, comparaison avant-après, différence de différences ;</li>
+<li>Familiarisation avec l’outil de traitement statistique R.</li>
+</ul>
+<p>D’autres aspects ont volontairement été placés au second plan, en particulier la caractérisartion trop technique des sources et les subtilités associés aux modèles économétriques.</p>
+<section id="améliorations-à-venir" class="level3">
+<h3 class="anchored" data-anchor-id="améliorations-à-venir">Améliorations à venir</h3>
+<ul>
+<li>Remplacer la variable de temps de parcours à une ville d’au moins 5000 habitants par une variable moins exposée à l’endogénéité, soit :
+<ul>
+<li>La distance à une ville d’au moins 5000 habitants en 2000 ; ou</li>
+<li>La distance euclidienne à une ville, sans tenir compte du réseau de transport.</li>
+</ul></li>
+<li>Ajouter de la discontinuité de la régression</li>
+</ul>
+</section>
+</section>
 <section id="outils-utilisés" class="level2">
 <h2 class="anchored" data-anchor-id="outils-utilisés">Outils utilisés</h2>
 <section id="notebook-quarto" class="level3">

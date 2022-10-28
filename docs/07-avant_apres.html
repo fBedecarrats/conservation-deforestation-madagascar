@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.2.174">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Impact des aires protégées sur la déforestation : guide de formation pratique - 8&nbsp; Comparaison avant-après</title>
+<title>Impact des aires protégées sur la déforestation : guide de formation pratique - 9&nbsp; Comparaison avant-après</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./08-diff_in_diff.html" rel="next">
-<link href="./06-matching_AP.html" rel="prev">
+<link href="./06b-matching_mailles.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -133,7 +133,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -224,12 +224,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-avant_apres.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></a>
+  <a href="./06b-matching_mailles.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appariement de mailles dans/hors aires protégées</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-diff_in_diff.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Doubles différences</span></a>
+  <a href="./07-avant_apres.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-diff_in_diff.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Doubles différences</span></a>
   </div>
 </li>
       </ul>
@@ -249,7 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-fondamentaux_R.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></a>
+  <a href="./10-fondamentaux_R.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Fondamentaux pour l’utilisation de R</span></a>
   </div>
 </li>
       </ul>
@@ -266,7 +271,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Comparaison avant-après</span></h1>
 </div>
 
 
@@ -274,14 +279,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
+  
     
   </div>
   
 
 </header>
 
-<p>On va comparer pour chaque AP les taux de déforestation entre les années qui précèdent la création de l’aire protégée et les années qui suivent la création. Les données utilisées sont celles de TMF, pour lesqueles on dispoe d’un historique allant de 1990 à 2020. On va donc se concentrer sur les aires protégées dont la création est survenue entre ces dates, en prenant un peu de marge pour avoir des données avant et après.</p>
-<p>Pour rappel, on représente ici les dates de création des aires protégées.</p>
+<p>L’intuition initiale de cette stratégie est que <strong>le meilleur contrefactuel de l’AP est elle-même avant la mise en place du statut</strong>.</p>
+<p>Ainsi, nous allons comparer pour chaque AP, les taux de déforestation entre les années qui précèdent la création de l’AP et les années qui suivent la création.</p>
+<p>En revanche, comme vu dans la partie théorique, cette approche repose sur <strong>l’hypothèse que la seule différence entre les périodes est la mise en place de la politique</strong>.</p>
+<p>Autrement dit, le seul facteur entre ces différentes périodes qui impactent le taux de dégradation des forêts est la mise en place de l’AP.</p>
+<p>Ci-dessous, un tableau représentant les dates de création des aires protégées.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -289,27 +298,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># On reprend les données telles que préparées au chapitre 3</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">an_creation =</span> <span class="fu">year</span>(date_creation)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, an_creation) <span class="sc">%&gt;%</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> an_creation)) <span class="sc">+</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="at">xmin =</span> <span class="dv">1995</span>, <span class="at">xmax =</span> <span class="dv">2016</span>, <span class="at">ymin =</span> <span class="dv">0</span>, </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">ymax =</span> <span class="dv">54</span>, <span class="at">fill =</span> <span class="st">"yellow"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">2020</span>)) <span class="sc">+</span> </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>), <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="cn">NA</span>, <span class="dv">53</span>) <span class="sc">+</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Dates de création des AP et de disponibilité</span><span class="sc">\n</span><span class="st">des données TMF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span><span class="dv">999</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On reprend les données telles que préparées au chapitre 3</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">an_creation =</span> <span class="fu">year</span>(date_creation)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, an_creation) <span class="sc">%&gt;%</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> an_creation)) <span class="sc">+</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="at">xmin =</span> <span class="dv">1995</span>, <span class="at">xmax =</span> <span class="dv">2016</span>, <span class="at">ymin =</span> <span class="dv">0</span>, </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">ymax =</span> <span class="dv">54</span>, <span class="at">fill =</span> <span class="st">"yellow"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">2020</span>)) <span class="sc">+</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">1990</span>, <span class="dv">2020</span>), <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="cn">NA</span>, <span class="dv">53</span>) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Dates de création des AP et de disponibilité</span><span class="sc">\n</span><span class="st">des données TMF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="07-avant_apres_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Afin de disposer de suffisamment d’historique avant et après la création des AP, on va sélectionner celles créées à partir de 1995 et jusqu’en 2015 (plage en jaune ci-dessus). Cela correspond à 72 aires protégées sur les 98 que contenaient la base Vahatra. Pour ces aires protégées, on va normaliser les dates pour les exprimées non plus en année calendaires (2002, 2003, 2004…), Mais en années par rapport à la date de création de l’aire protégée (-3, -2, -1, 0, 1, 2…).</p>
+<p>Les données mobilisées sont celles de TMF pour lesquelles on dispose d’un historique allant de 1990 à 2020. On se concentre sur les aires protégées dont le statut a été décrété entre ces deux dates.</p>
+<p>En revanche, afin d’avoir non pas un unique taux de dégradation du couvert forestier mais une tendance (i.e l’évolution) de celui-ci, nous restreignons notre échantillon aux AP dont le statut a été octroyé entre 1995 et 2015.</p>
+<p>En effet, si on se focalise uniquement sur le taux de déforestation juste avant et juste après, il se peut qu’un évènement ait impacté le taux de dégradation et ne représente pas réellement la dégradation du couvert forestier dans l’AP.</p>
+<p>Par exemple, si en t-1, il y a eu un énorme feu lié à un évènement naturel, alors nous risquons de surestimer la perte de couvert forestier avant et donc d’inférer à l’AP, un impact beaucoup plus bénéfique que ce qu’il est réellement.</p>
+<p>Notre échantillon final contient 72 AP (sur les 98 initiales de la base de données Vahatra _ en jaune sur le graphique).</p>
+<p>Nous normalisons les dates d’octroi du statut d’AP c’est à dire qu’on transforme les années calendaires (1995, 1996,…) en année relative à la mise en place de l’AP.</p>
+<p>Par exemple, si une AP est créée en 2000 (qui correspondra à l’année 0), toutes les autres années seront exprimées relativement à celle-ci et donc, 1995 sera égale à -5 et 2005 à 5.</p>
+<p>Cette transformation nous permet de pouvoir visualiser les données. Dans le tableau suivant, nous avons la moyenne annuelle de la surface (exprimée en hectare et en pourcentage) de l’AP qui a été dégradé sur les 5 années précédents et suivants la mise en place de l’AP.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -362,12 +380,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </details>
 <div class="cell-output-display">
 
-<div id="jdgafxkwkb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="rhtfjhzphm" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#jdgafxkwkb) .gt_table {
+:where(#rhtfjhzphm) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -392,7 +410,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_heading {
+:where(#rhtfjhzphm) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -404,7 +422,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_title {
+:where(#rhtfjhzphm) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -416,7 +434,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-:where(#jdgafxkwkb) .gt_subtitle {
+:where(#rhtfjhzphm) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -428,13 +446,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-:where(#jdgafxkwkb) .gt_bottom_border {
+:where(#rhtfjhzphm) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_col_headings {
+:where(#rhtfjhzphm) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -449,7 +467,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_col_heading {
+:where(#rhtfjhzphm) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -469,7 +487,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#jdgafxkwkb) .gt_column_spanner_outer {
+:where(#rhtfjhzphm) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -481,15 +499,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-:where(#jdgafxkwkb) .gt_column_spanner_outer:first-child {
+:where(#rhtfjhzphm) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#jdgafxkwkb) .gt_column_spanner_outer:last-child {
+:where(#rhtfjhzphm) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#jdgafxkwkb) .gt_column_spanner {
+:where(#rhtfjhzphm) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -501,7 +519,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-:where(#jdgafxkwkb) .gt_group_heading {
+:where(#rhtfjhzphm) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -526,7 +544,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#jdgafxkwkb) .gt_empty_group_heading {
+:where(#rhtfjhzphm) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -541,15 +559,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#jdgafxkwkb) .gt_from_md > :first-child {
+:where(#rhtfjhzphm) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#jdgafxkwkb) .gt_from_md > :last-child {
+:where(#rhtfjhzphm) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#jdgafxkwkb) .gt_row {
+:where(#rhtfjhzphm) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -568,7 +586,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#jdgafxkwkb) .gt_stub {
+:where(#rhtfjhzphm) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -581,7 +599,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#jdgafxkwkb) .gt_stub_row_group {
+:where(#rhtfjhzphm) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -595,11 +613,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-:where(#jdgafxkwkb) .gt_row_group_first td {
+:where(#rhtfjhzphm) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#jdgafxkwkb) .gt_summary_row {
+:where(#rhtfjhzphm) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -609,16 +627,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#jdgafxkwkb) .gt_first_summary_row {
+:where(#rhtfjhzphm) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_first_summary_row.thick {
+:where(#rhtfjhzphm) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#jdgafxkwkb) .gt_last_summary_row {
+:where(#rhtfjhzphm) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -628,7 +646,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_grand_summary_row {
+:where(#rhtfjhzphm) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -638,7 +656,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#jdgafxkwkb) .gt_first_grand_summary_row {
+:where(#rhtfjhzphm) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -648,11 +666,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_striped {
+:where(#rhtfjhzphm) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#jdgafxkwkb) .gt_table_body {
+:where(#rhtfjhzphm) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -661,7 +679,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_footnotes {
+:where(#rhtfjhzphm) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -675,7 +693,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_footnote {
+:where(#rhtfjhzphm) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -684,7 +702,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#jdgafxkwkb) .gt_sourcenotes {
+:where(#rhtfjhzphm) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -698,7 +716,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#jdgafxkwkb) .gt_sourcenote {
+:where(#rhtfjhzphm) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -706,64 +724,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#jdgafxkwkb) .gt_left {
+:where(#rhtfjhzphm) .gt_left {
   text-align: left;
 }
 
-:where(#jdgafxkwkb) .gt_center {
+:where(#rhtfjhzphm) .gt_center {
   text-align: center;
 }
 
-:where(#jdgafxkwkb) .gt_right {
+:where(#rhtfjhzphm) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#jdgafxkwkb) .gt_font_normal {
+:where(#rhtfjhzphm) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#jdgafxkwkb) .gt_font_bold {
+:where(#rhtfjhzphm) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#jdgafxkwkb) .gt_font_italic {
+:where(#rhtfjhzphm) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#jdgafxkwkb) .gt_super {
+:where(#rhtfjhzphm) .gt_super {
   font-size: 65%;
 }
 
-:where(#jdgafxkwkb) .gt_footnote_marks {
+:where(#rhtfjhzphm) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#jdgafxkwkb) .gt_asterisk {
+:where(#rhtfjhzphm) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#jdgafxkwkb) .gt_indent_1 {
+:where(#rhtfjhzphm) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#jdgafxkwkb) .gt_indent_2 {
+:where(#rhtfjhzphm) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#jdgafxkwkb) .gt_indent_3 {
+:where(#rhtfjhzphm) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#jdgafxkwkb) .gt_indent_4 {
+:where(#rhtfjhzphm) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#jdgafxkwkb) .gt_indent_5 {
+:where(#rhtfjhzphm) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -802,7 +820,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p>D’après ces éléments, il semble que la déforestation augmente dans les aires protégées après l’instauration de la protection.</p>
+<p>D’après le tableau ci-dessous, quelles conclusions pouvons-nous tirer ?</p>
 <p>On peut aussi visualiser cette information sur les 10 plus grandes aires.</p>
 <div class="cell">
 <details>
@@ -862,7 +880,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -898,36 +933,54 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-matching_AP.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Méthode d’appariement</span></span>
+      <a href="./06b-matching_mailles.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Appariement de mailles dans/hors aires protégées</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./08-diff_in_diff.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Doubles différences</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Doubles différences</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
