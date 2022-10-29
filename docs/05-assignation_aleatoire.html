@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.174">
+<meta name="generator" content="quarto-1.1.189">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -83,6 +83,25 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 
@@ -279,7 +298,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
@@ -289,85 +307,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <p><strong>ATTENTION :</strong> Il va de soi que les AP malgaches n’ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait “comme si”, pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d’une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.</p>
 </blockquote>
-<p>Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types “multi-polygones”. Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses agrégées, on va agrégéer les statistiques d’AP_poly afin d’avoir pour chaque variable une valeur par aire protégée.</p>
+<p>Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types “multi-polygones”. Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses par aire protégée, on va agréger les statistiques d’AP_poly afin d’avoir pour chaque variable une valeur par aire protégée.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># de types "multi-polygones". Certaines de ces aires protégées étaient en effet </span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># composées de plusieurs polygones disjoints. Ces polygones disjoints ont été </span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># scindés pour être traités séparément dans le jeu de données AP_poly. Avant </span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># de repasser sur des analyses agrégées, on va agrégéer les statistiques </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge les librairies utiles pour cette analyse</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Facilite la manipulation de données</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Aide à formater de jolis tableaux de rendu</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Aide à formater les rendus de régressions</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># idem</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour les données spatiales</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour gérer des dates</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span><span class="dv">999</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>rct_AP_Mada <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Déforestation 1996-2006 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Forest loss (ha) between 1996-2006 (percent loss)</span><span class="st">`</span>,</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Déforestation 2006-2016 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Forest loss (ha) between 2006-2016 (percent loss)</span><span class="st">`</span>,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> hectares) <span class="sc">%&gt;%</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Controle"</span>),</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Forest cover (ha) in 1996</span><span class="st">`</span> <span class="sc">/</span> </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Déforestation 1996-2016 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>           (<span class="st">`</span><span class="at">Forest loss (ha) between 1996-2006 (absolute loss)</span><span class="st">`</span> <span class="sc">+</span> </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">Forest loss (ha) between 2006-2016 (absolute loss)</span><span class="st">`</span>) <span class="sc">/</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Forest cover (ha) in 1996</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">100</span>)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># On fait une série de tests de comparaison de moyenne</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>t_tests <span class="ot">&lt;-</span> rct_AP_Mada <span class="sc">%&gt;%</span> </span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On applique aux variables de déforestation, couvert en 96 et taille</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">ends_with</span>(<span class="st">"(%)"</span>) <span class="sc">|</span> <span class="fu">ends_with</span>(<span class="st">"(ha)"</span>),<span class="co"># toutes finissent ainsi</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span> <span class="fu">t.test</span>(.[Groupe <span class="sc">==</span> <span class="st">"Controle"</span>], <span class="co"># on applique un t.test</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                            .[Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>])<span class="sc">$</span>p.value)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="st">"t-test"</span>)</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>equilibre_avant <span class="ot">&lt;-</span> rct_AP_Mada <span class="sc">%&gt;%</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Nombre d'aires</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(),</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Sans forêt</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span>)), </span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>),</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mean</span>(<span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(t_tests) <span class="sc">%&gt;%</span> <span class="co"># On colle tous les t-tests </span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">!</span>Groupe, <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>))) <span class="sc">%&gt;%</span><span class="co"># arrondit tout sauf colonne "Groupe"</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"Déforestation"</span>))<span class="co"># On ne garde que les t-tests de baseline</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Ce qui suit est une série d'opération pour formater le rendu en tableau</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>equilibre_avant <span class="sc">%&gt;%</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">%&gt;%</span> <span class="co"># On transpose lignes &lt;=&gt; colonnes</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> <span class="co"># La transposition a altéré le format, on remet en tableau</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>() <span class="sc">%&gt;%</span> <span class="co"># On met le nom des lignes en 1° colonne</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "Truc pour renommer avec le contenu de la première ligne</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">colnames&lt;-</span><span class="st">`</span> (<span class="fu">filter</span>(., <span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">!=</span> <span class="dv">1</span>)<span class="sc">%&gt;%</span> <span class="co"># Enlève la 1° ligne qui est maintenant en entête</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Equilibre des variables avant intervention"</span>,</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était une RCT)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et Carvalho et al. 2018"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On charge les librairies utiles pour cette analyse</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Facilite la manipulation de données</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Aide à formater de jolis tableaux de rendu</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co"># Aide à formater les rendus de régressions</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># idem</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour les données spatiales</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour gérer des dates</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span><span class="dv">999</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>rct_AP_Mada <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Déforestation 1996-2006 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Forest loss (ha) between 1996-2006 (percent loss)</span><span class="st">`</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Déforestation 2006-2016 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Forest loss (ha) between 2006-2016 (percent loss)</span><span class="st">`</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> hectares) <span class="sc">%&gt;%</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="fu">ifelse</span>(<span class="fu">year</span>(date_creation) <span class="sc">&lt;</span> <span class="dv">2015</span>, <span class="st">"Traitement"</span>, <span class="st">"Controle"</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Forest cover (ha) in 1996</span><span class="st">`</span> <span class="sc">/</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Déforestation 1996-2016 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>           (<span class="st">`</span><span class="at">Forest loss (ha) between 1996-2006 (absolute loss)</span><span class="st">`</span> <span class="sc">+</span> </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>             <span class="st">`</span><span class="at">Forest loss (ha) between 2006-2016 (absolute loss)</span><span class="st">`</span>) <span class="sc">/</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">Forest cover (ha) in 1996</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># On fait une série de tests de comparaison de moyenne</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>t_tests <span class="ot">&lt;-</span> rct_AP_Mada <span class="sc">%&gt;%</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On applique aux variables de déforestation, couvert en 96 et taille</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">ends_with</span>(<span class="st">"(%)"</span>) <span class="sc">|</span> <span class="fu">ends_with</span>(<span class="st">"(ha)"</span>),<span class="co"># toutes finissent ainsi</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                   <span class="sc">~</span> <span class="fu">t.test</span>(.[Groupe <span class="sc">==</span> <span class="st">"Controle"</span>], <span class="co"># on applique un t.test</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                            .[Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>])<span class="sc">$</span>p.value)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Groupe =</span> <span class="st">"t-test"</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>equilibre_avant <span class="ot">&lt;-</span> rct_AP_Mada <span class="sc">%&gt;%</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Nombre d'aires</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Sans forêt</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span>)), </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>),</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span> <span class="ot">=</span> </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mean</span>(<span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(t_tests) <span class="sc">%&gt;%</span> <span class="co"># On colle tous les t-tests </span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">!</span>Groupe, <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>))) <span class="sc">%&gt;%</span><span class="co"># arrondit tout sauf colonne "Groupe"</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"Déforestation"</span>))<span class="co"># On ne garde que les t-tests de baseline</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Ce qui suit est une série d'opération pour formater le rendu en tableau</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>equilibre_avant <span class="sc">%&gt;%</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">%&gt;%</span> <span class="co"># On transpose lignes &lt;=&gt; colonnes</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> <span class="co"># La transposition a altéré le format, on remet en tableau</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>() <span class="sc">%&gt;%</span> <span class="co"># On met le nom des lignes en 1° colonne</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "Truc pour renommer avec le contenu de la première ligne</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">colnames&lt;-</span><span class="st">`</span> (<span class="fu">filter</span>(., <span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">row_number</span>() <span class="sc">!=</span> <span class="dv">1</span>)<span class="sc">%&gt;%</span> <span class="co"># Enlève la 1° ligne qui est maintenant en entête</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Equilibre des variables avant intervention"</span>,</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"(exercice : </span><span class="sc">\"</span><span class="st">comme si</span><span class="sc">\"</span><span class="st"> c'était une RCT)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et Carvalho et al. 2018"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
-<div id="gqyyeskamm" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="jcerheliqz" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#gqyyeskamm) .gt_table {
+:where(#jcerheliqz) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -392,7 +403,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_heading {
+:where(#jcerheliqz) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -404,7 +415,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_title {
+:where(#jcerheliqz) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -416,7 +427,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-:where(#gqyyeskamm) .gt_subtitle {
+:where(#jcerheliqz) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -428,13 +439,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-:where(#gqyyeskamm) .gt_bottom_border {
+:where(#jcerheliqz) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_col_headings {
+:where(#jcerheliqz) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -449,7 +460,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_col_heading {
+:where(#jcerheliqz) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -469,7 +480,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#gqyyeskamm) .gt_column_spanner_outer {
+:where(#jcerheliqz) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -481,15 +492,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-:where(#gqyyeskamm) .gt_column_spanner_outer:first-child {
+:where(#jcerheliqz) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#gqyyeskamm) .gt_column_spanner_outer:last-child {
+:where(#jcerheliqz) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#gqyyeskamm) .gt_column_spanner {
+:where(#jcerheliqz) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -501,7 +512,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-:where(#gqyyeskamm) .gt_group_heading {
+:where(#jcerheliqz) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -526,7 +537,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#gqyyeskamm) .gt_empty_group_heading {
+:where(#jcerheliqz) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -541,15 +552,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#gqyyeskamm) .gt_from_md > :first-child {
+:where(#jcerheliqz) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#gqyyeskamm) .gt_from_md > :last-child {
+:where(#jcerheliqz) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#gqyyeskamm) .gt_row {
+:where(#jcerheliqz) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -568,7 +579,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#gqyyeskamm) .gt_stub {
+:where(#jcerheliqz) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -581,7 +592,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#gqyyeskamm) .gt_stub_row_group {
+:where(#jcerheliqz) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -595,11 +606,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-:where(#gqyyeskamm) .gt_row_group_first td {
+:where(#jcerheliqz) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#gqyyeskamm) .gt_summary_row {
+:where(#jcerheliqz) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -609,16 +620,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#gqyyeskamm) .gt_first_summary_row {
+:where(#jcerheliqz) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_first_summary_row.thick {
+:where(#jcerheliqz) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#gqyyeskamm) .gt_last_summary_row {
+:where(#jcerheliqz) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -628,7 +639,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_grand_summary_row {
+:where(#jcerheliqz) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -638,7 +649,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#gqyyeskamm) .gt_first_grand_summary_row {
+:where(#jcerheliqz) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -648,11 +659,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_striped {
+:where(#jcerheliqz) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#gqyyeskamm) .gt_table_body {
+:where(#jcerheliqz) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -661,7 +672,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_footnotes {
+:where(#jcerheliqz) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -675,7 +686,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_footnote {
+:where(#jcerheliqz) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -684,7 +695,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#gqyyeskamm) .gt_sourcenotes {
+:where(#jcerheliqz) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -698,7 +709,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#gqyyeskamm) .gt_sourcenote {
+:where(#jcerheliqz) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -706,64 +717,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#gqyyeskamm) .gt_left {
+:where(#jcerheliqz) .gt_left {
   text-align: left;
 }
 
-:where(#gqyyeskamm) .gt_center {
+:where(#jcerheliqz) .gt_center {
   text-align: center;
 }
 
-:where(#gqyyeskamm) .gt_right {
+:where(#jcerheliqz) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#gqyyeskamm) .gt_font_normal {
+:where(#jcerheliqz) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#gqyyeskamm) .gt_font_bold {
+:where(#jcerheliqz) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#gqyyeskamm) .gt_font_italic {
+:where(#jcerheliqz) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#gqyyeskamm) .gt_super {
+:where(#jcerheliqz) .gt_super {
   font-size: 65%;
 }
 
-:where(#gqyyeskamm) .gt_footnote_marks {
+:where(#jcerheliqz) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#gqyyeskamm) .gt_asterisk {
+:where(#jcerheliqz) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#gqyyeskamm) .gt_indent_1 {
+:where(#jcerheliqz) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#gqyyeskamm) .gt_indent_2 {
+:where(#jcerheliqz) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#gqyyeskamm) .gt_indent_3 {
+:where(#jcerheliqz) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#gqyyeskamm) .gt_indent_4 {
+:where(#jcerheliqz) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#gqyyeskamm) .gt_indent_5 {
+:where(#jcerheliqz) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -812,7 +823,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p>On a à première vue des équilibres limités “avant intervention”. En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Stydent ne permet pas de rejeter l’hypothèse nulle.</p>
+<p>On a à première vue des équilibres limités “avant intervention”. En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Student ne permet pas de rejeter l’hypothèse nulle.</p>
 <p>On va maintenant s’intéresser aux différences de déforestation observées “après intervention” dans le groupe de traitement.</p>
 <div class="cell">
 <details>
@@ -840,12 +851,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </details>
 <div class="cell-output-display">
 
-<div id="bldcwpqanv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="tokxgvheyi" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#bldcwpqanv) .gt_table {
+:where(#tokxgvheyi) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -870,7 +881,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_heading {
+:where(#tokxgvheyi) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -882,7 +893,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_title {
+:where(#tokxgvheyi) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -894,7 +905,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-:where(#bldcwpqanv) .gt_subtitle {
+:where(#tokxgvheyi) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -906,13 +917,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-:where(#bldcwpqanv) .gt_bottom_border {
+:where(#tokxgvheyi) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_col_headings {
+:where(#tokxgvheyi) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -927,7 +938,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_col_heading {
+:where(#tokxgvheyi) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -947,7 +958,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#bldcwpqanv) .gt_column_spanner_outer {
+:where(#tokxgvheyi) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -959,15 +970,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-:where(#bldcwpqanv) .gt_column_spanner_outer:first-child {
+:where(#tokxgvheyi) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#bldcwpqanv) .gt_column_spanner_outer:last-child {
+:where(#tokxgvheyi) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#bldcwpqanv) .gt_column_spanner {
+:where(#tokxgvheyi) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -979,7 +990,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-:where(#bldcwpqanv) .gt_group_heading {
+:where(#tokxgvheyi) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1004,7 +1015,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#bldcwpqanv) .gt_empty_group_heading {
+:where(#tokxgvheyi) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1019,15 +1030,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#bldcwpqanv) .gt_from_md > :first-child {
+:where(#tokxgvheyi) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#bldcwpqanv) .gt_from_md > :last-child {
+:where(#tokxgvheyi) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#bldcwpqanv) .gt_row {
+:where(#tokxgvheyi) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1046,7 +1057,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#bldcwpqanv) .gt_stub {
+:where(#tokxgvheyi) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1059,7 +1070,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#bldcwpqanv) .gt_stub_row_group {
+:where(#tokxgvheyi) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1073,11 +1084,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-:where(#bldcwpqanv) .gt_row_group_first td {
+:where(#tokxgvheyi) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#bldcwpqanv) .gt_summary_row {
+:where(#tokxgvheyi) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1087,16 +1098,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#bldcwpqanv) .gt_first_summary_row {
+:where(#tokxgvheyi) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_first_summary_row.thick {
+:where(#tokxgvheyi) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#bldcwpqanv) .gt_last_summary_row {
+:where(#tokxgvheyi) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1106,7 +1117,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_grand_summary_row {
+:where(#tokxgvheyi) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1116,7 +1127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#bldcwpqanv) .gt_first_grand_summary_row {
+:where(#tokxgvheyi) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1126,11 +1137,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_striped {
+:where(#tokxgvheyi) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#bldcwpqanv) .gt_table_body {
+:where(#tokxgvheyi) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1139,7 +1150,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_footnotes {
+:where(#tokxgvheyi) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1153,7 +1164,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_footnote {
+:where(#tokxgvheyi) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1162,7 +1173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#bldcwpqanv) .gt_sourcenotes {
+:where(#tokxgvheyi) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1176,7 +1187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#bldcwpqanv) .gt_sourcenote {
+:where(#tokxgvheyi) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1184,64 +1195,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#bldcwpqanv) .gt_left {
+:where(#tokxgvheyi) .gt_left {
   text-align: left;
 }
 
-:where(#bldcwpqanv) .gt_center {
+:where(#tokxgvheyi) .gt_center {
   text-align: center;
 }
 
-:where(#bldcwpqanv) .gt_right {
+:where(#tokxgvheyi) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#bldcwpqanv) .gt_font_normal {
+:where(#tokxgvheyi) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#bldcwpqanv) .gt_font_bold {
+:where(#tokxgvheyi) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#bldcwpqanv) .gt_font_italic {
+:where(#tokxgvheyi) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#bldcwpqanv) .gt_super {
+:where(#tokxgvheyi) .gt_super {
   font-size: 65%;
 }
 
-:where(#bldcwpqanv) .gt_footnote_marks {
+:where(#tokxgvheyi) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#bldcwpqanv) .gt_asterisk {
+:where(#tokxgvheyi) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#bldcwpqanv) .gt_indent_1 {
+:where(#tokxgvheyi) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#bldcwpqanv) .gt_indent_2 {
+:where(#tokxgvheyi) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#bldcwpqanv) .gt_indent_3 {
+:where(#tokxgvheyi) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#bldcwpqanv) .gt_indent_4 {
+:where(#tokxgvheyi) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#bldcwpqanv) .gt_indent_5 {
+:where(#tokxgvheyi) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1286,7 +1297,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p>On peut également réaliser une régression simple.</p>
+<p>On peut également réaliser une régression simple, qu’on présente selon le format courant pour la littérature en économie grâce au package {stargazer} <span class="citation" data-cites="hlavac2022">(<a href="09-bibliographie.html#ref-hlavac2022" role="doc-biblioref">Hlavac 2022</a>)</span>.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -1342,7 +1353,7 @@ Note:                                                                           
                                                                   Données : Association Vahatra et Carvalho et al. 2018</code></pre>
 </div>
 </div>
-<p>Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajer aux villes :</p>
+<p>Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche. Le seuil retenu ici pour une ville est toute localité de plus de 5000 habitants.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -1372,12 +1383,12 @@ Note:                                                                           
 </details>
 <div class="cell-output-display">
 
-<div id="jcxgqbbwfl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="lmiixutxfg" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#jcxgqbbwfl) .gt_table {
+:where(#lmiixutxfg) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1402,7 +1413,7 @@ Note:                                                                           
   border-left-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_heading {
+:where(#lmiixutxfg) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1414,7 +1425,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_title {
+:where(#lmiixutxfg) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1426,7 +1437,7 @@ Note:                                                                           
   border-bottom-width: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_subtitle {
+:where(#lmiixutxfg) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1438,13 +1449,13 @@ Note:                                                                           
   border-top-width: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_bottom_border {
+:where(#lmiixutxfg) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_col_headings {
+:where(#lmiixutxfg) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1459,7 +1470,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_col_heading {
+:where(#lmiixutxfg) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1479,7 +1490,7 @@ Note:                                                                           
   overflow-x: hidden;
 }
 
-:where(#jcxgqbbwfl) .gt_column_spanner_outer {
+:where(#lmiixutxfg) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1491,15 +1502,15 @@ Note:                                                                           
   padding-right: 4px;
 }
 
-:where(#jcxgqbbwfl) .gt_column_spanner_outer:first-child {
+:where(#lmiixutxfg) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_column_spanner_outer:last-child {
+:where(#lmiixutxfg) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_column_spanner {
+:where(#lmiixutxfg) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1511,7 +1522,7 @@ Note:                                                                           
   width: 100%;
 }
 
-:where(#jcxgqbbwfl) .gt_group_heading {
+:where(#lmiixutxfg) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1536,7 +1547,7 @@ Note:                                                                           
   vertical-align: middle;
 }
 
-:where(#jcxgqbbwfl) .gt_empty_group_heading {
+:where(#lmiixutxfg) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1551,15 +1562,15 @@ Note:                                                                           
   vertical-align: middle;
 }
 
-:where(#jcxgqbbwfl) .gt_from_md > :first-child {
+:where(#lmiixutxfg) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_from_md > :last-child {
+:where(#lmiixutxfg) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_row {
+:where(#lmiixutxfg) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1578,7 +1589,7 @@ Note:                                                                           
   overflow-x: hidden;
 }
 
-:where(#jcxgqbbwfl) .gt_stub {
+:where(#lmiixutxfg) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1591,7 +1602,7 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#jcxgqbbwfl) .gt_stub_row_group {
+:where(#lmiixutxfg) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1605,11 +1616,11 @@ Note:                                                                           
   vertical-align: top;
 }
 
-:where(#jcxgqbbwfl) .gt_row_group_first td {
+:where(#lmiixutxfg) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#jcxgqbbwfl) .gt_summary_row {
+:where(#lmiixutxfg) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1619,16 +1630,16 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#jcxgqbbwfl) .gt_first_summary_row {
+:where(#lmiixutxfg) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_first_summary_row.thick {
+:where(#lmiixutxfg) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#jcxgqbbwfl) .gt_last_summary_row {
+:where(#lmiixutxfg) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1638,7 +1649,7 @@ Note:                                                                           
   border-bottom-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_grand_summary_row {
+:where(#lmiixutxfg) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1648,7 +1659,7 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#jcxgqbbwfl) .gt_first_grand_summary_row {
+:where(#lmiixutxfg) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1658,11 +1669,11 @@ Note:                                                                           
   border-top-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_striped {
+:where(#lmiixutxfg) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#jcxgqbbwfl) .gt_table_body {
+:where(#lmiixutxfg) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1671,7 +1682,7 @@ Note:                                                                           
   border-bottom-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_footnotes {
+:where(#lmiixutxfg) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1685,7 +1696,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_footnote {
+:where(#lmiixutxfg) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1694,7 +1705,7 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#jcxgqbbwfl) .gt_sourcenotes {
+:where(#lmiixutxfg) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1708,7 +1719,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#jcxgqbbwfl) .gt_sourcenote {
+:where(#lmiixutxfg) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1716,64 +1727,64 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#jcxgqbbwfl) .gt_left {
+:where(#lmiixutxfg) .gt_left {
   text-align: left;
 }
 
-:where(#jcxgqbbwfl) .gt_center {
+:where(#lmiixutxfg) .gt_center {
   text-align: center;
 }
 
-:where(#jcxgqbbwfl) .gt_right {
+:where(#lmiixutxfg) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#jcxgqbbwfl) .gt_font_normal {
+:where(#lmiixutxfg) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#jcxgqbbwfl) .gt_font_bold {
+:where(#lmiixutxfg) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#jcxgqbbwfl) .gt_font_italic {
+:where(#lmiixutxfg) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#jcxgqbbwfl) .gt_super {
+:where(#lmiixutxfg) .gt_super {
   font-size: 65%;
 }
 
-:where(#jcxgqbbwfl) .gt_footnote_marks {
+:where(#lmiixutxfg) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#jcxgqbbwfl) .gt_asterisk {
+:where(#lmiixutxfg) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#jcxgqbbwfl) .gt_indent_1 {
+:where(#lmiixutxfg) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#jcxgqbbwfl) .gt_indent_2 {
+:where(#lmiixutxfg) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#jcxgqbbwfl) .gt_indent_3 {
+:where(#lmiixutxfg) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#jcxgqbbwfl) .gt_indent_4 {
+:where(#lmiixutxfg) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#jcxgqbbwfl) .gt_indent_5 {
+:where(#lmiixutxfg) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1826,7 +1837,7 @@ Note:                                                                           
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(rct_AP_Mada, <span class="at">file =</span> <span class="st">"data/rct_AP_Mada.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Temps de trajet aux villes significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d’endogénéité.</p>
+<p>Le temps de trajet aux villes est significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d’endogénéité (discussion en séance sur ce point).</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -1863,9 +1874,14 @@ F Statistic         8.046*** (df = 1; 92) 4.989*** (df = 2; 87)
 Note:                               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 </div>
-<p>Apparemment, le traitement reste sigificatif.</p>
+<p>Apparemment, le traitement reste significatif une fois que l’on contrôle pour la distance aux villes.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-hlavac2022" class="csl-entry" role="doc-biblioentry">
+Hlavac, Marek. 2022. <em>Stargazer: Well-Formatted Regression and Summary Statistics Tables</em>. <a href="https://CRAN.R-project.org/package=stargazer">https://CRAN.R-project.org/package=stargazer</a>.
+</div>
+</div>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1909,24 +1925,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1962,42 +1961,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script>

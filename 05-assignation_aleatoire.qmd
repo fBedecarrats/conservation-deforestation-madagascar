@@ -8,16 +8,9 @@ editor_options:
 
 > **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
 
-Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types "multi-polygones". Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses agrégées, on va agrégéer les statistiques d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
+Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries de types "multi-polygones". Certaines de ces aires protégées étaient en effet composées de plusieurs polygones disjoints. Ces polygones disjoints ont été scindés pour être traités séparément dans le jeu de données AP_poly. Avant de repasser sur des analyses par aire protégée, on va agréger les statistiques d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
 
 ```{r}
-# Le jeu de données AP_Vahatra contenait 98 aires protégées, avec des géométries
-# de types "multi-polygones". Certaines de ces aires protégées étaient en effet 
-# composées de plusieurs polygones disjoints. Ces polygones disjoints ont été 
-# scindés pour être traités séparément dans le jeu de données AP_poly. Avant 
-# de repasser sur des analyses agrégées, on va agrégéer les statistiques 
-# d'AP_poly afin d'avoir pour chaque variable une valeur par aire protégée.
-
 # On charge les librairies utiles pour cette analyse
 library(tidyverse) # Facilite la manipulation de données
 library(gt) # Aide à formater de jolis tableaux de rendu
@@ -79,7 +72,7 @@ equilibre_avant %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-On a à première vue des équilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Stydent ne permet pas de rejeter l'hypothèse nulle.
+On a à première vue des équilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Student ne permet pas de rejeter l'hypothèse nulle.
 
 On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement.
 
@@ -131,12 +124,12 @@ def_96_16 <- lm(`Déforestation 1996-2016 (%)`  ~ Groupe, data = rct_AP_Mada)
 #              subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
 #   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 
-stargazer(def_96_06, def_06_16, def_96_16, type = "text",
+stargazer(def_96_06, def_06_16, def_96_16, type = "latex",
           title = "Impact de la conservation sur la perte de couvert forestier",
           notes = "Données : Association Vahatra et Carvalho et al. 2018")
 ```
 
-Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajer aux villes :
+Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche. Le seuil retenu ici pour une ville est toute localité de plus de 5000 habitants.
 
 ```{r}
 
@@ -168,7 +161,7 @@ equilibre_autres %>%
 save(rct_AP_Mada, file = "data/rct_AP_Mada.rds")
 ```
 
-Temps de trajet aux villes significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d'endogénéité.
+Le temps de trajet aux villes est significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d'endogénéité (discussion en séance sur ce point).
 
 ```{r}
 def_96_16_controle <- lm(`Déforestation 1996-2016 (%)` ~ 
@@ -178,4 +171,4 @@ def_96_16_controle <- lm(`Déforestation 1996-2016 (%)` ~
 stargazer(def_96_16, def_96_16_controle, type = "text")
 ```
 
-Apparemment, le traitement reste sigificatif.
+Apparemment, le traitement reste significatif une fois que l'on contrôle pour la distance aux villes.
