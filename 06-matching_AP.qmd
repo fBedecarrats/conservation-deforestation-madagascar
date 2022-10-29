@@ -19,6 +19,7 @@ library(tidyverse) # Simplifie la manipulation de données
 library(lubridate) # Simplifie les opérations sur des dates
 library(sf) # Pour traiter les données spatiales
 library(MatchIt) # Pour réaliser les appariements.
+library(cobalt) # Pour les tests d'équilibre sur l'appariement
 library(gt) # Pour faire de jolies tables
 library(stargazer) # Pour préssenter les résultats de régressions
 
@@ -36,7 +37,9 @@ rct_AP_Mada_noNA <- rct_AP_Mada %>%
   filter(!is.na(`Déforestation 1996-2016 (%)`)) %>%
   filter(!is.na(dist_ville)) %>%
   # La vatiable de traitement doit être recodée en [0, 1]
-  mutate(traitement = ifelse(Groupe == "Traitement", 1, 0))
+  mutate(traitement = ifelse(Groupe == "Traitement", 1, 0)) %>%
+  rename(surface_ha = `Surface (ha)`, 
+         couv_foret_96 = `Couvert forestier en 1996 (%)`)
 
 rct_AP_Mada_noNA %>%
   group_by(Groupe) %>%
@@ -60,17 +63,17 @@ Cette même formule est encodée en R de la manière suivante :
 
 ```{r}
 #| code-fold: false
-pscor <- traitement ~  `Surface (ha)` + 
-                       `Couvert forestier en 1996 (%)`+ 
-                        altitude +
-                        indice_accidente + 
-                        dist_ville
+pscor <- traitement ~  surface_ha + 
+                       couv_foret_96 + 
+                       altitude +
+                       indice_accidente + 
+                       dist_ville
 ```
 
-On va maintenant réaliser une régression pour connaître l'influence de ces facteurs dans la désignation des aires comes protégées.
+On va maintenant réaliser une régression pour connaître l'influence de ces facteurs dans la désignation des aires comme protégées.
 
 ```{r}
-
+# On ré
 reg_select <- glm(formula = pscor,
                   family = binomial(link = "probit"),
                   data = rct_AP_Mada_noNA)
@@ -85,7 +88,7 @@ On va maintenant utiliser ce modèle pour comparer les aires protégées traité
 def_96_16_match <- matchit(formula = pscor,
                            family = binomial(link = "probit"),
                            method = "nearest",
-                           discard = "none",
+                           discard = "both",
                            replace = FALSE,
                            distance = "glm",
                            data = rct_AP_Mada_noNA)
@@ -93,6 +96,21 @@ def_96_16_match <- matchit(formula = pscor,
 print(def_96_16_match)
 ```
 
+On peut maintenant observer les équilibres entre les groupes traités et contrôle avant et après l'appariement.
+
+```{r}
+summary(def_96_16_match)
+```
+
+> **Exercice** : Etudiez les tables ci-dessus. Quel effet a eu l'appariement sur l'équilibre des variables entre le groupe de traitement et le groupe de contrôle ? Combien d'observation ont été écartées.
+
+On peut également représenter l'équilibre entre les variables avant et après traitement avec les graphiques suivants.
+
+```{r}
+bal.plot(def_96_16_match, var.name = "dist_ville", which = "both")
+```
+
+> **Exercice** : Quel effet a eu l'appariement sur la varialbe de distance à la ville ? Les autres variables d'appariement produisent-elles un effet aussi visible ?
 
 Le modèle qu'on utilise pour estimer l'impact est très proche de celui exposé ci-dessus, à la différence que la variable de traitement passe dans la partie droite, et qu'elle est remplacée par la déforestation.
 
@@ -100,7 +118,7 @@ $$
 Y = T + A + B + C + D + E
 $$
 
-Où Y est la déforestatoin, T est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l'altitude, D, le caractère accidenté et E le temps de parcours à une ville d'au moins 5000 habitants.
+Où Y est la déforestation, T est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l'altitude, D, le caractère accidenté et E le temps de parcours à une ville d'au moins 5000 habitants.
 
 Cette formule est codée en R de la manière suivante :
 
@@ -117,7 +135,7 @@ estimp <- `Déforestation 1996-2016 (%)` ~
                           dist_ville
 ```
 
-On va donc réaliser une régression, en utilisant comme pondération les pondérations générées par l'algorithme d'appariement.
+On va donc réaliser une régression, en tenant compte des pondérations générées par l'algorithme d'appariement (variable "weight").
 
 ```{r}
 # On extrait les données de l'appariement

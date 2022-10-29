@@ -7,7 +7,7 @@ editor_options:
 
 Il existe de plusieurs ressources en français pour apprendre à utiliser R. Nous vous recommandons en particulier :
 
--   [Introduction à R et au Tidyverse](https://juba.github.io/tidyverse/index.html)[@barnier2022]
+-   [Introduction à R et au Tidyverse](https://juba.github.io/tidyverse/index.html) [@barnier2022]
 -   [utilitR: documentation collaborative sur R de l'INSEE](https://www.book.utilitr.org/index.html) [@utilitr:2022]
 
 Les bonnes ressources anglophones gratuites sont très nombreuses, très facile à trouver sur le Web. Les grands classiques est R for data science, de Grolemund et Wickham [-@grolemund2022]. On se focalise ici avec deux autres qui sont le plus en lien avec nos sujets :
@@ -42,6 +42,8 @@ On se focalise ici sur quelques aspects qui peuvent être requis pour la manipul
 -   Le signe `<-` correspond à l'assignation d'une valeur à une variable. Il est presque équivalent à `=`, avec quelques différences dans certaines circonstances particulières, qui fait qu'on privilégie toujours `<-`.
 
 ```{r}
+#| code-fold: false
+
 # Ce qui suit un dièze n'est pas exécuté. On appelle ça un commentaire.
 
 # On commence par faire une opération simple
@@ -60,6 +62,7 @@ c
 -   R est constitué de fonctions. De nombreuses fonctions prédéfinies sont contenues dans la base de R ou dans des packages qu'on ajoute (qu'on verra plus tard).  La meilleure manière de comprendre ce qu'est une fonction est d'en créer une soi même. 
 
 ```{r}
+#| code-fold: false
 # On crée une fonction "ajoute" qui prend deux paramètres. 
 # x est Un premier et y est celui qu'on ajoute
 ajoute <- function(x, y) {
@@ -85,6 +88,7 @@ Les fonctions disposent d'une documentation qu'on peut explorer en utilisant l'a
 - Le signe `%>%` est un "tuyau". On peut le lire à haute voix comme "ensuite". Par exemple :
 
 ```{r}
+#| code-fold: false
 library(tidyverse)
 
 d <- a %>%
@@ -99,6 +103,7 @@ d
 
 
 ```{r}
+#| code-fold: false
 # On commence par créer les variables (les colonnes du tableau)
 noms <- c("John", "Jack", "Cindy", "Samantha")
 sexe <- c("homme", "homme", "femme", "femme")
@@ -133,6 +138,7 @@ sum(ma_table$poids, na.rm = TRUE)
     - créer des filtres : summarise
 
 ```{r}
+#| code-fold: false
 # Un exemple qui combine ces opérations
 ma_table %>%
   filter(!is.na(ages)) %>%
@@ -160,6 +166,7 @@ Pour une analyse plus approfondie, voir juba.
 ## Produire des cartes simples avec R
 
 ```{r}
+#| code-fold: false
 # Les librairies requises 
 library(sf) # pour traiter des données spatiales
 library(tmap) # pour faire des cartes
@@ -182,16 +189,10 @@ tm_shape(carte) +
 On utilise le package ggplot, avec la syntaxe suivante.
 
 ```{r}
-# On 
+# On réalise un graphique simple
 carte %>%
   ggplot(aes(x = cat__iucn, y = hectares)) +
   geom_col()
-
-carte %>%
-  ggplot(aes(x = cat__iucn, y = hectares)) +
-  geom_col() +
-  theme(axis.text.x.bottom =  element_text(angle = 45, hjust = 1))
-
 
 ```
 
