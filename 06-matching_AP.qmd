@@ -148,7 +148,7 @@ def_96_16_match_est <- lm(formula = estimp,
 stargazer(def_96_16_match_est, type = "text")
 ```
 
-### Exercice simple
+### Exercice simple 
 
 Analysez, interprétez et critiquez les résultats ci-dessus.
 
