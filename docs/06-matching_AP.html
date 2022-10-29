@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.174">
+<meta name="generator" content="quarto-1.1.189">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -288,7 +288,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
@@ -306,40 +305,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Simplifie les opérations sur des dates</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># Pour traiter les données spatiales</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt) <span class="co"># Pour réaliser les appariements.</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour faire de jolies tables</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># Pour préssenter les résultats de régressions</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span><span class="dv">999</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># On recharge les données préparées dans le chapitre 3</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Harmoniser les données entre avant et après.</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/rct_AP_Mada.rds"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cobalt) <span class="co"># Pour les tests d'équilibre sur l'appariement</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour faire de jolies tables</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer) <span class="co"># Pour préssenter les résultats de régressions</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Désactiver les notations scientifiques</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span><span class="dv">999</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># On recharge les données préparées dans le chapitre 3</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Harmoniser les données entre avant et après.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/rct_AP_Mada.rds"</span>)</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>rct_AP_Mada_noNA <span class="ot">&lt;-</span> rct_AP_Mada <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On enlève les observations pour lesquelles il manque des valeurs</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">Déforestation 1996-2016 (%)</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_ville)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># La vatiable de traitement doit être recodée en [0, 1]</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">traitement =</span> <span class="fu">ifelse</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>rct_AP_Mada_noNA <span class="sc">%&gt;%</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">`</span><span class="at">Nombre d'aires protégées</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Observations par groupe avant appariemment"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et Carvalho et al. 2018"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rct_AP_Mada_noNA <span class="ot">&lt;-</span> rct_AP_Mada <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On enlève les observations pour lesquelles il manque des valeurs</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">Déforestation 1996-2016 (%)</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(dist_ville)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># La vatiable de traitement doit être recodée en [0, 1]</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">traitement =</span> <span class="fu">ifelse</span>(Groupe <span class="sc">==</span> <span class="st">"Traitement"</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">surface_ha =</span> <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span>, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">couv_foret_96 =</span> <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>rct_AP_Mada_noNA <span class="sc">%&gt;%</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Groupe) <span class="sc">%&gt;%</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">`</span><span class="at">Nombre d'aires protégées</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Observations par groupe avant appariemment"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Association Vahatra et Carvalho et al. 2018"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
-<div id="nonpghqzjr" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="ucwfhjaudf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#nonpghqzjr) .gt_table {
+:where(#ucwfhjaudf) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -364,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_heading {
+:where(#ucwfhjaudf) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -376,7 +378,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_title {
+:where(#ucwfhjaudf) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -388,7 +390,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-:where(#nonpghqzjr) .gt_subtitle {
+:where(#ucwfhjaudf) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -400,13 +402,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-:where(#nonpghqzjr) .gt_bottom_border {
+:where(#ucwfhjaudf) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_col_headings {
+:where(#ucwfhjaudf) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -421,7 +423,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_col_heading {
+:where(#ucwfhjaudf) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -441,7 +443,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#nonpghqzjr) .gt_column_spanner_outer {
+:where(#ucwfhjaudf) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -453,15 +455,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-:where(#nonpghqzjr) .gt_column_spanner_outer:first-child {
+:where(#ucwfhjaudf) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#nonpghqzjr) .gt_column_spanner_outer:last-child {
+:where(#ucwfhjaudf) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#nonpghqzjr) .gt_column_spanner {
+:where(#ucwfhjaudf) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -473,7 +475,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-:where(#nonpghqzjr) .gt_group_heading {
+:where(#ucwfhjaudf) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -498,7 +500,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#nonpghqzjr) .gt_empty_group_heading {
+:where(#ucwfhjaudf) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -513,15 +515,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#nonpghqzjr) .gt_from_md > :first-child {
+:where(#ucwfhjaudf) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#nonpghqzjr) .gt_from_md > :last-child {
+:where(#ucwfhjaudf) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#nonpghqzjr) .gt_row {
+:where(#ucwfhjaudf) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -540,7 +542,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#nonpghqzjr) .gt_stub {
+:where(#ucwfhjaudf) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -553,7 +555,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#nonpghqzjr) .gt_stub_row_group {
+:where(#ucwfhjaudf) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -567,11 +569,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-:where(#nonpghqzjr) .gt_row_group_first td {
+:where(#ucwfhjaudf) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#nonpghqzjr) .gt_summary_row {
+:where(#ucwfhjaudf) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -581,16 +583,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#nonpghqzjr) .gt_first_summary_row {
+:where(#ucwfhjaudf) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_first_summary_row.thick {
+:where(#ucwfhjaudf) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#nonpghqzjr) .gt_last_summary_row {
+:where(#ucwfhjaudf) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -600,7 +602,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_grand_summary_row {
+:where(#ucwfhjaudf) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -610,7 +612,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#nonpghqzjr) .gt_first_grand_summary_row {
+:where(#ucwfhjaudf) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -620,11 +622,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_striped {
+:where(#ucwfhjaudf) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#nonpghqzjr) .gt_table_body {
+:where(#ucwfhjaudf) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -633,7 +635,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_footnotes {
+:where(#ucwfhjaudf) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -647,7 +649,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_footnote {
+:where(#ucwfhjaudf) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -656,7 +658,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#nonpghqzjr) .gt_sourcenotes {
+:where(#ucwfhjaudf) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -670,7 +672,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#nonpghqzjr) .gt_sourcenote {
+:where(#ucwfhjaudf) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -678,64 +680,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#nonpghqzjr) .gt_left {
+:where(#ucwfhjaudf) .gt_left {
   text-align: left;
 }
 
-:where(#nonpghqzjr) .gt_center {
+:where(#ucwfhjaudf) .gt_center {
   text-align: center;
 }
 
-:where(#nonpghqzjr) .gt_right {
+:where(#ucwfhjaudf) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#nonpghqzjr) .gt_font_normal {
+:where(#ucwfhjaudf) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#nonpghqzjr) .gt_font_bold {
+:where(#ucwfhjaudf) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#nonpghqzjr) .gt_font_italic {
+:where(#ucwfhjaudf) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#nonpghqzjr) .gt_super {
+:where(#ucwfhjaudf) .gt_super {
   font-size: 65%;
 }
 
-:where(#nonpghqzjr) .gt_footnote_marks {
+:where(#ucwfhjaudf) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#nonpghqzjr) .gt_asterisk {
+:where(#ucwfhjaudf) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#nonpghqzjr) .gt_indent_1 {
+:where(#ucwfhjaudf) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#nonpghqzjr) .gt_indent_2 {
+:where(#ucwfhjaudf) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#nonpghqzjr) .gt_indent_3 {
+:where(#ucwfhjaudf) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#nonpghqzjr) .gt_indent_4 {
+:where(#ucwfhjaudf) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#nonpghqzjr) .gt_indent_5 {
+:where(#ucwfhjaudf) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -776,53 +778,54 @@ T = A + B + C + D + E
 <p>Où Y est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l’altitude, D, le caractère accidenté et E le temps de parcours à une ville d’au moins 5000 habitants.</p>
 <p>Cette même formule est encodée en R de la manière suivante :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pscor <span class="ot">&lt;-</span> traitement <span class="sc">~</span>  <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="sc">+</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span><span class="sc">+</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                        altitude <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                        indice_accidente <span class="sc">+</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                        dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pscor <span class="ot">&lt;-</span> traitement <span class="sc">~</span>  surface_ha <span class="sc">+</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                       couv_foret_96 <span class="sc">+</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                       altitude <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                       indice_accidente <span class="sc">+</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                       dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>On va maintenant réaliser une régression pour connaître l’influence de ces facteurs dans la désignation des aires comes protégées.</p>
+<p>On va maintenant réaliser une régression pour connaître l’influence de ces facteurs dans la désignation des aires comme protégées.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>reg_select <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">formula =</span> pscor,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> rct_AP_Mada_noNA)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(reg_select, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On ré</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>reg_select <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">formula =</span> pscor,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> rct_AP_Mada_noNA)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(reg_select, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-===========================================================
-                                    Dependent variable:    
-                                ---------------------------
-                                        traitement         
------------------------------------------------------------
-`Surface (ha)`                           -0.00000          
-                                         (0.00000)         
-                                                           
-`Couvert forestier en 1996 (%)`            0.005           
-                                          (0.006)          
-                                                           
-altitude                                  -0.0003          
-                                         (0.0004)          
-                                                           
-indice_accidente                           0.004           
-                                          (0.023)          
-                                                           
-dist_ville                                0.002**          
-                                          (0.001)          
-                                                           
-Constant                                  -0.498           
-                                          (0.364)          
-                                                           
------------------------------------------------------------
-Observations                                90             
-Log Likelihood                            -59.054          
-Akaike Inf. Crit.                         130.108          
-===========================================================
-Note:                           *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+=============================================
+                      Dependent variable:    
+                  ---------------------------
+                          traitement         
+---------------------------------------------
+surface_ha                 -0.00000          
+                           (0.00000)         
+                                             
+couv_foret_96                0.005           
+                            (0.006)          
+                                             
+altitude                    -0.0003          
+                           (0.0004)          
+                                             
+indice_accidente             0.004           
+                            (0.023)          
+                                             
+dist_ville                  0.002**          
+                            (0.001)          
+                                             
+Constant                    -0.498           
+                            (0.364)          
+                                             
+---------------------------------------------
+Observations                  90             
+Log Likelihood              -59.054          
+Akaike Inf. Crit.           130.108          
+=============================================
+Note:             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 </div>
 <p>On va maintenant utiliser ce modèle pour comparer les aires protégées traitées en premier par rapport à celles traitées plus récemment.</p>
@@ -833,7 +836,7 @@ Note:                           *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>def_96_16_match <span class="ot">&lt;-</span> <span class="fu">matchit</span>(<span class="at">formula =</span> pscor,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>),</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"nearest"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">discard =</span> <span class="st">"none"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">discard =</span> <span class="st">"both"</span>,</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">distance =</span> <span class="st">"glm"</span>,</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> rct_AP_Mada_noNA)</span>
@@ -843,83 +846,153 @@ Note:                           *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre
 <div class="cell-output cell-output-stdout">
 <pre><code>A matchit object
  - method: 1:1 nearest neighbor matching without replacement
- - distance: Propensity score
+ - distance: Propensity score [common support]
              - estimated with logistic regression
- - number of obs.: 90 (original), 86 (matched)
+ - common support: units from both groups dropped
+ - number of obs.: 90 (original), 78 (matched)
  - target estimand: ATT
- - covariates: Surface (ha), Couvert forestier en 1996 (%), altitude, indice_accidente, dist_ville</code></pre>
+ - covariates: surface_ha, couv_foret_96, altitude, indice_accidente, dist_ville</code></pre>
 </div>
 </div>
+<p>On peut maintenant observer les équilibres entre les groupes traités et contrôle avant et après l’appariement.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(def_96_16_match)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+matchit(formula = pscor, data = rct_AP_Mada_noNA, method = "nearest", 
+    distance = "glm", discard = "both", replace = FALSE, family = binomial(link = "probit"))
+
+Summary of Balance for All Data:
+                 Means Treated Means Control Std. Mean Diff. Var. Ratio
+distance                0.5123        0.4462          0.4600     1.7294
+surface_ha          64859.7293    71636.6002         -0.0856     0.5216
+couv_foret_96          61.8218       55.4658          0.2363     1.1522
+altitude              538.6298      475.9134          0.1328     0.7177
+indice_accidente       12.0830       10.7187          0.1667     1.0636
+dist_ville            233.3141      152.0447          0.3811     2.1820
+                 eCDF Mean eCDF Max
+distance            0.1409   0.2622
+surface_ha          0.0910   0.2509
+couv_foret_96       0.0795   0.2425
+altitude            0.0890   0.2103
+indice_accidente    0.0578   0.1390
+dist_ville          0.1333   0.2588
+
+
+Summary of Balance for Matched Data:
+                 Means Treated Means Control Std. Mean Diff. Var. Ratio
+distance                0.4783        0.4712          0.0497     0.9995
+surface_ha          67277.5891    56596.5970          0.1348     0.7366
+couv_foret_96          60.8113       60.4309          0.0141     1.3400
+altitude              518.5203      503.7378          0.0313     0.8548
+indice_accidente       11.6356       11.6417         -0.0007     1.0171
+dist_ville            182.9262      166.4807          0.0771     0.8322
+                 eCDF Mean eCDF Max Std. Pair Dist.
+distance            0.0379   0.1538          0.0883
+surface_ha          0.1217   0.2821          1.0327
+couv_foret_96       0.0473   0.1795          0.8761
+altitude            0.0490   0.1282          1.0065
+indice_accidente    0.0316   0.0769          1.1074
+dist_ville          0.0692   0.2051          0.3803
+
+Sample Sizes:
+          Control Treated
+All            47      43
+Matched        39      39
+Unmatched       6       0
+Discarded       2       4</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Exercice</strong> : Etudiez les tables ci-dessus. Quel effet a eu l’appariement sur l’équilibre des variables entre le groupe de traitement et le groupe de contrôle ? Combien d’observation ont été écartées.</p>
+</blockquote>
+<p>On peut également représenter l’équilibre entre les variables avant et après traitement avec les graphiques suivants.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bal.plot</span>(def_96_16_match, <span class="at">var.name =</span> <span class="st">"dist_ville"</span>, <span class="at">which =</span> <span class="st">"both"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="06-matching_AP_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Exercice</strong> : Quel effet a eu l’appariement sur la varialbe de distance à la ville ? Les autres variables d’appariement produisent-elles un effet aussi visible ?</p>
+</blockquote>
 <p>Le modèle qu’on utilise pour estimer l’impact est très proche de celui exposé ci-dessus, à la différence que la variable de traitement passe dans la partie droite, et qu’elle est remplacée par la déforestation.</p>
 <p><span class="math display">\[
 Y = T + A + B + C + D + E
 \]</span></p>
-<p>Où Y est la déforestatoin, T est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l’altitude, D, le caractère accidenté et E le temps de parcours à une ville d’au moins 5000 habitants.</p>
+<p>Où Y est la déforestation, T est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l’altitude, D, le caractère accidenté et E le temps de parcours à une ville d’au moins 5000 habitants.</p>
 <p>Cette formule est codée en R de la manière suivante :</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On extrait la donnée de l'appariement</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: false</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>estimp <span class="ot">&lt;-</span> <span class="st">`</span><span class="at">Déforestation 1996-2016 (%)</span><span class="st">`</span> <span class="sc">~</span>   </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                          traitement <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                          <span class="st">`</span><span class="at">Surface (ha)</span><span class="st">`</span> <span class="sc">+</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                          <span class="st">`</span><span class="at">Couvert forestier en 1996 (%)</span><span class="st">`</span><span class="sc">+</span> </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                          altitude <span class="sc">+</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                          indice_accidente <span class="sc">+</span> </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                          dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On extrait la donnée de l'appariement</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: false</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>estimp <span class="ot">&lt;-</span> <span class="st">`</span><span class="at">Déforestation 1996-2016 (%)</span><span class="st">`</span> <span class="sc">~</span>   </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                          traitement <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                          surface_ha <span class="sc">+</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                          couv_foret_96 <span class="sc">+</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                          altitude <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                          indice_accidente <span class="sc">+</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                          dist_ville</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>On va donc réaliser une régression, en utilisant comme pondération les pondérations générées par l’algorithme d’appariement.</p>
+<p>On va donc réaliser une régression, en tenant compte des pondérations générées par l’algorithme d’appariement (variable “weight”).</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On extrait les données de l'appariement</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>def_96_16_match_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(def_96_16_match)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># On effectue une régression simple avec la formule précédente</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>def_96_16_match_est <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> estimp,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> def_96_16_match_data,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">weights =</span> weights)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># On visualise les résultats</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(def_96_16_match_est, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On extrait les données de l'appariement</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>def_96_16_match_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(def_96_16_match)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># On effectue une régression simple avec la formule précédente</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>def_96_16_match_est <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">formula =</span> estimp,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> def_96_16_match_data,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">weights =</span> weights)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># On visualise les résultats</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(def_96_16_match_est, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-=============================================================
-                                     Dependent variable:     
-                                -----------------------------
-                                `Déforestation 1996-2016 (%)`
--------------------------------------------------------------
-traitement                                -6.814**           
-                                           (3.015)           
-                                                             
-`Surface (ha)`                             0.00001           
-                                          (0.00002)          
-                                                             
-`Couvert forestier en 1996 (%)`            -0.044            
-                                           (0.066)           
-                                                             
-altitude                                   0.0002            
-                                           (0.005)           
-                                                             
-indice_accidente                           -0.296            
-                                           (0.247)           
-                                                             
-dist_ville                                 -0.007            
-                                           (0.010)           
-                                                             
-Constant                                  22.370***          
-                                           (4.213)           
-                                                             
--------------------------------------------------------------
-Observations                                 86              
-R2                                          0.148            
-Adjusted R2                                 0.084            
-Residual Std. Error                   13.647 (df = 79)       
-F Statistic                         2.293** (df = 6; 79)     
-=============================================================
-Note:                             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+=================================================
+                         Dependent variable:     
+                    -----------------------------
+                    `Déforestation 1996-2016 (%)`
+-------------------------------------------------
+traitement                    -6.781**           
+                               (3.166)           
+                                                 
+surface_ha                     0.00000           
+                              (0.00002)          
+                                                 
+couv_foret_96                  -0.083            
+                               (0.072)           
+                                                 
+altitude                        0.001            
+                               (0.005)           
+                                                 
+indice_accidente               -0.357            
+                               (0.260)           
+                                                 
+dist_ville                     -0.009            
+                               (0.015)           
+                                                 
+Constant                      25.457***          
+                               (4.826)           
+                                                 
+-------------------------------------------------
+Observations                     78              
+R2                              0.144            
+Adjusted R2                     0.072            
+Residual Std. Error       13.939 (df = 71)       
+F Statistic              1.992* (df = 6; 71)     
+=================================================
+Note:                 *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 </div>
 <section id="exercice-simple" class="level3" data-number="7.0.1">
@@ -979,24 +1052,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1032,42 +1088,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script>

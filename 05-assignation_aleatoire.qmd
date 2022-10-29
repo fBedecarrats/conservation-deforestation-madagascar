@@ -3,8 +3,8 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
-# Méthode randomisée
 
+# Méthode randomisée
 
 > **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
 
@@ -79,9 +79,6 @@ equilibre_avant %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-
-
-
 On a à première vue des équilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Stydent ne permet pas de rejeter l'hypothèse nulle.
 
 On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement.
@@ -109,7 +106,7 @@ comparaison_apres  %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-On peut également réaliser une régression simple, qu'on présente selon le format courant pour la littérature en économie grâce au package {stargazer} .
+On peut également réaliser une régression simple, qu'on présente selon le format courant pour la littérature en économie grâce au package {stargazer} [@hlavac2022].
 
 ```{r}
 def_96_06 <- lm(`Déforestation 1996-2006 (%)`  ~ Groupe, data = rct_AP_Mada)

@@ -128,8 +128,8 @@ Cette formule est codée en R de la manière suivante :
 #| code-fold: false
 estimp <- `Déforestation 1996-2016 (%)` ~   
                           traitement +
-                          `Surface (ha)` + 
-                          `Couvert forestier en 1996 (%)`+ 
+                          surface_ha + 
+                          couv_foret_96 + 
                           altitude +
                           indice_accidente + 
                           dist_ville
