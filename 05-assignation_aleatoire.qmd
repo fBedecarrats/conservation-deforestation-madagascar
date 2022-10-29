@@ -109,7 +109,7 @@ comparaison_apres  %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-On peut également réaliser une régression simple.
+On peut également réaliser une régression simple, qu'on présente selon le format courant pour la littérature en économie grâce au package {stargazer} .
 
 ```{r}
 def_96_06 <- lm(`Déforestation 1996-2006 (%)`  ~ Groupe, data = rct_AP_Mada)
