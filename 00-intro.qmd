@@ -2,26 +2,25 @@
 
 ## Démarche
 
-Il s'agit d'un support de formation conçu pour initier des étudiants et jeunes chercheurs non familiers de l'économétrie spatiale, avec un objet très concret. Ce document a été élaboré avec les priorités suivantes : 
+Il s'agit d'un support de formation conçu pour initier des étudiants et jeunes chercheurs non familiers de l'économétrie spatiale, avec un objet très concret. Ce document a été élaboré avec les priorités suivantes :
 
-- Familiarisation avec la démarche scientifique : recherche bibliographique, revue d'articles économétriques ;
-- Formulaion d'une question de recherche relevant de l'évaluation économétrique et recherche des donnéees permettant d'y répondre ;
-- Compréhension des différentes approches pour constituer un contrefactuel : randomisation, appariement, comparaison avant-après, différence de différences ;
-- Familiarisation avec l'outil de traitement statistique R.
+-   Familiarisation avec la démarche scientifique : recherche bibliographique, revue d'articles économétriques ;
+-   Formulaion d'une question de recherche relevant de l'évaluation économétrique et recherche des donnéees permettant d'y répondre ;
+-   Compréhension des différentes approches pour constituer un contrefactuel : randomisation, appariement, comparaison avant-après, différence de différences ;
+-   Familiarisation avec l'outil de traitement statistique R.
 
 D'autres aspects ont volontairement été placés au second plan, en particulier la discussion technique de la fiabilité, différences et biais des sources de données mobilisées, ou encore les subtilités associées aux modèles économétriques. Les méthodes économétriques mobilisées ici sont volontairement simples : pour être publiable dans une revue scientifique, un travail d'évaluation doit mobiliser des spécifications plus sophistiquées.
 
 ### Améliorations à venir
 
-- Remplacer la variable de temps de parcours à une ville d'au moins 5000 habitants par une variable moins exposée à l'endogénéité, soit : 
+-   Remplacer la variable de temps de parcours à une ville d'au moins 5000 habitants par une variable moins exposée à l'endogénéité, soit :
 
-    - La distance à une ville d'au moins 5000 habitants en 2000 ; ou
-    - La distance euclidienne à une ville, sans tenir compte du réseau de transport.
+    -   La distance à une ville d'au moins 5000 habitants en 2000 ; ou
+    -   La distance euclidienne à une ville, sans tenir compte du réseau de transport.
 
-- Ajouter de la discontinuité de la régression
+-   Ajouter de la discontinuité de la régression
 
 ## Outils utilisés
-
 
 ### Notebook Quarto
 
@@ -54,7 +53,6 @@ On mobilise aussi les codes d'analyse d'impact développés par la même équipe
 ### Onyxia/SSP Cloud
 
 Les sources pour l'ensemble du code source et du texte du présent document est accessible sur Github à l'adresse suivante : <https://github.com/fBedecarrats/conservation-deforestation-madagascar>. Les analyses sont menées sur la plateforme SSP Cloud, mises à disposition par l'INSEE pour les data scientists travaillant pour des administrations publiques. Il s'agit d'une instance de stockage de données massif (S3) et de calcul haute performance (cluster Kubernetes) disposant d'une interface simplifiée permettant à l'utilisateur de configurer, lancer et administrer facilement des environnements de traitement de données (RStudio server, Jupyter lab ou autres...). Le code est conçu pour s'exécuter de la même manière en local sur un PC, mais la préparation des données sera certainement beaucoup plus longue à exécuter.
-
 
 ### Librairies R
 
@@ -110,4 +108,6 @@ dir.create("data")
 options(scipen =999)
 ```
 
-## Mode d'emploi
+## Cadrage général pour les méthodes d'évaluation
+
+[Cliquer sur ce lien pour télécharger la présentation.](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_Intro_generale.pdf)
