@@ -43,6 +43,19 @@ gt(slice(ap_did, 20:30)) %>%
   tab_source_note("Source : Aires protégées d'AP Vahatra, données TMF")
 ```
 
+Pour rappel, on récapitule les années d'assignation : 
+
+```{r}
+ap_did %>%
+  select(nom, annee_creation) %>%
+  filter(annee_creation > 1990) %>%
+  unique() %>%
+  group_by(annee_creation) %>%
+  summarize(`Nombre d'AP créées cette année` = n()) %>%
+  gt() %>%
+  tab_header(title = "Années de création des aires protégées")
+```
+
 
 ## Double différences pour la déforestation
 
