@@ -1,3 +1,3 @@
-# Récapitulatif et description des données disponibles
+# Récapitulatif et description des données disponibles {#sec-recap_donnees}
 
 [Cliquer sur ce lien pour la présentation générale des données mobilisées](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM2022_PresentationDesDonnees.pdf).

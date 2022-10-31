@@ -1,2 +1,108 @@
 # Doubles différences
 
+## Méthode des doubles différences échelonnées (staggered matching)
+
+Pour réaliser un diff-in-diff, on va utiliser la méthode de différence de différences échelonnées élaboréé par Callaway et Sant'Anna [-@callaway2021] et diffusée dans la librairie {did} [@did].
+
+La spécification employée peut se traduire de la manière suivante :
+
+On l'applique aux aires protégées et à leur déforestation entre 1990 et 2021. On commence par préparer le jeu de données tel qu'attendu par {did}, de sorte à obtenir :
+
+```{r}
+# On installe le package {did} si pas encore installé
+if (!("did" %in% installed.packages())) {
+  install.packages("did")
+}
+library(did) # Pour des doubles-différences échelonnées
+library(tidyverse) # Pur faciliter la manipulation de données
+library(lubridate) # Pour modifier les dates
+library(gt) # Pour de jolis tableaux
+
+load("data/ch3_AP_Vahatra.rds") # On charge les données préparées au chapitre 3
+options(scipen = 999) # On désactive les notations scientifiques
+
+# On prépare le jeu de données au format attendu par {did}
+ap_did <- AP_Vahatra %>%
+  select(nom, date_creation, num_atlas = num_atlas_, starts_with("TMF"),
+         cat_iucn = cat__iucn) %>%
+  mutate(annee_creation = year(date_creation)) %>%
+  pivot_longer(cols = starts_with("TMF"), 
+               names_to = "TMF_variable", 
+               values_to = "TMF_value") %>%
+  mutate(annee = str_extract(TMF_variable, "[:digit:]{4}"),
+         annee = as.numeric(annee),
+         traitee = ifelse(annee > annee_creation, 1, 0),
+         TMF_variable = str_remove(TMF_variable, "TMF"),
+         TMF_variable = str_remove(TMF_variable, "_[:digit:]{4}"),
+         group = 1) %>%
+  pivot_wider(names_from = TMF_variable, values_from = TMF_value)
+
+gt(slice(ap_did, 20:30)) %>%
+  tab_header(title = "Jeu de données 1990-2020 préparé pour {did}",
+             subtitle = "Echantillon des 10 lignes") %>%
+  tab_source_note("Source : Aires protégées d'AP Vahatra, données TMF")
+```
+
+
+## Double différences pour la déforestation
+
+On passe maintenant à l'estimation pour la déforestation.
+
+```{r}
+#| fig-height: 20
+attgt_apmada_def <- att_gt(yname = "ly_ratio",
+                        tname = "annee",
+                        idname = "num_atlas",
+                        gname = "annee_creation",
+                        data = ap_did,
+                       control_group = "notyettreated")
+ggdid(attgt_apmada_def) +
+  theme(axis.text.x =  element_text(angle = 45, hjust = 1))
+```
+
+Peu d'effet ressortent graphiquement. 
+
+On aggrège les effets de traitment pour l'ensemble de la période
+```{r}
+agg.simple <- aggte(attgt_apmada_def, type = "simple", na.rm = TRUE)
+
+summary(agg.simple)
+# gt(summary(agg.simple)) %>%
+#   tab_header(title = "Effet aggrégé pour les traités de 1991 à 2011") %>%
+#   tab_footnote("Résultats encore préliminaire à confirmer (erreurs possibles)")
+
+```
+
+Pour la déforestation, on ne voit aucun effet net des aires protégées (ATT très faible et non significativement différent de 0). Mais la taille de l'échantillon est extrêmement restreinte et il est on ne peut pas vraiment en tirer d'interprétation.
+
+## Double différence pour la dégradation
+
+On modifie la spécification en remplaçant la variable à expliquer "déforestation" par "dégradation" (cf. présentation des sources dans @sec-recap_donnees).
+
+```{r}
+#| fig-height: 20
+attgt_apmada_deg <- att_gt(yname = "deg_ratio",
+                        tname = "annee",
+                        idname = "num_atlas",
+                        gname = "annee_creation",
+                        data = ap_did,
+                       control_group = "notyettreated")
+ggdid(attgt_apmada_deg) +
+  theme(axis.text.x =  element_text(angle = 45, hjust = 1))
+```
+
+On aggrège les résultats :
+
+```{r}
+agg.simple <- aggte(attgt_apmada_deg, type = "simple", na.rm = TRUE)
+
+summary(agg.simple)
+# gt(summary(agg.simple)) %>%
+#   tab_header(title = "Effet aggrégé pour les traités de 1991 à 2011") %>%
+#   tab_footnote("Résultats encore préliminaire à confirmer (erreurs possibles)")
+
+```
+
+Là encore, l'effet mesuré est très faible et non significativement différent de 0.
+
+> **Mise en garde :** l'échantillon utilisé à titre d'exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d'observation, par exemple en se focalisant sur des pixels ou des cellules.
