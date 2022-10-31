@@ -106,6 +106,12 @@ summary(def_96_16_match)
 
 > **Exercice** : Etudiez les tables ci-dessus. Quel effet a eu l'appariement sur l'équilibre des variables entre le groupe de traitement et le groupe de contrôle ? Combien d'observation ont été écartées.
 
+On peut observer la distance entre groupe de traitement et de contrôle.
+
+```{r}
+plot(def_96_16_match, type = "jitter", interactive = FALSE)
+```
+
 On peut également représenter l'équilibre entre les variables avant et après traitement avec les graphiques suivants.
 
 ```{r}

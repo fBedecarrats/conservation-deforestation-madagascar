@@ -1,3 +1,16 @@
 # Récapitulatif et description des données disponibles {#sec-recap_donnees}
 
+## Discussion sur la construction, portée et limites de ces données
+
 [Cliquer sur ce lien pour la présentation générale des données mobilisées](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM2022_PresentationDesDonnees.pdf).
+
+## Liste des variables
+
+# Autres sources d'information
+
+-   [DHS](https://dhsprogram.com/data/available-datasets.cfm) et [MICS](http://mics.unicef.org/) : principales enquêtes socio-sanitaires
+-   [IHSN](http://www.ihsn.org/) : la plupart des enquêtes nationales
+-   [World Bank Microdata catalog](http://microdata.worldbank.org/index.php/catalog/central) : microdonnées de nombreuses autres enquêtes (notamment des grosses enquêtes sur l'eau par la Banque mondiale)
+-   [WAPOR](https://wapor.apps.fao.org/home/1) : données satellitaires préprocessées de productivité : rapport biomass water productivity, évapotranspiration, précipitations... (cliquez sur l'onglet « layers » en bas à gauche de l'écran pour voir la liste des donnés disponibles)
+
+Il y a encore plein d'autres choses sur l'accès à l'eau dans les établissements de santé ou les écoles, ou encore le satellitaire, mais c'est plus diffus et je ne veux pas vous noyer. On prépare un outil en ligne avec la KfW qui permettra aux REP et partenaires de mieux s'y retrouver.
