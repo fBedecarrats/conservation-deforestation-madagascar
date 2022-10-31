@@ -9,7 +9,7 @@ This work is licensed under a
 [cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
 
-> This is a tutorial in French on impact evaluation applied to protected areas in Madagascar.
+> This is a tutorial in French on impact evaluation applied to protected areas in Madagascar. It is available online at: https://fbedecarrats.github.io/conservation-deforestation-madagascar/
 
 # Présentation du contenu
 
