@@ -60,10 +60,12 @@ sf_use_s2(TRUE)
 n_hex <- nrow(grille_mada)
 # Carte pour visualiser le résultat ------------------------------------------
 
-if (file.exists("data/carte_zoom.rds")) {
-  load("data/carte_zoom.rds")
-  load("data/elements_carte_zoom.rds")
-} else {
+# A supprimer après validation, l'échappement ne fonctionne pas. 
+# if (file.exists("data/carte_zoom.rds")) {
+  # load("data/carte_zoom.rds")
+  # load("data/elements_carte_zoom.rds")
+# } else {
+
 ## Carte de droite : zoom sur une zone spécifique-----------------------------
 # On part d'un dataframe contenant une adresse
 nom_centre_zoom <- "Maroantsetra"
@@ -108,7 +110,7 @@ carte_zoom <- tm_shape(fond_carte_zoom) +
              align = "right",
              position = c("right", "BOTTOM"))
 save(carte_zoom, zoom_boite, file = "data/carte_zoom.rds")
-}
+# }
 
 
 ## Carte de gauche : simple à réaliser mais hexagones non visibles -------------
@@ -122,7 +124,8 @@ carte_grille <- tm_shape(contour_mada) +
                                "hexagones de", taille_hex, "km2"),
             main.title.size = taille_titres_cartes)
 
-
+# Assemblage des deux cartes ---------------------------------------------------
+tmap_arrange(carte_grille, carte_zoom, ncol = 2) 
 ```
 
 ## Récupération des données pour le maillage
