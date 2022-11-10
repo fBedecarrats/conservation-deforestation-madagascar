@@ -8,7 +8,20 @@ Un point crucial à retenir est l'importance de toujours accompagner l'analyse d
 
 ## Liste des variables
 
-# Autres sources d'information
+On réalise un résumé des données disponible. Les fonctions `str()` et `summary()` sont les plus couramment utilisées pour avoir une idée rapide du contenu des tables pendant qu'on étudie les données. Le package {} facilite l'élaboration d'une description rapide d'un jeu de données. C'est l'exemple qu'on prend ci-desous.
+
+> TODO: le faire avec un package qui produit un joli rendu.
+
+```{r}
+load("data/ch3_AP_Vahatra.rds")
+str(AP_Vahatra)
+```
+
+### Exercices
+
+Produire le même tableau de résumé pour les autres tables :
+
+## Autres sources d'information
 
 -   [DHS](https://dhsprogram.com/data/available-datasets.cfm) et [MICS](http://mics.unicef.org/) : principales enquêtes socio-sanitaires
 -   [IHSN](http://www.ihsn.org/) : la plupart des enquêtes nationales
