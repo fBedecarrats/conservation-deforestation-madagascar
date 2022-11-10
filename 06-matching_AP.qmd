@@ -56,8 +56,8 @@ Pour commencer, on va estimer le un modèle qui estime dans quel mesure la prope
 Cette spécification peut se représenter selon l'équation suivante : \[TODO: revoir la spécification au format standard\]
 
 $$
-T = A + B + C + D + E  
-$$
+T = \alpha + \beta_{1}A + \beta_{2}B + \beta_{3}C + \beta_{4}D + \beta_{5}E + \varepsilon
+$$ {#eq-psm}
 
 Où Y est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l'altitude, D, le caractère accidenté et E le temps de parcours à une ville d'au moins 5000 habitants.
 
@@ -123,7 +123,7 @@ bal.plot(def_96_16_match, var.name = "dist_ville", which = "both")
 Le modèle qu'on utilise pour estimer l'impact est très proche de celui exposé ci-dessus, à la différence que la variable de traitement passe dans la partie droite, et qu'elle est remplacée par la déforestation.
 
 $$
-Y = T + A + B + C + D + E
+Y = \alpha + \beta_{0}T + \beta_{1}A + \beta_{2}B + \beta_{3}C + \beta_{4}D + \beta_{5}E + \varepsilon
 $$
 
 Où Y est la déforestation, T est le traitement, A est la taille (surface en hectares, B le taux de couverture forestière en 1996, C l'altitude, D, le caractère accidenté et E le temps de parcours à une ville d'au moins 5000 habitants.
