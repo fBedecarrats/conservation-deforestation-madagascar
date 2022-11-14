@@ -60,8 +60,8 @@ Outre Mapme.biodiversity, on mobilise une série de librairies (appelées "packa
 
 ```{r Installation et chargement des librairies requises}
 # # Le package est en cours de développement, toujours installer la version en cours
-# remotes::install_github("mapme-initiative/mapme.biodiversity", 
-#                         upgrade = "always")
+remotes::install_github("mapme-initiative/mapme.biodiversity",
+                        upgrade = "always")
 
 librairies_requises <- c( # On liste les librairies dont on a besoin
   "tidyverse", # Une série de packages pour faciliter la manipulation de données
@@ -75,7 +75,7 @@ librairies_requises <- c( # On liste les librairies dont on a besoin
   "geodata", # Pour télécharger simplement les frontières administratives
   "tidygeocoder", # pour obtenir les coordo GPS d'un point à partir de son nom
   "maptiles", # Pour télécharger des fonds de carte 
-  "mapme.biodiversity", # Acquisition et traitement des données du projet
+  # "mapme.biodiversity", # Acquisition et traitement des données du projet
   "plm", # Linear Models for Panel Data and robust covariance matrices
   "broom", # pour reformater simplement les rendus de tests statistiques
   "stargazer", # Reformater de manière plus lisible les résumé des régressions
