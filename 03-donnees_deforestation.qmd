@@ -59,41 +59,32 @@ La procédure de traitement de ces fichiers sur Mapme est analogue à celle empl
 ```{r}
 #| eval: false
 
-# On charge les polygones travaillés au chapitre 2
-load("data/Vahatra_poly.rds")
+# On charge les polygones travaillés au chapitre 1
+WDPA_Mada <- wdpa_read("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip") 
+load("data/contour_mada.rds")
 
-# Constitution d'un portefeuille (voir la documentation)
-AP_poly <- init_portfolio(x = AP_poly, 
-                          years = 2000:2020,
-                          outdir = "data_s3/mapme",
-                          cores = 16,
-                          add_resources = TRUE,
-                          verbose = TRUE)
+# Cette fonction calcule la part d'un polygone incluse dans un 
+# autre polygone et retourne un ratio entre 0 et 1
+ratio_inclus <- function(x, y) {
+  inclus <- st_intersection(x, y)
+  ratio <- st_area(inclus) / st_area(x)
+  return(ratio)
+}
+
+# On charge les polygones travaillés au chapitre 1
+WDPA_poly  <- WDPA_Mada %>%
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>%
+  st_cast("POLYGON")
 
 
 # Get GFW data
-AP_poly <- get_resources(x = AP_poly, 
-                         resources = c("gfw_treecover", "gfw_lossyear", 
-                                       "gfw_emissions"))
+WDPA_poly  <- get_resources(x = WDPA_poly , 
+                         resources = c("gfw_treecover", "gfw_lossyear"))
 
-# Données d'accessibilité de Nelson et al. (2018)
-AP_poly <-  get_resources(x = AP_poly, resource = "nelson_et_al",  
-                          range_traveltime = "5k_110mio")
-# Données de qualité des sols (uniquement teneur )
-AP_poly  <-  get_resources(x = AP_poly,
-                           resources = "soilgrids",  layers = "clay", 
-                           depths = "5-15cm", stats = "mean")
-# Modèle numérique de terrain SRTM de la NASA
-AP_poly <- get_resources(x = AP_poly, resource = "nasa_srtm")
-# Données de feux
-AP_poly <- get_resources(x = AP_poly, resource = "nasa_firms",
-                         instrument = "MODIS")
-
-# Get 
 # Indicateurs de couvert forestier
-AP_poly  <- calc_indicators(x = AP_poly,
-                            indicators = "treecover_area_and_emissions", 
-                            min_cover = 30, min_size = 1)
+WDPA_poly  <- calc_indicators(x = WDPA_poly,
+                            indicators = "treecover_area", 
+                            min_cover = 10, min_size = 0.5)
 
 # On réorganise les variables -----------------------------------------------
 # Couvert forestier annuel en colonnes plutôt qu'en liste imbriquée  
