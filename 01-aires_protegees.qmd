@@ -225,7 +225,6 @@ Il faut aussi s'assurer qu'on filtre bien les entités analysées selon un crit�
 On commence par télécharger et présenter ces données.
 
 ```{r}
-
 # On regarde si les données WDPA sont disponibles sur l'ordinateur qui exécute
 if (file.exists("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")) {
   # Si oui, on charge
@@ -236,10 +235,29 @@ if (file.exists("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")) {
                       download_dir = "data/WDPA") 
 }
 
+tm_shape(contour_mada) +
+  tm_borders() +
+  tm_shape(WDPA_Mada) + 
+  tm_polygons(col = "IUCN_CAT", alpha = 0.6, title = "Catégorie IUCN",
+              id = "NAME",
+              popup.vars = c("Type" = "DESIG",
+                             "Catégorie UICN" = "IUCN_CAT",
+                             "Surface déclarée" = "REP_AREA",
+                             "Année du statut" = "STATUS_YR")) +
+  tmap_options(check.and.fix = TRUE)
 
 
 # TODO: inclure graph et description des données.
 ```
+
+Plusieurs aires protégées sont superposées les unes aux autres. 
+De nombreuses données sont manquantes.
+
+```{r}
+
+```
+
+
 
 ## Comparaison des données Vahatra et WDPA
 
