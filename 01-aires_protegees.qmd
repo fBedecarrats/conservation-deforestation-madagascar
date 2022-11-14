@@ -115,11 +115,7 @@ AP_Vahatra <- AP_Vahatra %>%
   select(-date_creationA, -date_creationB) %>%
   # On place les colonnes créées à gauche pour les inspecter facilement
   relocate(date_creation:mention_changement, .after = creation) 
-
 # Après une vérification manuelle, on remarque les données de l'association Vahatra comportent des mentions incomplètes pour certaines aires, qui n'ont pas été extraites:
-
-
-# Lokobe : 31 décembre 1927
 AP_Vahatra <- AP_Vahatra %>%
   mutate(date_creation = case_when(nom == "Lokobe" ~ ymd("1927-12-31"),
                                    nom == "Mantadia" ~ ymd("1989-01-11"),
@@ -129,7 +125,8 @@ AP_Vahatra <- AP_Vahatra %>%
                                        nom == "Tsaratanana" ~ ymd("2011-07-06"),
                                        nom == "Pic d'Ivohibe" ~ ymd("2015-04-28"),
                                        nom == "Mantadia" ~ ymd("2002-08-07"),
-                                       TRUE ~ date_modification)) %>%
+                                       TRUE ~ date_modification),
+         an_creation = year(date_creation)) %>%
   st_make_valid() # fiabilise qu'il n'y a pas d'erreurs topologiques
 # dir.create("AP_Vahatra")
 # st_write(AP_Vahatra, "out/AP_Vahatra.shp")
@@ -139,9 +136,12 @@ AP_Vahatra <- AP_Vahatra %>%
 Le bloc de code suivant génère une carte interactive. On a également inclus des lignes de code qui permettent de formater la carte joliment pour un rendu figé (pdf/LaTeX, html statique, word), mais ce code est "commenté", c'est-à-dire qu'on a placé des dièses au début de chaque ligne, de sorte qu'il ne s'exécute pas (R n'exécute jamais ce qui se trouve à droite d'un \# sur une ligne). Pour plus de détails sur la manière dont on produit des cartes, voire l'annexe : Cartes simples en R
 
 ```{r}
+# On regarde si les frontières terrestres de Mada ont déjà été téléchargées
 if (file.exists("data/contour_mada.rds")) {
+  # Si c'"est le cas, on charge la version déjà disponible localement
   load("data/contour_mada.rds")
 } else {
+  # Sinon on la télécharge depuis la base GADM
   contour_mada <- gadm(country = "Madagascar", resolution = 1, level = 0,
                      path = "data/GADM") %>%
   st_as_sf()
