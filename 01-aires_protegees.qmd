@@ -154,19 +154,14 @@ tmap_mode("view") # En mode interactif
 tm_shape(contour_mada) +
   tm_borders() +
   tm_shape(AP_Vahatra) + 
-  tm_polygons(col = "cat__iucn", alpha = 0.6, title = "Catégorie IUCN") +
-  tmap_options(check.and.fix = TRUE) # +
-# Les dièses en début de ligne font que ce qui suit ne s'exécute pas.
-# La suite est uniquement pour les rendus fixes (tmap_mode = "plot"), p. ex. pour les pdf
-  # # NB : on note les positions en majuscules quand on veut coller aux marges
-  # tm_credits("Sources: WDPA et GADM", position = c("RIGHT", "BOTTOM"),
-  #            size = 0.6) +
-  # tm_layout(main.title = "Aires protégées de Madagascar",
-  #           # NB : position en minuscules pour laisser un espace avec la marge
-  #           main.title.position = c("center", "top"),
-  #           main.title.size = taille_titres_cartes,
-  #           legend.position = c("left", "top"),
-  #           legend.outside = TRUE)
+  tm_polygons(col = "cat_iucn", alpha = 0.6, title = "Catégorie IUCN",
+              id = "nom",
+              popup.vars = c("Acte de création" = "creation",
+                             "Année de création" = "an_creation",
+                             "Surface (ha)" = "hectares",
+                             "Nom complet" = "full_name",
+                             "Gestionnaire" = "gest_1")) +
+  tmap_options(check.and.fix = TRUE)
 ```
 
 On peut également réaliser un graphique qui présente l'historique de création des aires protégées. Pour plus de précisions sur la manière de produire des graphiques en R, voir l'annexe correspondante.
