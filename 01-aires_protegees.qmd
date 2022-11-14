@@ -31,8 +31,8 @@ unzip("data/Vahatra98AP.zip", exdir = "data/Vahatra")
 # collection de fichiers homonymes .shp, .dbf, .shx qui est chargée.
 AP_Vahatra <- st_read("data/Vahatra/Vahatra98AP.shp", quiet = TRUE) %>%
   # Il manque la projection (pas de fichier .prj), on la spécifie à la main
-  st_set_crs("EPSG:4326") # EPSG 4325 = WSG 84 = le standard pour le web
-
+  st_set_crs("EPSG:4326") %>% # EPSG 4325 = WSG 84 = le standard pour le web
+  rename(cat_iucn = cat__iucn) # une variable a un nom étrange : on simplifie
 # L'option ci-dessous est un peu cryptique : des caractéristiques topologiques
 # de la carte source sont incompatibles avec la possibilité d'avoir des objets
 # sphériques dans sf. Cela disparait si on désactive cette possibilité
