@@ -133,7 +133,7 @@ AP_Vahatra <- AP_Vahatra %>%
 # writexl::write_xlsx(st_drop_geometry(AP_Vahatra), "AP_Vahatra.xlsx")
 ```
 
-Le bloc de code suivant génère une carte interactive. On a également inclus des lignes de code qui permettent de formater la carte joliment pour un rendu figé (pdf/LaTeX, html statique, word), mais ce code est "commenté", c'est-à-dire qu'on a placé des dièses au début de chaque ligne, de sorte qu'il ne s'exécute pas (R n'exécute jamais ce qui se trouve à droite d'un \# sur une ligne). Pour plus de détails sur la manière dont on produit des cartes, voire l'annexe : Cartes simples en R
+Le bloc de code suivant génère une carte interactive. On a également inclus des lignes de code qui permettent de formater la carte joliment pour un rendu figé (pdf/LaTeX, html statique, word), mais ce code est "commenté", c'est-à-dire qu'on a placé des dièses au début de chaque ligne, de sorte qu'il ne s'exécute pas (R n'exécute jamais ce qui se trouve à droite d'un \# sur une ligne). Pour plus de détails sur la manière dont on produit des cartes, voire la section "Cartes simples avec R" dans le chapitre @sec-fondamentaux.
 
 ```{r}
 # On regarde si les frontières terrestres de Mada ont déjà été téléchargées
@@ -164,7 +164,7 @@ tm_shape(contour_mada) +
   tmap_options(check.and.fix = TRUE)
 ```
 
-On peut également réaliser un graphique qui présente l'historique de création des aires protégées. Pour plus de précisions sur la manière de produire des graphiques en R, voir l'annexe correspondante.
+On peut également réaliser un graphique qui présente l'historique de création des aires protégées. Pour plus de précisions sur la manière de produire des graphiques en R, voir l'annexe correspondante (@sec-fondamentaux).
 
 ```{r}
 #| fig-height: 12 
@@ -248,7 +248,7 @@ tm_shape(contour_mada) +
 
 ```
 
-De nombreuses données sont manquantes.
+En observant les métadonnées associées aux aires protégées dans la carte interactive ci-dessus, on s'aperçoit que de nombreuses informations sont manquantes. On passe en revue la complétude des données issues de WDPA.
 
 ```{r}
 # Résumé des valeurs manquantes
@@ -266,14 +266,52 @@ WDPA_Mada %>%
   tab_source_note("Source : WDPA (octobre 2022)")
 ```
 
-
-On remarque en outre que plusieurs aires protégées de la base WDPA se superposent les unes aux autre. 
+Outre le problème des données manquantes, on remarque sur la carte interactive ci-dessus que plusieurs aires protégées de la base WDPA se superposent les unes aux autres. Afin de jauger l'empleur de ces superpositions, on calcule tout d'abord la somme des surfaces des aires protégéés enregistrées dans la base WDPA, puis on la compare à leur emprise totale, sans doublon.
 
 ```{r}
 
+# On ne garde que les polygones (sans les points)
+WDPA_Mada_poly <- WDPA_Mada %>% 
+  filter(st_geometry_type(.) == "MULTIPOLYGON")
+
+# On ne garde que les parties terrestres
+WDPA_Mada_poly_terrestre <- WDPA_Mada_poly %>%
+  st_intersection(contour_mada)
+
+# On calcule le total des surfaces de chaque aires
+surface_cumul <- WDPA_Mada_poly_terrestre %>%
+  mutate(surface = st_area(.)) %>%
+  st_drop_geometry() %>% 
+  summarise(surface = sum(surface, na.rm = TRUE)) %>%
+  mutate(`Type de cumul` = "Somme des surfaces terrestres de chaque aire protégée",
+         .before = everything())
+
+library(units)
+surface_tot <- WDPA_Mada_poly_terrestre %>%
+  st_union() %>%
+  st_as_sf() %>% 
+  mutate(surface = st_area(.)) %>%
+  st_drop_geometry() %>% 
+  summarise(surface = sum(surface, na.rm = TRUE)) %>%
+  mutate(`Type de cumul` = "Emprise totale des aires protégées",
+         .before = everything())
+
+compare_surfaces <- surface_cumul %>%
+  bind_rows(surface_tot) %>%
+  mutate(surface = set_units(surface, "hectares"),
+         surface = as.numeric(surface)) %>%
+  rename(`Surface (ha)` = surface)
+
+compare_surfaces %>%
+  gt() %>%
+  fmt_number(columns = `Surface (ha)`, use_seps = TRUE, decimals = 0) %>% 
+  tab_header(title = "Superposition des aires WDPA",
+             subtitle = "Somme des surfaces d'aires vs. emprise totale") %>%
+  tab_source_note("Source : WDPA (oct. 2022), calculs des auteurs")
+  
 ```
 
-
+Cela signifie qu'on a de nombreuses aires protégées dans la base WDPA qui se superposent et que leur emprise réelle est bien inférieure à la somme de leurs surfaces. Réaliser des sommes ou des moyennes simples sur l'ensemble de la base WDPA revient à compter plusieurs fois les mêmes zones géographiques.
 
 ## Comparaison des données Vahatra et WDPA
 
