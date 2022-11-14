@@ -180,7 +180,7 @@ AP_Vahatra_carte <- AP_Vahatra %>%
                                 hectares > 150000 ~ 1.5,
                                 hectares >  50000 ~ 1,
                                              TRUE ~ 0.5)) %>%
-  rename(`Catégorie IUCN` = cat__iucn)
+  rename(`Catégorie IUCN` = cat_iucn)
 
 # On crée un graph pour les anciennetés
 graph_gauche <- AP_Vahatra_carte %>%
@@ -341,10 +341,8 @@ verif_meta_wdpa <-AP_Vahatra %>%
   st_drop_geometry() %>% # Pas besoin d'un jeu spatial
   select(nom:date_modification, nom_wdpa) %>% # colonnes à garder dans Vahatra
   # On renomme la catégorie IUCN de Vahatra et on code les NA comme dans WDPA
-  mutate(cat_iucn = ifelse(is.na(cat__iucn), "Not Reported", cat__iucn)) %>%
-  relocate(cat_iucn, .before = cat__iucn) %>% # Nouvelle colonne près de l'ancienne
+  mutate(cat_iucn = ifelse(is.na(cat_iucn), "Not Reported", cat_iucn)) %>%
   left_join(WDPA_a_comparer, by = "nom_wdpa") %>% # On rassemble Vahatra et WDPA
-  select(-nom_wdpa, -cat__iucn) %>% # On enlève les colonnes inutiles
   # On compare les dates et statuts
   mutate(`Différence de date` = year(date_creation) != year_wdpa,
          `Différence de statut` = cat_iucn != cat_iucn_wdpa)
