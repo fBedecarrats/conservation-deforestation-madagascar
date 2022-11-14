@@ -246,12 +246,28 @@ tm_shape(contour_mada) +
                              "Année du statut" = "STATUS_YR")) +
   tmap_options(check.and.fix = TRUE)
 
-
-# TODO: inclure graph et description des données.
 ```
 
-Plusieurs aires protégées sont superposées les unes aux autres. 
 De nombreuses données sont manquantes.
+
+```{r}
+# Résumé des valeurs manquantes
+WDPA_Mada %>%
+  st_drop_geometry() %>%
+  summarise(`Nombre total d'aires protégées` = n(),
+            `Catégorie IUCN manquante` = sum(IUCN_CAT == "Not Reported"),
+            `Année de création manquante` = sum(STATUS_YR == 0),
+            `Gestionnaire manquant` = sum(MANG_AUTH == "Not Reported")) %>%
+  pivot_longer(cols = everything(),
+               names_to = " ",
+               values_to = "Nombre d'aires") %>%
+  gt() %>%
+  tab_header("Valeurs manquantes dans les données WDPA pour Madagascar") %>%
+  tab_source_note("Source : WDPA (octobre 2022)")
+```
+
+
+On remarque en outre que plusieurs aires protégées de la base WDPA se superposent les unes aux autre. 
 
 ```{r}
 
