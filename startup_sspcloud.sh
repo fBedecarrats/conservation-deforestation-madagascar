@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# export QUARTO_VERSION="1.2.174"
-# sudo curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
-# sudo gdebi quarto-linux-amd64.deb -n
+export QUARTO_VERSION="1.2.174"
+sudo curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
+sudo gdebi quarto-linux-amd64.deb -n
 
 
 
