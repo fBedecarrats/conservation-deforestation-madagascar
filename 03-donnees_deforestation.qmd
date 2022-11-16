@@ -14,6 +14,8 @@ Pour commencer, on récupère le travail réalisé par Carvalho et al. [-@carval
 library(tidyverse)
 library(readxl)
 library(sf)
+library(wdpar)
+library(mapme.biodiversity)
 
 # Voir le chapitre "Fondamentaux R" pour une aide à l'import.
 sup2 <- read_xlsx("data/Carvalho2018sup2.xlsx", # Enplacement du fichier
@@ -61,20 +63,20 @@ La procédure de traitement de ces fichiers sur Mapme est analogue à celle empl
 
 # On charge les polygones travaillés au chapitre 1
 WDPA_Mada <- wdpa_read("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip") 
+
+# On charge aussi le contour de Madagascar
 load("data/contour_mada.rds")
 
-# Cette fonction calcule la part d'un polygone incluse dans un 
-# autre polygone et retourne un ratio entre 0 et 1
-ratio_inclus <- function(x, y) {
-  inclus <- st_intersection(x, y)
-  ratio <- st_area(inclus) / st_area(x)
-  return(ratio)
-}
-
 # On charge les polygones travaillés au chapitre 1
-WDPA_poly  <- WDPA_Mada %>%
-  filter(st_geometry_type(.) == "MULTIPOLYGON") %>%
+WDPA_poly  <- WDPA_Mada %>% # On enlève les AP pour lesquelles on n'a que des points
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>% 
   st_cast("POLYGON")
+
+WDPA_poly <- init_portfolio(WDPA_poly,
+                           years = 2000:2020,
+                           outdir  = "out",
+                           cores = 18,
+                           add_resources = TRUE)
 
 
 # Get GFW data
@@ -84,22 +86,20 @@ WDPA_poly  <- get_resources(x = WDPA_poly ,
 # Indicateurs de couvert forestier
 WDPA_poly  <- calc_indicators(x = WDPA_poly,
                             indicators = "treecover_area", 
-                            min_cover = 10, min_size = 0.5)
+                            min_cover = 10, min_size = 1)
 
-# On réorganise les variables -----------------------------------------------
-# Couvert forestier annuel en colonnes plutôt qu'en liste imbriquée  
-deforest_par_an <- AP_poly %>%
-  unnest(treecover_area_and_emissions) %>%
-  select(assetid, nom, years, treecover) %>%
-  filter(!is.na(years)) %>%
+deforest_par_an <- WDPA_poly %>%
+  unnest(treecover_area) %>%
+  # filter(!is.na(years)) %>%
   pivot_wider(names_from = "years", values_from = "treecover", 
               names_prefix = "treecover_") %>%
-  st_drop_geometry()
+  st_drop_geometry() %>%
+  select(-assetid) %>%
+  group_by(across(WDPAID:CONS_OBJ)) %>%
+  summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
 
-# Jointure du couvert forestier en colonne avec les données initiales
-AP_poly <- AP_poly %>%
-  select(-treecover_area_and_emissions) %>%
-  left_join(deforest_par_an, by = "assetid")
+save(deforest_par_an, file = "deforest_par_an.rds")
+
 ```
 
 Toutefois, en raison d'un problème liés à la gestion des calculs volumineux, les calculs pour certaines aires protégées renvoient des données aberrantes. Ce point sera mis à jour dans ce guide dès la résolution des erreurs rencontrées. 
