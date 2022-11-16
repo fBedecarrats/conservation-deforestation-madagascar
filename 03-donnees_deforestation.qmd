@@ -165,6 +165,15 @@ mada_global <- mada_poly %>%
   group_by(across(!starts_with("treecover"))) %>%
   summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
 
+
+library(writexl)
+writexl(list(WDPA = deforest_par_an,
+             Vahatra = APV_par_aire, 
+             Madagascar = mada_global),
+        path = "couvert_forestier_10_1")
+
+
+
 ```
 
 Toutefois, en raison d'un problème liés à la gestion des calculs volumineux, les calculs pour certaines aires protégées renvoient des données aberrantes. Ce point sera mis à jour dans ce guide dès la résolution des erreurs rencontrées. 
