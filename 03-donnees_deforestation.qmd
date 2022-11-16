@@ -98,7 +98,72 @@ deforest_par_an <- WDPA_poly %>%
   group_by(across(WDPAID:CONS_OBJ)) %>%
   summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
 
-save(deforest_par_an, file = "deforest_par_an.rds")
+# Stats pour AP_Vahatra ------------------------------------
+
+# On charge les polygones travaillés au chapitre 1
+APV_poly  <-AP_Vahatra %>% # On enlève les AP pour lesquelles on n'a que des points
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>% 
+  st_cast("POLYGON")
+
+APV_poly <- init_portfolio(APV_poly,
+                           years = 2000:2020,
+                           outdir  = "out_Vahatra",
+                           cores = 18,
+                           add_resources = TRUE)
+
+
+# Get GFW data
+APV_poly  <- get_resources(x = APV_poly , 
+                         resources = c("gfw_treecover", "gfw_lossyear"))
+
+# Indicateurs de couvert forestier
+APV_poly  <- calc_indicators(x = APV_poly,
+                            indicators = "treecover_area", 
+                            min_cover = 10, min_size = 1)
+
+APV_par_aire <- APV_poly %>%
+  unnest(treecover_area) %>%
+  # filter(!is.na(years)) %>%
+  pivot_wider(names_from = "years", values_from = "treecover", 
+              names_prefix = "treecover_") %>%
+  st_drop_geometry() %>%
+  select(-assetid) %>%
+  group_by(across(!starts_with("treecover"))) %>%
+  summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
+
+
+# Stats pour Mada --------------------------------------------------------
+
+# On charge les polygones travaillés au chapitre 1
+mada_poly  <- contour_mada %>% # On enlève les AP pour lesquelles on n'a que des points
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>% 
+  st_cast("POLYGON")
+
+mada_poly <- init_portfolio(mada_poly ,
+                           years = 2000:2020,
+                           outdir  = "out_Vahatra",
+                           cores = 18,
+                           add_resources = TRUE)
+
+
+# Get GFW data
+mada_poly  <- get_resources(x = mada_poly , 
+                         resources = c("gfw_treecover", "gfw_lossyear"))
+
+# Indicateurs de couvert forestier
+mada_poly  <- calc_indicators(x = mada_poly,
+                            indicators = "treecover_area", 
+                            min_cover = 10, min_size = 1)
+
+mada_global <- mada_poly %>%
+  unnest(treecover_area) %>%
+  # filter(!is.na(years)) %>%
+  pivot_wider(names_from = "years", values_from = "treecover", 
+              names_prefix = "treecover_") %>%
+  st_drop_geometry() %>%
+  select(-assetid) %>%
+  group_by(across(!starts_with("treecover"))) %>%
+  summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
 
 ```
 
