@@ -173,7 +173,7 @@ library(writexl)
 write_xlsx(list(WDPA = deforest_par_an,
              Vahatra = APV_par_aire, 
              Madagascar = mada_global),
-        path = "couvert_forestier_10_1")
+        path = "couvert_forestier_10_1.xlsx")
 
 
 
