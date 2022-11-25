@@ -1,2 +1,111 @@
 # Appariement de mailles dans/hors aires protégées {#sec-matching_mailles}
 
+## Procédure en avec/sans
+
+Dans l'analyse par aire protégée, on a mené une analyse avant/après, c'est-à-dire qu'on a
+
+Une procédure détaillée est proposée dans <https://github.com/openkfw/mapme.protectedareas>
+
+On commence ici par une approche naïve, dans le sens où on apparie simplement les zones dans les aires protégées avec les zones hors aires protégées pour expliquer le principe du matching ("appariement", en français).
+
+Les données ne peuvent pas contenir de données manquantes sur les variables d'appariement, donc on les écarte.
+
+```{r}
+library(tidyverse)
+library(MatchIt)
+library(stargazer)
+library(sf)
+library(cobalt)
+library(tmap)
+# Taille des titres des cartes
+taille_titres_cartes = 1
+
+load("data/grille_mada_summary_AP.rds")
+
+# On référence le nom des variables qui vont servir à l'analyse
+variables_analyse <- c("assetid","treatment","distance_minutes_5k_110mio",
+                       "tri_mean", "elevation_mean", "mean_clay_5_15cm",
+                       "treecover_2000", "var_treecover")
+
+# On renomme le ficher 'df' (dataframe) : plus concis dans les commandes ensuite
+df <- grille_mada_summary_AP %>%
+  # On supprime toutes les lignes pour lesquelles au moins 1 valeur variable 
+  # est manquante parmi les variables d'analyse
+  mutate(treatment = position_ap == "Intérieur") %>% 
+  drop_na(any_of(variables_analyse))
+
+```
+
+On analyse maintenant le score de propension.
+
+```{r}
+
+# Get propensity scores
+glm_out <- glm(treatment ~ 
+                 distance_minutes_5k_110mio + 
+                 mean_clay_5_15cm + 
+                 tri_mean +
+                 elevation_mean + 
+                 treecover_2000,  # Très étrange
+               family = binomial(link = "probit"),
+               data = df)
+
+stargazer(glm_out,
+          summary = TRUE,
+          type = "text",
+          title = "Probit regression for matching frame ")
+```
+
+On visualise la localisation des cellules utilisées comme contrôles.
+
+```{r}
+m_out <- matchit(treatment ~ 
+                   distance_minutes_5k_110mio + 
+                   mean_clay_5_15cm + 
+                   tri_mean +
+                   elevation_mean + 
+                   treecover_2000,
+                 data = df,
+                 method = "nearest",
+                 replace = TRUE,
+                 # exact = ~ as.factor(NAME_0),
+                 distance = "glm", 
+                 discard = "both", # common support: drop units from both groups 
+                 link = "probit")
+
+print(m_out)
+# print(summary(m_out, un = FALSE))
+bal_table <- bal.tab(m_out, un = TRUE)
+print(bal_table)
+m_data <- match.data(m_out) %>%
+  st_sf()
+# On charge le countour des frontières malgaches
+load("data/contour_mada.rds")
+
+# On visualise les données appareillées
+tm_shape(contour_mada) +
+  tm_borders() +
+  tm_shape(m_data) +
+  tm_fill(col = "treatment", palette = "Set1", title = "Groupes d'appariement",
+          labels = c("Contrôle", "Traitement")) +
+  tm_layout(legend.outside = TRUE,
+            main.title = "Localisation des groupes de traitement et de contrôle",
+            main.title.position = c("center", "top"),
+            main.title.size = taille_titres_cartes)
+```
+
+On réalise la régression.
+
+```{r}
+
+modele <- lm(formula = var_treecover ~
+               treatment +
+               distance_minutes_5k_110mio + 
+               mean_clay_5_15cm + 
+               tri_mean +
+               elevation_mean + 
+               treecover_2000,
+             data = m_data,
+             weights = weights)
+stargazer(modele, type = "text")
+```

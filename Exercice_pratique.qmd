@@ -1,0 +1,160 @@
+---
+title: "Exercice pratique"
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Problématique
+
+Je décris ma problématique
+
+## Données
+
+Je décris mes données.
+
+```{r}
+# On charge la base Vahatra
+# Dès le départ
+library(tidyverse)
+library(sf)
+library(tmap)
+
+
+# Charge SF
+AP_Vahatra <- st_read("data_exo/AP_Vahatra.shp") %>%
+  # Regarde la table et recode
+  rename(cat_iucn = cat_icn, creation = creatin, date_creation = dt_crtn,
+         num_atlas = nm_tls_) %>%
+  st_make_valid()
+
+
+sf_use_s2(FALSE) # Apres 
+
+tmap_mode("view") # Apres
+
+# On fait une carte
+tm_shape(AP_Vahatra) +
+  tm_polygons(col = "cat_iucn") +
+  tmap_options(check.and.fix = TRUE) # Apres
+
+# Renvoyer vers geocompr
+# Chercher comment créer une carte
+```
+
+Je décris ce jeu. Et on va aussi chercher des données de forêt.
+
+```{r}
+# Chargées ensuite.
+library(lubridate)
+# A rajouter après
+library(readxl)
+
+# Charge xl avec l'assistant
+carvalho <- read_excel("data_exo/carvalho.xlsx") %>%
+  rename(foret96 = `Forest cover (ha) in 1996`) # Apres
+
+# Puis jointeure : réflexion sur la clé
+ap <- AP_Vahatra %>%
+  left_join(carvalho, by = "num_atlas")
+
+# On écrit les données
+write_csv2(ap, "ap.csv")
+
+# On recode quelques variables
+ ap2 <- ap %>%
+  mutate(an_creation = year(date_creation), # Après
+         traitement = ifelse(an_creation < 2015, 1, 0),
+         groupe = ifelse(traitement == 1, "traitement", "controle"),
+         tx_foret96 = foret96 / hectars * 100,
+         .after = creation)
+
+ ap2 %>%
+   ggplot(aes(x = tx_foret96, fill = groupe)) +
+   # geom_density(alpha = 0.6) + # en premier
+   geom_histogram(alpha = 0.6) + 
+   facet_wrap("groupe") + 
+   ggtitle("Couvert forestier en 1996") +
+   labs(x = "Taux de couvert forestier",
+        y = "Nombre d'aires")
+ 
+```
+
+```{r}
+## Observations sur le contenu.
+options(scipen =999)
+library(gt)
+comp_foret96 <- ap2 %>%
+  st_drop_geometry() %>%
+  group_by(groupe) %>%
+  summarise(nombre_aires = n(),
+            couv_forest96 = mean(tx_foret96, na.rm = TRUE)) 
+
+gt(comp_foret96)
+```
+
+Régression
+
+```{r}
+load("data/Vahatra_poly.rds")
+
+# Vahatra_vars_terrain <- Vahatra_poly %>%
+#   unnest(cols = c(tri, elevation, traveltime)) %>%
+#   st_drop_geometry() %>%
+#   select(nom, num_atlas = num_atlas_, hectares, indice_accidente = tri_mean, dist_ville = minutes_mean, 
+#          altitude = elevation_mean) %>%
+#   group_by(nom, num_atlas) %>%
+#   summarise(indice_accidente = weighted.mean(indice_accidente, hectares,
+#                                              na.rm = TRUE),
+#             dist_ville = weighted.mean(dist_ville, hectares,
+#                                        na.rm = TRUE),
+#             altitude = weighted.mean(altitude, hectares,
+#                                      na.rm = TRUE))
+# write_rds(Vahatra_vars_terrain, "data_exo/Vahatra_vars_terrain.rds")
+Vahatra_vars_terrain <- read_rds("data_exo/Vahatra_vars_terrain.rds")
+
+ap3 <- ap2 %>%
+  left_join(Vahatra_vars_terrain, by = "num_atlas")
+```
+
+On teste le matching.
+
+```{r}
+library(tidyverse)
+library(MatchIt)
+library(cobalt)
+
+ap4 <- ap3 %>%
+  rename(def_06_16 = `Forest loss (ha) between 2006-2016 (percent loss)`) %>%
+  filter(!is.na(def_06_16) & !is.na(dist_ville))
+
+pscor <- traitement ~  dist_ville
+
+reg_select <- glm(formula = pscor,
+                  family = binomial(link = "probit"),
+                  data = ap3)
+
+stargazer(reg_select, type = "text")
+```
+
+```{r}
+
+
+reg_impact <- def_06_16 ~ traitement + dist_ville
+
+match_ap <- matchit(formula = pscor,
+                      family = binomial(link = "probit"),
+                      method = "nearest",
+                      discard = "both",
+                      estimand = "ATT",
+                      replace = FALSE,
+                      distance = "glm",
+                      data = ap4)
+
+plot(match_ap, type = "jitter")
+bal.tab(match_ap)
+bal.plot(match_ap, var.name = "distance", which = "both")
+
+
+
+```

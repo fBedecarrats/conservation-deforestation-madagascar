@@ -1,0 +1,29 @@
+---
+title: "Données de district Mapme"
+author: "Florent"
+editor: visual
+---
+
+On récupère les frontières administratives
+
+```{r}
+library(geodata)
+library(tidyverse)
+library(mapme.biodiversity)
+library(sf)
+
+districts_mada <- gadm(country = "Madagascar", resolution = 1, level = 4, 
+                     path = "data/GADM") %>%
+  st_as_sf()
+
+districts_interet <- districts_mada %>%
+  filter() # Compléter le filtre
+
+
+districts_interet <- init_portfolio(disticts_interet,
+                                   years = 2012:2022,
+                                   out_dir = "mes_donnees")
+
+districts_interet <- get_resources()
+
+```

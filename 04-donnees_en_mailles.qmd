@@ -347,7 +347,7 @@ if (file.exists("data/grille_mada_summary_AP.rds")) {
                                 ifelse(!is.na(WDPAID_inclus), "Intérieur",
                                        "Frontière"))) %>%
     relocate(geometry, .after = last_col()) 
-  save(grille_mada_summary_AP, file = "data_s3/grille_mada_summary_AP.rds")
+  save(grille_mada_summary_AP, file = "data/grille_mada_summary_AP.rds")
 }
 
 # Une vue après classification
