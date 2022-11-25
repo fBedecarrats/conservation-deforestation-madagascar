@@ -14,6 +14,8 @@ Pour commencer, on récupère le travail réalisé par Carvalho et al. [-@carval
 library(tidyverse)
 library(readxl)
 library(sf)
+library(wdpar)
+library(mapme.biodiversity)
 
 # Voir le chapitre "Fondamentaux R" pour une aide à l'import.
 sup2 <- read_xlsx("data/Carvalho2018sup2.xlsx", # Enplacement du fichier
@@ -59,56 +61,122 @@ La procédure de traitement de ces fichiers sur Mapme est analogue à celle empl
 ```{r}
 #| eval: false
 
-# On charge les polygones travaillés au chapitre 2
-load("data/Vahatra_poly.rds")
+# On charge les polygones travaillés au chapitre 1
+WDPA_Mada <- wdpa_read("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip") 
 
-# Constitution d'un portefeuille (voir la documentation)
-AP_poly <- init_portfolio(x = AP_poly, 
-                          years = 2000:2020,
-                          outdir = "data_s3/mapme",
-                          cores = 16,
-                          add_resources = TRUE,
-                          verbose = TRUE)
+# On charge aussi le contour de Madagascar
+load("data/contour_mada.rds")
+
+# On charge les polygones travaillés au chapitre 1
+WDPA_poly  <- WDPA_Mada %>% # On enlève les AP pour lesquelles on n'a que des points
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>% 
+  st_cast("POLYGON")
+
+WDPA_poly <- init_portfolio(WDPA_poly,
+                           years = 2000:2020,
+                           outdir  = "out",
+                           cores = 18,
+                           add_resources = TRUE)
 
 
 # Get GFW data
-AP_poly <- get_resources(x = AP_poly, 
-                         resources = c("gfw_treecover", "gfw_lossyear", 
-                                       "gfw_emissions"))
+WDPA_poly  <- get_resources(x = WDPA_poly , 
+                         resources = c("gfw_treecover", "gfw_lossyear"))
 
-# Données d'accessibilité de Nelson et al. (2018)
-AP_poly <-  get_resources(x = AP_poly, resource = "nelson_et_al",  
-                          range_traveltime = "5k_110mio")
-# Données de qualité des sols (uniquement teneur )
-AP_poly  <-  get_resources(x = AP_poly,
-                           resources = "soilgrids",  layers = "clay", 
-                           depths = "5-15cm", stats = "mean")
-# Modèle numérique de terrain SRTM de la NASA
-AP_poly <- get_resources(x = AP_poly, resource = "nasa_srtm")
-# Données de feux
-AP_poly <- get_resources(x = AP_poly, resource = "nasa_firms",
-                         instrument = "MODIS")
-
-# Get 
 # Indicateurs de couvert forestier
-AP_poly  <- calc_indicators(x = AP_poly,
-                            indicators = "treecover_area_and_emissions", 
-                            min_cover = 30, min_size = 1)
+WDPA_poly  <- calc_indicators(x = WDPA_poly,
+                            indicators = "treecover_area", 
+                            min_cover = 10, min_size = 1)
 
-# On réorganise les variables -----------------------------------------------
-# Couvert forestier annuel en colonnes plutôt qu'en liste imbriquée  
-deforest_par_an <- AP_poly %>%
-  unnest(treecover_area_and_emissions) %>%
-  select(assetid, nom, years, treecover) %>%
-  filter(!is.na(years)) %>%
+deforest_par_an <- WDPA_poly %>%
+  unnest(treecover_area) %>%
+  # filter(!is.na(years)) %>%
   pivot_wider(names_from = "years", values_from = "treecover", 
               names_prefix = "treecover_") %>%
-  st_drop_geometry()
+  st_drop_geometry() %>%
+  select(-assetid) %>%
+  group_by(across(WDPAID:CONS_OBJ)) %>%
+  summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
 
-# Jointure du couvert forestier en colonne avec les données initiales
-AP_poly <- AP_poly %>%
-  select(-treecover_area_and_emissions) %>%
-  left_join(deforest_par_an, by = "assetid")
+# Stats pour AP_Vahatra ------------------------------------
+
+# On charge les polygones travaillés au chapitre 2
+load("data/ch2_AP_Vahatra.rds")
+APV_poly  <-AP_Vahatra %>% # On enlève les AP pour lesquelles on n'a que des points
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>% 
+  st_make_valid() %>% 
+  st_cast("POLYGON") %>% 
+  st_make_valid()
+
+APV_poly <- init_portfolio(APV_poly,
+                           years = 2000:2020,
+                           outdir  = "out_Vahatra",
+                           cores = 18,
+                           add_resources = TRUE)
+
+
+# Get GFW data
+APV_poly  <- get_resources(x = APV_poly , 
+                         resources = c("gfw_treecover", "gfw_lossyear"))
+
+# Indicateurs de couvert forestier
+APV_poly  <- calc_indicators(x = APV_poly,
+                            indicators = "treecover_area", 
+                            min_cover = 10, min_size = 1)
+
+APV_par_aire <- APV_poly %>%
+  unnest(treecover_area) %>%
+  # filter(!is.na(years)) %>%
+  pivot_wider(names_from = "years", values_from = "treecover", 
+              names_prefix = "treecover_") %>%
+  st_drop_geometry() %>%
+  select(-assetid) %>%
+  group_by(across(!starts_with("treecover"))) %>%
+  summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
+
+
+# Stats pour Mada --------------------------------------------------------
+
+# On charge les polygones travaillés au chapitre 1
+mada_poly  <- contour_mada %>% # On enlève les AP pour lesquelles on n'a que des points
+  filter(st_geometry_type(.) == "MULTIPOLYGON") %>% 
+  st_cast("POLYGON")
+
+mada_poly <- init_portfolio(mada_poly ,
+                           years = 2000:2020,
+                           outdir  = "out_Mada",
+                           cores = 18,
+                           add_resources = TRUE)
+
+
+# Get GFW data
+mada_poly  <- get_resources(x = mada_poly , 
+                         resources = c("gfw_treecover", "gfw_lossyear"))
+
+# Indicateurs de couvert forestier
+mada_poly  <- calc_indicators(x = mada_poly,
+                            indicators = "treecover_area", 
+                            min_cover = 10, min_size = 1)
+
+mada_global <- mada_poly %>%
+  unnest(treecover_area) %>%
+  # filter(!is.na(years)) %>%
+  pivot_wider(names_from = "years", values_from = "treecover", 
+              names_prefix = "treecover_") %>%
+  st_drop_geometry() %>%
+  select(-assetid) %>%
+  group_by(across(!starts_with("treecover"))) %>%
+  summarise(across(starts_with("treecover"), sum, na.rm = TRUE))
+
+
+library(writexl)
+write_xlsx(list(WDPA = deforest_par_an,
+             Vahatra = APV_par_aire, 
+             Madagascar = mada_global),
+        path = "couvert_forestier_10_1.xlsx")
+
+
+
 ```
 
 Toutefois, en raison d'un problème liés à la gestion des calculs volumineux, les calculs pour certaines aires protégées renvoient des données aberrantes. Ce point sera mis à jour dans ce guide dès la résolution des erreurs rencontrées. 
