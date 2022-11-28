@@ -1,4 +1,4 @@
-# Récapitulatif et description des données disponibles {#sec-recap_donnees}
+# Récapitulatif des données disponibles {#sec-recap_donnees}
 
 ## Discussion sur la construction, portée et limites de ces données
 
