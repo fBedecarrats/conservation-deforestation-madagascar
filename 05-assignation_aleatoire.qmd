@@ -10,6 +10,8 @@ editor_options:
 
 > **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
 
+L'analyse est effectuée partir des données préparées dans le [Chapitre -@sec-deforestation]. On commence par vérifier s'il existe des déséquilibres flagrants entre les aires qui ont été protégées avant 2015 et celles qui ont été protégées en 2015, en matière de surface totale ou de part couverte par des forêts en 1996.
+
 ```{r}
 # On charge les librairies utiles pour cette analyse
 library(tidyverse) # Facilite la manipulation de données
@@ -72,7 +74,7 @@ equilibre_avant %>%
   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
 ```
 
-On a à première vue des équilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Student ne permet pas de rejeter l'hypothèse nulle.
+On a à première vue des déséquilibres limités "avant intervention". En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Student ne permet pas de rejeter l'hypothèse nulle concernant une différence de moyenne sur ces critères.
 
 On va maintenant s'intéresser aux différences de déforestation observées "après intervention" dans le groupe de traitement.
 
@@ -129,7 +131,7 @@ stargazer(def_96_06, def_06_16, def_96_16, type = "text",
           notes = "Données : Association Vahatra et Carvalho et al. 2018")
 ```
 
-Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche. Le seuil retenu ici pour une ville est toute localité de plus de 5000 habitants.
+On analyse ensuite la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche en 2015. Le seuil retenu ici pour considérer une localité comme une ville est qu'elle ait au moins 5000 habitants.
 
 ```{r}
 t_tests_autres <- rct_AP_Mada %>% 
@@ -159,7 +161,9 @@ equilibre_autres %>%
 save(rct_AP_Mada, file = "data/rct_AP_Mada.rds")
 ```
 
-Le temps de trajet aux villes est significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d'endogénéité (discussion en séance sur ce point).
+Le temps de trajet aux villes est significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d'endogénéité, car le jeu de données utilisé pour cela date de 2015, alors que notre période d'étude démarre en 1996. Or, il est possible que la présence d'aires protégées ait eu une incidence sur la construction ou l'amélioration des tronçons routiers à proximité (discussion en séance sur ce point). Il semble important de tenir compte de l'accessibilité géographiques des aires protégées, mais une donnée antérieure à 2015 serait préférable.
+
+On essaye de limiter ce biais en ajoutant le temps de trajet à une ville comme variables de contrôle à notre régression.
 
 ```{r}
 def_96_16_controle <- lm(`Déforestation 1996-2016 (%)` ~ 

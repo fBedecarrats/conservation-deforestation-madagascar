@@ -4,7 +4,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Couvert forestier
+# Couvert forestier {#sec-deforestation}
 
 ## Carvalho et al. (source MODIS)
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.174">
+<meta name="generator" content="quarto-1.1.189">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -218,7 +218,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04b-recap_donnees_dispo.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Récapitulatif et description des données disponibles</span></a>
+  <a href="./04b-recap_donnees_dispo.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Récapitulatif des données disponibles</span></a>
   </div>
 </li>
       </ul>
@@ -298,7 +298,6 @@ div.csl-indent {
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
@@ -309,6 +308,7 @@ div.csl-indent {
 <blockquote class="blockquote">
 <p><strong>ATTENTION :</strong> Il va de soi que les AP malgaches n’ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait “comme si”, pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d’une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.</p>
 </blockquote>
+<p>L’analyse est effectuée partir des données préparées dans le <a href="03-donnees_deforestation.html">Chapitre&nbsp;<span>3</span></a>. On commence par vérifier s’il existe des déséquilibres flagrants entre les aires qui ont été protégées avant 2015 et celles qui ont été protégées en 2015, en matière de surface totale ou de part couverte par des forêts en 1996.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -374,12 +374,12 @@ div.csl-indent {
 </details>
 <div class="cell-output-display">
 
-<div id="tzzyxdvjmz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="sfqfwkzmvo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#tzzyxdvjmz) .gt_table {
+:where(#sfqfwkzmvo) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -404,7 +404,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_heading {
+:where(#sfqfwkzmvo) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -416,12 +416,12 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_caption {
+:where(#sfqfwkzmvo) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#tzzyxdvjmz) .gt_title {
+:where(#sfqfwkzmvo) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -433,7 +433,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_subtitle {
+:where(#sfqfwkzmvo) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -445,13 +445,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_bottom_border {
+:where(#sfqfwkzmvo) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_col_headings {
+:where(#sfqfwkzmvo) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -466,7 +466,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_col_heading {
+:where(#sfqfwkzmvo) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -486,7 +486,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#tzzyxdvjmz) .gt_column_spanner_outer {
+:where(#sfqfwkzmvo) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -498,15 +498,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-:where(#tzzyxdvjmz) .gt_column_spanner_outer:first-child {
+:where(#sfqfwkzmvo) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_column_spanner_outer:last-child {
+:where(#sfqfwkzmvo) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_column_spanner {
+:where(#sfqfwkzmvo) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -518,7 +518,7 @@ div.csl-indent {
   width: 100%;
 }
 
-:where(#tzzyxdvjmz) .gt_group_heading {
+:where(#sfqfwkzmvo) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -544,7 +544,7 @@ div.csl-indent {
   text-align: left;
 }
 
-:where(#tzzyxdvjmz) .gt_empty_group_heading {
+:where(#sfqfwkzmvo) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -559,15 +559,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-:where(#tzzyxdvjmz) .gt_from_md > :first-child {
+:where(#sfqfwkzmvo) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_from_md > :last-child {
+:where(#sfqfwkzmvo) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_row {
+:where(#sfqfwkzmvo) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -586,7 +586,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#tzzyxdvjmz) .gt_stub {
+:where(#sfqfwkzmvo) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -599,7 +599,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#tzzyxdvjmz) .gt_stub_row_group {
+:where(#sfqfwkzmvo) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -613,11 +613,11 @@ div.csl-indent {
   vertical-align: top;
 }
 
-:where(#tzzyxdvjmz) .gt_row_group_first td {
+:where(#sfqfwkzmvo) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#tzzyxdvjmz) .gt_summary_row {
+:where(#sfqfwkzmvo) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -627,16 +627,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#tzzyxdvjmz) .gt_first_summary_row {
+:where(#sfqfwkzmvo) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_first_summary_row.thick {
+:where(#sfqfwkzmvo) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#tzzyxdvjmz) .gt_last_summary_row {
+:where(#sfqfwkzmvo) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -646,7 +646,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_grand_summary_row {
+:where(#sfqfwkzmvo) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -656,7 +656,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#tzzyxdvjmz) .gt_first_grand_summary_row {
+:where(#sfqfwkzmvo) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -666,11 +666,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_striped {
+:where(#sfqfwkzmvo) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#tzzyxdvjmz) .gt_table_body {
+:where(#sfqfwkzmvo) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -679,7 +679,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_footnotes {
+:where(#sfqfwkzmvo) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -693,7 +693,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_footnote {
+:where(#sfqfwkzmvo) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -702,7 +702,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#tzzyxdvjmz) .gt_sourcenotes {
+:where(#sfqfwkzmvo) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -716,7 +716,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#tzzyxdvjmz) .gt_sourcenote {
+:where(#sfqfwkzmvo) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -724,64 +724,64 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#tzzyxdvjmz) .gt_left {
+:where(#sfqfwkzmvo) .gt_left {
   text-align: left;
 }
 
-:where(#tzzyxdvjmz) .gt_center {
+:where(#sfqfwkzmvo) .gt_center {
   text-align: center;
 }
 
-:where(#tzzyxdvjmz) .gt_right {
+:where(#sfqfwkzmvo) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#tzzyxdvjmz) .gt_font_normal {
+:where(#sfqfwkzmvo) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#tzzyxdvjmz) .gt_font_bold {
+:where(#sfqfwkzmvo) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#tzzyxdvjmz) .gt_font_italic {
+:where(#sfqfwkzmvo) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#tzzyxdvjmz) .gt_super {
+:where(#sfqfwkzmvo) .gt_super {
   font-size: 65%;
 }
 
-:where(#tzzyxdvjmz) .gt_footnote_marks {
+:where(#sfqfwkzmvo) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#tzzyxdvjmz) .gt_asterisk {
+:where(#sfqfwkzmvo) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#tzzyxdvjmz) .gt_indent_1 {
+:where(#sfqfwkzmvo) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#tzzyxdvjmz) .gt_indent_2 {
+:where(#sfqfwkzmvo) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#tzzyxdvjmz) .gt_indent_3 {
+:where(#sfqfwkzmvo) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#tzzyxdvjmz) .gt_indent_4 {
+:where(#sfqfwkzmvo) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#tzzyxdvjmz) .gt_indent_5 {
+:where(#sfqfwkzmvo) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -830,7 +830,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>On a à première vue des équilibres limités “avant intervention”. En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Student ne permet pas de rejeter l’hypothèse nulle.</p>
+<p>On a à première vue des déséquilibres limités “avant intervention”. En moyenne, les deux groupes sont assez proches en termes de surface et de couvert forestier et le test de Student ne permet pas de rejeter l’hypothèse nulle concernant une différence de moyenne sur ces critères.</p>
 <p>On va maintenant s’intéresser aux différences de déforestation observées “après intervention” dans le groupe de traitement.</p>
 <div class="cell">
 <details>
@@ -858,12 +858,12 @@ div.csl-indent {
 </details>
 <div class="cell-output-display">
 
-<div id="enrzvazxtl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="pdjgfmjxfy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#enrzvazxtl) .gt_table {
+:where(#pdjgfmjxfy) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -888,7 +888,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_heading {
+:where(#pdjgfmjxfy) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -900,12 +900,12 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_caption {
+:where(#pdjgfmjxfy) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#enrzvazxtl) .gt_title {
+:where(#pdjgfmjxfy) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -917,7 +917,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-:where(#enrzvazxtl) .gt_subtitle {
+:where(#pdjgfmjxfy) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -929,13 +929,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-:where(#enrzvazxtl) .gt_bottom_border {
+:where(#pdjgfmjxfy) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_col_headings {
+:where(#pdjgfmjxfy) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -950,7 +950,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_col_heading {
+:where(#pdjgfmjxfy) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -970,7 +970,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#enrzvazxtl) .gt_column_spanner_outer {
+:where(#pdjgfmjxfy) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -982,15 +982,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-:where(#enrzvazxtl) .gt_column_spanner_outer:first-child {
+:where(#pdjgfmjxfy) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#enrzvazxtl) .gt_column_spanner_outer:last-child {
+:where(#pdjgfmjxfy) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#enrzvazxtl) .gt_column_spanner {
+:where(#pdjgfmjxfy) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1002,7 +1002,7 @@ div.csl-indent {
   width: 100%;
 }
 
-:where(#enrzvazxtl) .gt_group_heading {
+:where(#pdjgfmjxfy) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1028,7 +1028,7 @@ div.csl-indent {
   text-align: left;
 }
 
-:where(#enrzvazxtl) .gt_empty_group_heading {
+:where(#pdjgfmjxfy) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1043,15 +1043,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-:where(#enrzvazxtl) .gt_from_md > :first-child {
+:where(#pdjgfmjxfy) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#enrzvazxtl) .gt_from_md > :last-child {
+:where(#pdjgfmjxfy) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#enrzvazxtl) .gt_row {
+:where(#pdjgfmjxfy) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1070,7 +1070,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#enrzvazxtl) .gt_stub {
+:where(#pdjgfmjxfy) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1083,7 +1083,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#enrzvazxtl) .gt_stub_row_group {
+:where(#pdjgfmjxfy) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1097,11 +1097,11 @@ div.csl-indent {
   vertical-align: top;
 }
 
-:where(#enrzvazxtl) .gt_row_group_first td {
+:where(#pdjgfmjxfy) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#enrzvazxtl) .gt_summary_row {
+:where(#pdjgfmjxfy) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1111,16 +1111,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#enrzvazxtl) .gt_first_summary_row {
+:where(#pdjgfmjxfy) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_first_summary_row.thick {
+:where(#pdjgfmjxfy) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#enrzvazxtl) .gt_last_summary_row {
+:where(#pdjgfmjxfy) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1130,7 +1130,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_grand_summary_row {
+:where(#pdjgfmjxfy) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1140,7 +1140,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#enrzvazxtl) .gt_first_grand_summary_row {
+:where(#pdjgfmjxfy) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1150,11 +1150,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_striped {
+:where(#pdjgfmjxfy) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#enrzvazxtl) .gt_table_body {
+:where(#pdjgfmjxfy) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1163,7 +1163,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_footnotes {
+:where(#pdjgfmjxfy) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1177,7 +1177,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_footnote {
+:where(#pdjgfmjxfy) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1186,7 +1186,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#enrzvazxtl) .gt_sourcenotes {
+:where(#pdjgfmjxfy) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1200,7 +1200,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#enrzvazxtl) .gt_sourcenote {
+:where(#pdjgfmjxfy) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1208,64 +1208,64 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#enrzvazxtl) .gt_left {
+:where(#pdjgfmjxfy) .gt_left {
   text-align: left;
 }
 
-:where(#enrzvazxtl) .gt_center {
+:where(#pdjgfmjxfy) .gt_center {
   text-align: center;
 }
 
-:where(#enrzvazxtl) .gt_right {
+:where(#pdjgfmjxfy) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#enrzvazxtl) .gt_font_normal {
+:where(#pdjgfmjxfy) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#enrzvazxtl) .gt_font_bold {
+:where(#pdjgfmjxfy) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#enrzvazxtl) .gt_font_italic {
+:where(#pdjgfmjxfy) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#enrzvazxtl) .gt_super {
+:where(#pdjgfmjxfy) .gt_super {
   font-size: 65%;
 }
 
-:where(#enrzvazxtl) .gt_footnote_marks {
+:where(#pdjgfmjxfy) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#enrzvazxtl) .gt_asterisk {
+:where(#pdjgfmjxfy) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#enrzvazxtl) .gt_indent_1 {
+:where(#pdjgfmjxfy) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#enrzvazxtl) .gt_indent_2 {
+:where(#pdjgfmjxfy) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#enrzvazxtl) .gt_indent_3 {
+:where(#pdjgfmjxfy) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#enrzvazxtl) .gt_indent_4 {
+:where(#pdjgfmjxfy) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#enrzvazxtl) .gt_indent_5 {
+:where(#pdjgfmjxfy) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1366,7 +1366,7 @@ Note:                                                                           
                                                                   Données : Association Vahatra et Carvalho et al. 2018</code></pre>
 </div>
 </div>
-<p>Analyse la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche. Le seuil retenu ici pour une ville est toute localité de plus de 5000 habitants.</p>
+<p>On analyse ensuite la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche en 2015. Le seuil retenu ici pour considérer une localité comme une ville est qu’elle ait au moins 5000 habitants.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -1396,12 +1396,12 @@ Note:                                                                           
 </details>
 <div class="cell-output-display">
 
-<div id="ydlfanuvzf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="nxoonrfeir" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#ydlfanuvzf) .gt_table {
+:where(#nxoonrfeir) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1426,7 +1426,7 @@ Note:                                                                           
   border-left-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_heading {
+:where(#nxoonrfeir) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1438,12 +1438,12 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_caption {
+:where(#nxoonrfeir) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#ydlfanuvzf) .gt_title {
+:where(#nxoonrfeir) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1455,7 +1455,7 @@ Note:                                                                           
   border-bottom-width: 0;
 }
 
-:where(#ydlfanuvzf) .gt_subtitle {
+:where(#nxoonrfeir) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1467,13 +1467,13 @@ Note:                                                                           
   border-top-width: 0;
 }
 
-:where(#ydlfanuvzf) .gt_bottom_border {
+:where(#nxoonrfeir) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_col_headings {
+:where(#nxoonrfeir) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1488,7 +1488,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_col_heading {
+:where(#nxoonrfeir) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1508,7 +1508,7 @@ Note:                                                                           
   overflow-x: hidden;
 }
 
-:where(#ydlfanuvzf) .gt_column_spanner_outer {
+:where(#nxoonrfeir) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1520,15 +1520,15 @@ Note:                                                                           
   padding-right: 4px;
 }
 
-:where(#ydlfanuvzf) .gt_column_spanner_outer:first-child {
+:where(#nxoonrfeir) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#ydlfanuvzf) .gt_column_spanner_outer:last-child {
+:where(#nxoonrfeir) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#ydlfanuvzf) .gt_column_spanner {
+:where(#nxoonrfeir) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1540,7 +1540,7 @@ Note:                                                                           
   width: 100%;
 }
 
-:where(#ydlfanuvzf) .gt_group_heading {
+:where(#nxoonrfeir) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1566,7 +1566,7 @@ Note:                                                                           
   text-align: left;
 }
 
-:where(#ydlfanuvzf) .gt_empty_group_heading {
+:where(#nxoonrfeir) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1581,15 +1581,15 @@ Note:                                                                           
   vertical-align: middle;
 }
 
-:where(#ydlfanuvzf) .gt_from_md > :first-child {
+:where(#nxoonrfeir) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#ydlfanuvzf) .gt_from_md > :last-child {
+:where(#nxoonrfeir) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#ydlfanuvzf) .gt_row {
+:where(#nxoonrfeir) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1608,7 +1608,7 @@ Note:                                                                           
   overflow-x: hidden;
 }
 
-:where(#ydlfanuvzf) .gt_stub {
+:where(#nxoonrfeir) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1621,7 +1621,7 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#ydlfanuvzf) .gt_stub_row_group {
+:where(#nxoonrfeir) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1635,11 +1635,11 @@ Note:                                                                           
   vertical-align: top;
 }
 
-:where(#ydlfanuvzf) .gt_row_group_first td {
+:where(#nxoonrfeir) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#ydlfanuvzf) .gt_summary_row {
+:where(#nxoonrfeir) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1649,16 +1649,16 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#ydlfanuvzf) .gt_first_summary_row {
+:where(#nxoonrfeir) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_first_summary_row.thick {
+:where(#nxoonrfeir) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#ydlfanuvzf) .gt_last_summary_row {
+:where(#nxoonrfeir) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1668,7 +1668,7 @@ Note:                                                                           
   border-bottom-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_grand_summary_row {
+:where(#nxoonrfeir) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1678,7 +1678,7 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#ydlfanuvzf) .gt_first_grand_summary_row {
+:where(#nxoonrfeir) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1688,11 +1688,11 @@ Note:                                                                           
   border-top-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_striped {
+:where(#nxoonrfeir) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#ydlfanuvzf) .gt_table_body {
+:where(#nxoonrfeir) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1701,7 +1701,7 @@ Note:                                                                           
   border-bottom-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_footnotes {
+:where(#nxoonrfeir) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1715,7 +1715,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_footnote {
+:where(#nxoonrfeir) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1724,7 +1724,7 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#ydlfanuvzf) .gt_sourcenotes {
+:where(#nxoonrfeir) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1738,7 +1738,7 @@ Note:                                                                           
   border-right-color: #D3D3D3;
 }
 
-:where(#ydlfanuvzf) .gt_sourcenote {
+:where(#nxoonrfeir) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1746,64 +1746,64 @@ Note:                                                                           
   padding-right: 5px;
 }
 
-:where(#ydlfanuvzf) .gt_left {
+:where(#nxoonrfeir) .gt_left {
   text-align: left;
 }
 
-:where(#ydlfanuvzf) .gt_center {
+:where(#nxoonrfeir) .gt_center {
   text-align: center;
 }
 
-:where(#ydlfanuvzf) .gt_right {
+:where(#nxoonrfeir) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#ydlfanuvzf) .gt_font_normal {
+:where(#nxoonrfeir) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#ydlfanuvzf) .gt_font_bold {
+:where(#nxoonrfeir) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#ydlfanuvzf) .gt_font_italic {
+:where(#nxoonrfeir) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#ydlfanuvzf) .gt_super {
+:where(#nxoonrfeir) .gt_super {
   font-size: 65%;
 }
 
-:where(#ydlfanuvzf) .gt_footnote_marks {
+:where(#nxoonrfeir) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#ydlfanuvzf) .gt_asterisk {
+:where(#nxoonrfeir) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#ydlfanuvzf) .gt_indent_1 {
+:where(#nxoonrfeir) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#ydlfanuvzf) .gt_indent_2 {
+:where(#nxoonrfeir) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#ydlfanuvzf) .gt_indent_3 {
+:where(#nxoonrfeir) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#ydlfanuvzf) .gt_indent_4 {
+:where(#nxoonrfeir) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#ydlfanuvzf) .gt_indent_5 {
+:where(#nxoonrfeir) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1856,7 +1856,8 @@ Note:                                                                           
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(rct_AP_Mada, <span class="at">file =</span> <span class="st">"data/rct_AP_Mada.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Le temps de trajet aux villes est significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d’endogénéité (discussion en séance sur ce point).</p>
+<p>Le temps de trajet aux villes est significativement distinct entre les deux groupes. Attention, car cette variable pose un problème d’endogénéité, car le jeu de données utilisé pour cela date de 2015, alors que notre période d’étude démarre en 1996. Or, il est possible que la présence d’aires protégées ait eu une incidence sur la construction ou l’amélioration des tronçons routiers à proximité (discussion en séance sur ce point). Il semble important de tenir compte de l’accessibilité géographiques des aires protégées, mais une donnée antérieure à 2015 serait préférable.</p>
+<p>On essaye de limiter ce biais en ajoutant le temps de trajet à une ville comme variables de contrôle à notre régression.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -1944,24 +1945,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1997,49 +1981,31 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./04b-recap_donnees_dispo.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Récapitulatif et description des données disponibles</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Récapitulatif des données disponibles</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

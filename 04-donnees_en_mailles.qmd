@@ -9,7 +9,7 @@ Une approche courante consiste à diviser le territoires en mailles, carrées ou
 
 ## Constitution d'un maillage
 
-On montre ci-dessous comment cette approche fonctionne.
+On montre ci-dessous comment cette approche fonctionne. La première étape consiste à dessiner un carré autour des aires protégées malgaches, puis à subdiviser ce grand carré en un damier de formes hexagonales. Enfin, on ne garde que les hexagones qui se trouvent dans les frontières terrestres de Madagascar.
 
 ```{r Données satellitaires}
 library(tidyverse)
@@ -19,8 +19,7 @@ library(mapme.biodiversity)
 library(tidygeocoder) # pour obtenir les coordo GPS d'un point à partir de son nom
 library(maptiles) # Pour télécharger des fonds de carte
 
-# Taille des titres des cartes
-taille_titres_cartes = 1
+
 # Surface des hexagones en km2
 taille_hex <- 5
 
@@ -49,7 +48,7 @@ if (file.exists("data/grille_mada_donnees_raster.rds")) {
 } 
 ```
 
-Le maillage est trop fin pour être visible à l'échelle du pays, mais on peut l'observer en zoomant sur une zone spécifique.
+Le maillage produit est trop fin pour être visible à l'échelle du pays, mais on peut l'observer en zoomant sur une zone spécifique.
 
 ```{r Carte grille mada}
 
@@ -104,7 +103,7 @@ carte_zoom <- tm_shape(fond_carte_zoom) +
   tm_borders(col = "red") +
   tm_layout(frame = FALSE,
             main.title = paste("Zoom sur la zone de", nom_centre_zoom),
-            main.title.size = taille_titres_cartes) +
+            main.title.size = 1) +
   tm_credits(get_credit("Stamen.Toner"),
              bg.color = "white",
              align = "right",
@@ -122,13 +121,15 @@ carte_grille <- tm_shape(contour_mada) +
   tm_layout(frame = FALSE) +
   tm_layout(main.title = paste("Découpage en", n_hex,
                                "hexagones de", taille_hex, "km2"),
-            main.title.size = taille_titres_cartes)
+            main.title.size = 1)
 
 # Assemblage des deux cartes ---------------------------------------------------
 tmap_arrange(carte_grille, carte_zoom, ncol = 2) 
 ```
 
 ## Récupération des données pour le maillage
+
+On va ensuite utiliser [le package mapme.biodiversity](https://mapme-initiative.github.io/mapme.biodiversity/index.html) pour calculer, pour chaque hexagones, une série d'indicateurs : temps de parcours jusqu'à la ville (définie comme toute localité de 5000 habitants) la plus proche en 2015, teneur du sol en argile et couvert forestier par année).
 
 ``` {r}
 #| eval: false
@@ -201,11 +202,11 @@ tmap_arrange(carte_grille, carte_zoom, ncol = 2)
 
 ```
 
-On peut également représenter les différentes valeurs des indicateurs générés à partir des données satellitaires.
+On peut représenter sous forme de cartes et d'histogrammes les différentes valeurs des indicateurs générés à partir des données satellitaires.
 
 ```{r Synthèse données satellitaires, fig.fullwidth = TRUE}
-if (file.exists("data/grille_mada_summary.rds")) {
-  load("data/grille_mada_summary.rds")
+if (file.exists("data/carte_mailles.rds")) {
+  load("data/carte_mailles.rds")
 } else {
   grille_mada_summary <- grille_mada %>%
     # On met à plat les données de distance
@@ -225,138 +226,165 @@ if (file.exists("data/grille_mada_summary.rds")) {
     rename(treecover_2000 = init_treecover_2000) %>%
     relocate(geometry, .after = last_col())
   
-  save(grille_mada_summary, file = "data_s3/grille_mada_summary.rds")
+  carte_acces <- tm_shape(grille_mada_summary) +
+    tm_fill("distance_minutes_5k_110mio",
+            title = "Distance ville (>5K hab)",
+            palette = "Oranges",
+            style = "fisher",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              # legend.title.size = 0.8,
+              # legend.text.size = 0.6,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_sol <- tm_shape(grille_mada_summary) +
+    tm_fill("mean_clay_5_15cm",
+            title = "Sol argileux (5-15cm prof)",
+            palette = "YlOrBr",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              # legend.title.size = 0.8,
+              # legend.text.size = 0.6
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_TRI <- tm_shape(grille_mada_summary) +
+    tm_fill("tri_mean",
+            title = c("Terrain accidenté (TRI)"),
+            palette = "Blues",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              # legend.title.size = 0.8,
+              # legend.text.size = 0.6,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_alt <- tm_shape(grille_mada_summary) +
+    tm_fill("elevation_mean",
+            title = "Altitude",
+            palette = "Purples",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              # legend.title.size = 0.8,
+              # legend.text.size = 0.6,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_cover <- graph_alt <- tm_shape(grille_mada_summary) +
+    tm_fill("treecover_2000",
+            title = "Couvert arboré en 2000",
+            palette = "Greens",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              # legend.title.size = 0.8,
+              # legend.text.size = 0.6,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_loss <- graph_alt <- tm_shape(grille_mada_summary) +
+    tm_fill("var_treecover",
+            title = "Perte couvert (2000-2020)",
+            palette = "Reds",
+            n = 8,
+            legend.hist = TRUE) +
+    tm_layout(legend.outside = TRUE,
+              # legend.title.size = 0.8,
+              # legend.text.size = 0.6,
+              legend.hist.width = 1,
+              legend.hist.height = 1)
+  
+  carte_mailles <- tmap_arrange(carte_acces, carte_sol, 
+                                carte_alt, carte_TRI, 
+                                carte_cover, carte_loss,
+                                ncol = 2, nrow = 3) %>%
+    tmap_save("data/carte_mailles.png")
 }
 
-carte_acces <- tm_shape(grille_mada_summary) +
-  tm_fill("distance_minutes_5k_110mio",
-          title = "Distance ville (>5K hab)",
-          palette = "Oranges",
-          style = "fisher",
-          n = 8,
-          legend.hist = TRUE) +
-  tm_layout(legend.outside = TRUE,
-            # legend.title.size = 0.8,
-            # legend.text.size = 0.6,
-            legend.hist.width = 1,
-            legend.hist.height = 1)
-
-carte_sol <- tm_shape(grille_mada_summary) +
-  tm_fill("mean_clay_5_15cm",
-          title = "Sol argileux (5-15cm prof)",
-          palette = "YlOrBr",
-          n = 8,
-          legend.hist = TRUE) +
-  tm_layout(legend.outside = TRUE,
-            # legend.title.size = 0.8,
-            # legend.text.size = 0.6
-            legend.hist.width = 1,
-            legend.hist.height = 1)
-
-carte_TRI <- tm_shape(grille_mada_summary) +
-  tm_fill("tri_mean",
-          title = c("Terrain accidenté (TRI)"),
-          palette = "Blues",
-          n = 8,
-          legend.hist = TRUE) +
-  tm_layout(legend.outside = TRUE,
-            # legend.title.size = 0.8,
-            # legend.text.size = 0.6,
-            legend.hist.width = 1,
-            legend.hist.height = 1)
-
-carte_alt <- tm_shape(grille_mada_summary) +
-  tm_fill("elevation_mean",
-          title = "Altitude",
-          palette = "Purples",
-          n = 8,
-          legend.hist = TRUE) +
-  tm_layout(legend.outside = TRUE,
-            # legend.title.size = 0.8,
-            # legend.text.size = 0.6,
-            legend.hist.width = 1,
-            legend.hist.height = 1)
-
-carte_cover <- graph_alt <- tm_shape(grille_mada_summary) +
-  tm_fill("treecover_2000",
-          title = "Couvert arboré en 2000",
-          palette = "Greens",
-          n = 8,
-          legend.hist = TRUE) +
-  tm_layout(legend.outside = TRUE,
-            # legend.title.size = 0.8,
-            # legend.text.size = 0.6,
-            legend.hist.width = 1,
-            legend.hist.height = 1)
-
-carte_loss <- graph_alt <- tm_shape(grille_mada_summary) +
-  tm_fill("var_treecover",
-          title = "Perte couvert (2000-2020)",
-          palette = "Reds",
-          n = 8,
-          legend.hist = TRUE) +
-  tm_layout(legend.outside = TRUE,
-            # legend.title.size = 0.8,
-            # legend.text.size = 0.6,
-            legend.hist.width = 1,
-            legend.hist.height = 1)
-
-tmap_arrange(carte_acces, carte_sol, 
-             carte_alt, carte_TRI, 
-             carte_cover, carte_loss,
-             ncol = 2, nrow = 3) 
+carte_mailles
 ```
 
-Ces approches permettent de mieux capter la variabilité des relations entre les variables spatiales. Elle est utile si les estimations qu'on va ensuite réaliser se font aussi au niveau des aires.
+
+Les cartes et histogrammes ci-dessus illustrent la distribution des variables spatiales calculées par hexagones. 
 
 ## Croisement des données d'aires protégées et satellitaires
 
 On peut maintenant associer les données d'aires protégées aux hexagones afin de les croiser avec les indicateurs issus des données satellitaires déjà calculés pour ces hexagones.
 
 ```{r Jointure aires protégées et données satellitaires}
-if (file.exists("data/grille_mada_summary_AP.rds")) {
-  load("data/grille_mada_summary_AP.rds")
+if (file.exists("data/grille_mada_AP.rds")) {
+  load("data/grille_mada_AP.rds")
 } else {
+  # On charge les données d'aires protégées élaborées au chapitre précédent
+  load("data/ch3_AP_Vahatra.rds")
+  
+  # On prépare ces données pour les joindre avec celles en mailles
+  aires_prot_mada <- AP_Vahatra %>%
+    st_make_valid() %>% # Corrige les erreurs topo dans certains polygones
+    mutate(AP_ligne = row_number()) %>% # Intègre le numéro de ligne dans un champ
+    mutate(an_creation = year(date_creation)) # passe les dates en années
+  
   # Le code suivant va asocier les hexagones aux aires protégées en se référant
   # aux AP par leur rang dans la table des AP. On voudra plutôt leur identifiant, 
   # alors on crée une table d'équivalence rang/identifiant 
   aires_prot_mada_rang_id <- aires_prot_mada %>%
     st_drop_geometry() %>% # Enlève l'information spatiale
-    mutate(AP_ligne = row_number()) %>% # Intègre le numéro de ligne dans un champ
-    select(AP_ligne, WDPAID) # On ne garde que le numéro de ligne et l'identifiant
+    select(AP_ligne, nom)
+  
+  
+  # On sélectionne des infos additionnelles qu'on va inclure dans les données
+  info_vahatra_a_inclure <- aires_prot_mada %>%
+    st_drop_geometry() %>% # Enlève l'information spatiale
+    select(AP_ligne, nom, an_creation, cat_iucn = cat__iucn, 
+           gestionnaire = gest_2) # On ne garde que les variables d'intérêt
   
   # Pour chaque hexagone, on va maintenant identifier s'ils touchent ("intersect")
   # ou s'ils sont strictiement inclus dans ("within") une aire protégé
-  grille_mada_summary_AP <- grille_mada_summary %>%
-    st_transform(crs = mon_scr) %>%
+  grille_mada_AP <- grille_mada %>%
     mutate(AP_ligne = st_intersects(., aires_prot_mada), # liste des n° de lignes d'AP qui recoupent
            AP_ligne = map(AP_ligne, 1), # On extrait le 1° élément de la liste (toutes n'ont qu'1 élément)
            AP_ligne = as.integer(as.character(AP_ligne))) %>%  # formattage en numérique
     left_join(aires_prot_mada_rang_id, by = "AP_ligne") %>% # récupère l'id de l'AP
-    rename(WDPAID_touche = WDPAID) %>% # on renomme pour différentier
+    rename(AP_touche = nom) %>% # on renomme pour différentier
     mutate(AP_ligne = st_within(., aires_prot_mada),
            AP_ligne = map(AP_ligne, 1),
            AP_ligne = as.integer(as.character(AP_ligne))) %>%
     left_join(aires_prot_mada_rang_id, by = "AP_ligne") %>%
-    rename(WDPAID_inclus = WDPAID) %>%
+    rename(AP_inclus = nom) %>%
     select(-AP_ligne) 
   
-  grille_mada_summary_AP <- grille_mada_summary_AP %>%
+  grille_mada_AP <- grille_mada_AP %>%
     st_sf() %>%
-    mutate(position_ap = ifelse(is.na(WDPAID_touche), "Extérieur",
-                                ifelse(!is.na(WDPAID_inclus), "Intérieur",
-                                       "Frontière"))) %>%
+    mutate(position_ap = ifelse(is.na(AP_touche), "Extérieur",
+                                ifelse(!is.na(AP_inclus), "Intérieur",
+                                       "Frontière")),
+           ref_AP = ifelse(position_ap == "Intérieur", AP_inclus, 
+                           ifelse(position_ap == "Frontière", AP_touche, NA))) %>%
+    left_join(info_vahatra_a_inclure, by = c("ref_AP" = "nom")) %>%
     relocate(geometry, .after = last_col()) 
-  save(grille_mada_summary_AP, file = "data/grille_mada_summary_AP.rds")
+  
+  grille_mada_AP <- grille_mada_AP %>%
+    # On met à plat les données de distance
+    unnest(cols = c(traveltime, soilproperties, tri, elevation),
+           names_repair = "universal") %>%
+    select(-distance, -layer, -depth, -stat,  -active_fire_counts, 
+           -active_fire_properties) %>%
+    rename(distance_minutes_5k_110mio = minutes_mean, mean_clay_5_15cm = mean)
+  save(grille_mada_AP, file = "data/grille_mada_AP.rds")
 }
 
 # Une vue après classification
-tm_shape(grille_mada_summary_AP) +
+tm_shape(grille_mada_AP) +
   tm_fill(col = "position_ap", title = "par rapport aux aires protégées") +
   tm_layout(main.title = "Localisation des hexagones",
             # NB : position en minuscules pour laisser un espace avec la marge
             main.title.position = c("center", "top"),
-            main.title.size = taille_titres_cartes,
+            main.title.size = 1,
             legend.position = c("left", "top"),
             legend.outside = FALSE)
 ```

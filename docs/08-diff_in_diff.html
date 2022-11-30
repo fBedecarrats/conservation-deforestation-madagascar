@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.174">
+<meta name="generator" content="quarto-1.1.189">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -218,7 +218,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04b-recap_donnees_dispo.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Récapitulatif et description des données disponibles</span></a>
+  <a href="./04b-recap_donnees_dispo.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Récapitulatif des données disponibles</span></a>
   </div>
 </li>
       </ul>
@@ -287,9 +287,12 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#méthode-des-doubles-différences-échelonnées-staggered-matching" id="toc-méthode-des-doubles-différences-échelonnées-staggered-matching" class="nav-link active" data-scroll-target="#méthode-des-doubles-différences-échelonnées-staggered-matching"><span class="toc-section-number">10.1</span>  Méthode des doubles différences échelonnées (staggered matching)</a></li>
-  <li><a href="#double-différences-pour-la-déforestation" id="toc-double-différences-pour-la-déforestation" class="nav-link" data-scroll-target="#double-différences-pour-la-déforestation"><span class="toc-section-number">10.2</span>  Double différences pour la déforestation</a></li>
-  <li><a href="#double-différence-pour-la-dégradation" id="toc-double-différence-pour-la-dégradation" class="nav-link" data-scroll-target="#double-différence-pour-la-dégradation"><span class="toc-section-number">10.3</span>  Double différence pour la dégradation</a></li>
+  <li><a href="#méthode-des-doubles-différences-échelonnées-simples" id="toc-méthode-des-doubles-différences-échelonnées-simples" class="nav-link active" data-scroll-target="#méthode-des-doubles-différences-échelonnées-simples"><span class="toc-section-number">10.1</span>  Méthode des doubles différences échelonnées simples</a>
+  <ul class="collapse">
+  <li><a href="#application-aux-polygones-daires-protégées" id="toc-application-aux-polygones-daires-protégées" class="nav-link" data-scroll-target="#application-aux-polygones-daires-protégées"><span class="toc-section-number">10.1.1</span>  Application aux polygones d’aires protégées</a></li>
+  <li><a href="#application-aux-données-par-mailles" id="toc-application-aux-données-par-mailles" class="nav-link" data-scroll-target="#application-aux-données-par-mailles"><span class="toc-section-number">10.1.2</span>  Application aux données par mailles</a></li>
+  </ul></li>
+  <li><a href="#doubles-différences-échelonnées-avec-contrôles" id="toc-doubles-différences-échelonnées-avec-contrôles" class="nav-link" data-scroll-target="#doubles-différences-échelonnées-avec-contrôles"><span class="toc-section-number">10.2</span>  Doubles différences échelonnées avec contrôles</a></li>
   </ul>
 </nav>
     </div>
@@ -306,62 +309,59 @@ div.csl-indent {
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
 
 </header>
 
-<section id="méthode-des-doubles-différences-échelonnées-staggered-matching" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="méthode-des-doubles-différences-échelonnées-staggered-matching"><span class="header-section-number">10.1</span> Méthode des doubles différences échelonnées (staggered matching)</h2>
-<p>Pour réaliser un diff-in-diff, on va utiliser la méthode de différence de différences échelonnées élaboréé par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="09-bibliographie.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> et diffusée dans la librairie {did}&nbsp;<span class="citation" data-cites="did">(<a href="09-bibliographie.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span>.</p>
+<section id="méthode-des-doubles-différences-échelonnées-simples" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="méthode-des-doubles-différences-échelonnées-simples"><span class="header-section-number">10.1</span> Méthode des doubles différences échelonnées simples</h2>
+<p>Pour réaliser un diff-in-diff, on va utiliser la méthode de différence de différences échelonnées (staggered matching) élaboréé par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="09-bibliographie.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> et diffusée dans la librairie {did}&nbsp;<span class="citation" data-cites="did">(<a href="09-bibliographie.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span>.</p>
+<section id="application-aux-polygones-daires-protégées" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="application-aux-polygones-daires-protégées"><span class="header-section-number">10.1.1</span> Application aux polygones d’aires protégées</h3>
 <p>La spécification employée peut se traduire de la manière suivante :</p>
 <p>On l’applique aux aires protégées et à leur déforestation entre 1990 et 2021. On commence par préparer le jeu de données tel qu’attendu par {did}, de sorte à obtenir :</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On installe le package {did} si pas encore installé</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>(<span class="st">"did"</span> <span class="sc">%in%</span> <span class="fu">installed.packages</span>())) {</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"did"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(did) <span class="co"># Pour des doubles-différences échelonnées</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Pur faciliter la manipulation de données</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour modifier les dates</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour de jolis tableaux</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>) <span class="co"># On charge les données préparées au chapitre 3</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>) <span class="co"># On désactive les notations scientifiques</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># On prépare le jeu de données au format attendu par {did}</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ap_did <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, <span class="at">num_atlas =</span> num_atlas_, <span class="fu">starts_with</span>(<span class="st">"TMF"</span>),</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">cat_iucn =</span> cat__iucn) <span class="sc">%&gt;%</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annee_creation =</span> <span class="fu">year</span>(date_creation)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"TMF"</span>), </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"TMF_variable"</span>, </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"TMF_value"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annee =</span> <span class="fu">str_extract</span>(TMF_variable, <span class="st">"[:digit:]{4}"</span>),</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">annee =</span> <span class="fu">as.numeric</span>(annee),</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">traitee =</span> <span class="fu">ifelse</span>(annee <span class="sc">&gt;</span> annee_creation, <span class="dv">1</span>, <span class="dv">0</span>),</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">TMF_variable =</span> <span class="fu">str_remove</span>(TMF_variable, <span class="st">"TMF"</span>),</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">TMF_variable =</span> <span class="fu">str_remove</span>(TMF_variable, <span class="st">"_[:digit:]{4}"</span>),</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">group =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> TMF_variable, <span class="at">values_from =</span> TMF_value)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">slice</span>(ap_did, <span class="dv">20</span><span class="sc">:</span><span class="dv">30</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Jeu de données 1990-2020 préparé pour {did}"</span>,</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"Echantillon des 10 lignes"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Aires protégées d'AP Vahatra, données TMF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(did) <span class="co"># Pour des doubles-différences échelonnées</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Pur faciliter la manipulation de données</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># Pour modifier les dates</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Pour de jolis tableaux</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/ch3_AP_Vahatra.rds"</span>) <span class="co"># On charge les données préparées au chapitre 3</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>) <span class="co"># On désactive les notations scientifiques</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># On prépare le jeu de données au format attendu par {did}</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>ap_did <span class="ot">&lt;-</span> AP_Vahatra <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nom, date_creation, <span class="at">num_atlas =</span> num_atlas_, <span class="fu">starts_with</span>(<span class="st">"TMF"</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">cat_iucn =</span> cat__iucn) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annee_creation =</span> <span class="fu">year</span>(date_creation)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"TMF"</span>), </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"TMF_variable"</span>, </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"TMF_value"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annee =</span> <span class="fu">str_extract</span>(TMF_variable, <span class="st">"[:digit:]{4}"</span>),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">annee =</span> <span class="fu">as.numeric</span>(annee),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">traitee =</span> <span class="fu">ifelse</span>(annee <span class="sc">&gt;</span> annee_creation, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">TMF_variable =</span> <span class="fu">str_remove</span>(TMF_variable, <span class="st">"TMF"</span>),</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">TMF_variable =</span> <span class="fu">str_remove</span>(TMF_variable, <span class="st">"_[:digit:]{4}"</span>),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">group =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> TMF_variable, <span class="at">values_from =</span> TMF_value)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(<span class="fu">slice</span>(ap_did, <span class="dv">20</span><span class="sc">:</span><span class="dv">30</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Jeu de données 1990-2020 préparé pour {did}"</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"Echantillon des 10 lignes"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source : Aires protégées d'AP Vahatra, données TMF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
-<div id="kzcbjtmjuw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="conyqqarpm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#kzcbjtmjuw) .gt_table {
+:where(#conyqqarpm) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -386,7 +386,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_heading {
+:where(#conyqqarpm) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -398,12 +398,12 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_caption {
+:where(#conyqqarpm) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#kzcbjtmjuw) .gt_title {
+:where(#conyqqarpm) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -415,7 +415,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_subtitle {
+:where(#conyqqarpm) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -427,13 +427,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_bottom_border {
+:where(#conyqqarpm) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_col_headings {
+:where(#conyqqarpm) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -448,7 +448,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_col_heading {
+:where(#conyqqarpm) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -468,7 +468,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#kzcbjtmjuw) .gt_column_spanner_outer {
+:where(#conyqqarpm) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -480,15 +480,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-:where(#kzcbjtmjuw) .gt_column_spanner_outer:first-child {
+:where(#conyqqarpm) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_column_spanner_outer:last-child {
+:where(#conyqqarpm) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_column_spanner {
+:where(#conyqqarpm) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -500,7 +500,7 @@ div.csl-indent {
   width: 100%;
 }
 
-:where(#kzcbjtmjuw) .gt_group_heading {
+:where(#conyqqarpm) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -526,7 +526,7 @@ div.csl-indent {
   text-align: left;
 }
 
-:where(#kzcbjtmjuw) .gt_empty_group_heading {
+:where(#conyqqarpm) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -541,15 +541,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-:where(#kzcbjtmjuw) .gt_from_md > :first-child {
+:where(#conyqqarpm) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_from_md > :last-child {
+:where(#conyqqarpm) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_row {
+:where(#conyqqarpm) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -568,7 +568,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#kzcbjtmjuw) .gt_stub {
+:where(#conyqqarpm) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -581,7 +581,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#kzcbjtmjuw) .gt_stub_row_group {
+:where(#conyqqarpm) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -595,11 +595,11 @@ div.csl-indent {
   vertical-align: top;
 }
 
-:where(#kzcbjtmjuw) .gt_row_group_first td {
+:where(#conyqqarpm) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#kzcbjtmjuw) .gt_summary_row {
+:where(#conyqqarpm) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -609,16 +609,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#kzcbjtmjuw) .gt_first_summary_row {
+:where(#conyqqarpm) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_first_summary_row.thick {
+:where(#conyqqarpm) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#kzcbjtmjuw) .gt_last_summary_row {
+:where(#conyqqarpm) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -628,7 +628,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_grand_summary_row {
+:where(#conyqqarpm) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -638,7 +638,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#kzcbjtmjuw) .gt_first_grand_summary_row {
+:where(#conyqqarpm) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -648,11 +648,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_striped {
+:where(#conyqqarpm) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#kzcbjtmjuw) .gt_table_body {
+:where(#conyqqarpm) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -661,7 +661,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_footnotes {
+:where(#conyqqarpm) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -675,7 +675,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_footnote {
+:where(#conyqqarpm) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -684,7 +684,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#kzcbjtmjuw) .gt_sourcenotes {
+:where(#conyqqarpm) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -698,7 +698,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#kzcbjtmjuw) .gt_sourcenote {
+:where(#conyqqarpm) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -706,64 +706,64 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#kzcbjtmjuw) .gt_left {
+:where(#conyqqarpm) .gt_left {
   text-align: left;
 }
 
-:where(#kzcbjtmjuw) .gt_center {
+:where(#conyqqarpm) .gt_center {
   text-align: center;
 }
 
-:where(#kzcbjtmjuw) .gt_right {
+:where(#conyqqarpm) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#kzcbjtmjuw) .gt_font_normal {
+:where(#conyqqarpm) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#kzcbjtmjuw) .gt_font_bold {
+:where(#conyqqarpm) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#kzcbjtmjuw) .gt_font_italic {
+:where(#conyqqarpm) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#kzcbjtmjuw) .gt_super {
+:where(#conyqqarpm) .gt_super {
   font-size: 65%;
 }
 
-:where(#kzcbjtmjuw) .gt_footnote_marks {
+:where(#conyqqarpm) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#kzcbjtmjuw) .gt_asterisk {
+:where(#conyqqarpm) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#kzcbjtmjuw) .gt_indent_1 {
+:where(#conyqqarpm) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#kzcbjtmjuw) .gt_indent_2 {
+:where(#conyqqarpm) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#kzcbjtmjuw) .gt_indent_3 {
+:where(#conyqqarpm) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#kzcbjtmjuw) .gt_indent_4 {
+:where(#conyqqarpm) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#kzcbjtmjuw) .gt_indent_5 {
+:where(#conyqqarpm) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -951,12 +951,12 @@ div.csl-indent {
 </details>
 <div class="cell-output-display">
 
-<div id="hpxdflxhiu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="aecosrqmzm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#hpxdflxhiu) .gt_table {
+:where(#aecosrqmzm) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -981,7 +981,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_heading {
+:where(#aecosrqmzm) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -993,12 +993,12 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_caption {
+:where(#aecosrqmzm) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#hpxdflxhiu) .gt_title {
+:where(#aecosrqmzm) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1010,7 +1010,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-:where(#hpxdflxhiu) .gt_subtitle {
+:where(#aecosrqmzm) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1022,13 +1022,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-:where(#hpxdflxhiu) .gt_bottom_border {
+:where(#aecosrqmzm) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_col_headings {
+:where(#aecosrqmzm) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1043,7 +1043,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_col_heading {
+:where(#aecosrqmzm) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1063,7 +1063,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#hpxdflxhiu) .gt_column_spanner_outer {
+:where(#aecosrqmzm) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1075,15 +1075,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-:where(#hpxdflxhiu) .gt_column_spanner_outer:first-child {
+:where(#aecosrqmzm) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#hpxdflxhiu) .gt_column_spanner_outer:last-child {
+:where(#aecosrqmzm) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#hpxdflxhiu) .gt_column_spanner {
+:where(#aecosrqmzm) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1095,7 +1095,7 @@ div.csl-indent {
   width: 100%;
 }
 
-:where(#hpxdflxhiu) .gt_group_heading {
+:where(#aecosrqmzm) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1121,7 +1121,7 @@ div.csl-indent {
   text-align: left;
 }
 
-:where(#hpxdflxhiu) .gt_empty_group_heading {
+:where(#aecosrqmzm) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1136,15 +1136,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-:where(#hpxdflxhiu) .gt_from_md > :first-child {
+:where(#aecosrqmzm) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#hpxdflxhiu) .gt_from_md > :last-child {
+:where(#aecosrqmzm) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#hpxdflxhiu) .gt_row {
+:where(#aecosrqmzm) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1163,7 +1163,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#hpxdflxhiu) .gt_stub {
+:where(#aecosrqmzm) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1176,7 +1176,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#hpxdflxhiu) .gt_stub_row_group {
+:where(#aecosrqmzm) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1190,11 +1190,11 @@ div.csl-indent {
   vertical-align: top;
 }
 
-:where(#hpxdflxhiu) .gt_row_group_first td {
+:where(#aecosrqmzm) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#hpxdflxhiu) .gt_summary_row {
+:where(#aecosrqmzm) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1204,16 +1204,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#hpxdflxhiu) .gt_first_summary_row {
+:where(#aecosrqmzm) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_first_summary_row.thick {
+:where(#aecosrqmzm) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#hpxdflxhiu) .gt_last_summary_row {
+:where(#aecosrqmzm) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1223,7 +1223,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_grand_summary_row {
+:where(#aecosrqmzm) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1233,7 +1233,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#hpxdflxhiu) .gt_first_grand_summary_row {
+:where(#aecosrqmzm) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1243,11 +1243,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_striped {
+:where(#aecosrqmzm) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#hpxdflxhiu) .gt_table_body {
+:where(#aecosrqmzm) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1256,7 +1256,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_footnotes {
+:where(#aecosrqmzm) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1270,7 +1270,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_footnote {
+:where(#aecosrqmzm) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1279,7 +1279,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#hpxdflxhiu) .gt_sourcenotes {
+:where(#aecosrqmzm) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1293,7 +1293,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#hpxdflxhiu) .gt_sourcenote {
+:where(#aecosrqmzm) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1301,64 +1301,64 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#hpxdflxhiu) .gt_left {
+:where(#aecosrqmzm) .gt_left {
   text-align: left;
 }
 
-:where(#hpxdflxhiu) .gt_center {
+:where(#aecosrqmzm) .gt_center {
   text-align: center;
 }
 
-:where(#hpxdflxhiu) .gt_right {
+:where(#aecosrqmzm) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#hpxdflxhiu) .gt_font_normal {
+:where(#aecosrqmzm) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#hpxdflxhiu) .gt_font_bold {
+:where(#aecosrqmzm) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#hpxdflxhiu) .gt_font_italic {
+:where(#aecosrqmzm) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#hpxdflxhiu) .gt_super {
+:where(#aecosrqmzm) .gt_super {
   font-size: 65%;
 }
 
-:where(#hpxdflxhiu) .gt_footnote_marks {
+:where(#aecosrqmzm) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#hpxdflxhiu) .gt_asterisk {
+:where(#aecosrqmzm) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#hpxdflxhiu) .gt_indent_1 {
+:where(#aecosrqmzm) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#hpxdflxhiu) .gt_indent_2 {
+:where(#aecosrqmzm) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#hpxdflxhiu) .gt_indent_3 {
+:where(#aecosrqmzm) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#hpxdflxhiu) .gt_indent_4 {
+:where(#aecosrqmzm) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#hpxdflxhiu) .gt_indent_5 {
+:where(#aecosrqmzm) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1403,9 +1403,6 @@ div.csl-indent {
 </div>
 </div>
 </div>
-</section>
-<section id="double-différences-pour-la-déforestation" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="double-différences-pour-la-déforestation"><span class="header-section-number">10.2</span> Double différences pour la déforestation</h2>
 <p>On passe maintenant à l’estimation pour la déforestation.</p>
 <div class="cell">
 <details>
@@ -1440,7 +1437,7 @@ aggte(MP = attgt_apmada_def, type = "simple", na.rm = TRUE)
 Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
 
      ATT    Std. Error     [ 95%  Conf. Int.] 
- -0.0001         0.001     -0.002      0.0018 
+ -0.0001        0.0009    -0.0019      0.0017 
 
 
 ---
@@ -1457,43 +1454,55 @@ Estimation Method:  Doubly Robust</code></pre>
 </details>
 </div>
 <p>Pour la déforestation, on ne voit aucun effet net des aires protégées (ATT très faible et non significativement différent de 0). Mais la taille de l’échantillon est extrêmement restreinte et il est on ne peut pas vraiment en tirer d’interprétation.</p>
+<blockquote class="blockquote">
+<p><strong>Mise en garde :</strong> l’échantillon utilisé à titre d’exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d’observation, par exemple en se focalisant sur des pixels ou des cellules.</p>
+</blockquote>
 </section>
-<section id="double-différence-pour-la-dégradation" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="double-différence-pour-la-dégradation"><span class="header-section-number">10.3</span> Double différence pour la dégradation</h2>
-<p>On modifie la spécification en remplaçant la variable à expliquer “déforestation” par “dégradation” (cf.&nbsp;présentation des sources dans <a href="04b-recap_donnees_dispo.html"><span>Chapter&nbsp;5</span></a>).</p>
+<section id="application-aux-données-par-mailles" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="application-aux-données-par-mailles"><span class="header-section-number">10.1.2</span> Application aux données par mailles</h3>
+<p>L’analyse reposant par aire protégée rassemble un nombre trop faible d’observations. On va donc procéder en réalisant l’analyse par maille. On va donc avoir une observation par hexagone de 5 km<sup>2</sup>, pour lequel on dispose du couvert forestier par année, de l’année de création de l’aire protégée. La première analyse est une première régression simple n’incluant pas de variables de contrôle. On commence par visualiser les tendances.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>attgt_apmada_deg <span class="ot">&lt;-</span> <span class="fu">att_gt</span>(<span class="at">yname =</span> <span class="st">"deg_ratio"</span>,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">tname =</span> <span class="st">"annee"</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">idname =</span> <span class="st">"num_atlas"</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">gname =</span> <span class="st">"annee_creation"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> ap_did,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">control_group =</span> <span class="st">"notyettreated"</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(attgt_apmada_deg) <span class="sc">+</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span>  <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/grille_mada_AP.rds"</span>) <span class="co"># On charge les données préparées au chapitre 4</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On "déplie" les données de déforestation, ce qui produit un format long</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>grille_mada_AP_long <span class="ot">&lt;-</span> grille_mada_AP <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">cols =</span> treecover_area_and_emissions)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On passe ces paramètres au package did</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>att_mailles_def <span class="ot">&lt;-</span> <span class="fu">att_gt</span>(<span class="at">yname =</span> <span class="st">"treecover"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">tname =</span> <span class="st">"years"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">idname =</span> <span class="st">"assetid"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">gname =</span> <span class="st">"an_creation"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">data =</span> grille_mada_AP_long,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control_group =</span> <span class="st">"notyettreated"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># On visualise les résultats.</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(att_mailles_def) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span>  <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="08-diff_in_diff_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>On aggrège les résultats :</p>
+<p>On aggrège à nouveau les résultats de traitements pour l’ensemble de la période, ce qui produit le résumé suivant.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>agg.simple <span class="ot">&lt;-</span> <span class="fu">aggte</span>(attgt_apmada_deg, <span class="at">type =</span> <span class="st">"simple"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>agg.simple <span class="ot">&lt;-</span> <span class="fu">aggte</span>(att_mailles_def, <span class="at">type =</span> <span class="st">"simple"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(agg.simple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-aggte(MP = attgt_apmada_deg, type = "simple", na.rm = TRUE)
+aggte(MP = att_mailles_def, type = "simple", na.rm = TRUE)
 
 Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
 
-     ATT    Std. Error     [ 95%  Conf. Int.] 
- -0.0052        0.0029    -0.0108      0.0004 
+     ATT    Std. Error     [ 95%  Conf. Int.]  
+ -3.4758         0.648    -4.7458     -2.2059 *
 
 
 ---
@@ -1502,17 +1511,60 @@ Signif. codes: `*' confidence band does not cover 0
 Control Group:  Not Yet Treated,  Anticipation Periods:  0
 Estimation Method:  Doubly Robust</code></pre>
 </div>
+</div>
+<p>Les résultats indiquent une baisse de la déforestation. TODO : coefficents à interpréter.</p>
+</section>
+</section>
+<section id="doubles-différences-échelonnées-avec-contrôles" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="doubles-différences-échelonnées-avec-contrôles"><span class="header-section-number">10.2</span> Doubles différences échelonnées avec contrôles</h2>
+<p>L’analyse précédente ne tient pas compte de certains facteurs dont on a vu qu’ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l’altitude, la qualité des sols, le temps de parcours à la ville la plus proche, ou encore le caractère accidenté du terrain. On va rajouter ces variables comme contrôles, en continuant à comparer les aires protégées créées avant 2015 avec celles créées en 2015.</p>
+<div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gt(summary(agg.simple)) %&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   tab_header(title = "Effet aggrégé pour les traités de 1991 à 2011") %&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   tab_footnote("Résultats encore préliminaire à confirmer (erreurs possibles)")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On passe ces paramètres au package did</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>att_mailles_def_crtl <span class="ot">&lt;-</span> <span class="fu">att_gt</span>(<span class="at">yname =</span> <span class="st">"treecover"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">tname =</span> <span class="st">"years"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">idname =</span> <span class="st">"assetid"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">gname =</span> <span class="st">"an_creation"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">xformla =</span> <span class="sc">~</span> distance_minutes_5k_110mio <span class="sc">+</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                 mean_clay_5_15cm <span class="sc">+</span> tri_mean <span class="sc">+</span> elevation_mean,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">data =</span> grille_mada_AP_long,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control_group =</span> <span class="st">"notyettreated"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># On visualise les résultats.</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdid</span>(att_mailles_def_crtl) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span>  <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<p><img src="08-diff_in_diff_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
-<p>Là encore, l’effet mesuré est très faible et non significativement différent de 0.</p>
-<blockquote class="blockquote">
-<p><strong>Mise en garde :</strong> l’échantillon utilisé à titre d’exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d’observation, par exemple en se focalisant sur des pixels ou des cellules.</p>
-</blockquote>
+</div>
+<p>On aggrège les résultats.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>agg.simple <span class="ot">&lt;-</span> <span class="fu">aggte</span>(att_mailles_def_crtl, <span class="at">type =</span> <span class="st">"simple"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(agg.simple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+aggte(MP = att_mailles_def_crtl, type = "simple", na.rm = TRUE)
+
+Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
+
+     ATT    Std. Error     [ 95%  Conf. Int.] 
+ -2.2241        1.2049    -4.5856      0.1374 
+
+
+---
+Signif. codes: `*' confidence band does not cover 0
+
+Control Group:  Not Yet Treated,  Anticipation Periods:  0
+Estimation Method:  Doubly Robust</code></pre>
+</div>
+</div>
+<p>Une autre solution consisterait à utiliser des matching pour utiliser comme contrefactuel des zones hors aires protégées..</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
@@ -1567,24 +1619,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1620,42 +1655,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script>

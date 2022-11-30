@@ -1,8 +1,10 @@
 # Doubles différences
 
-## Méthode des doubles différences échelonnées (staggered matching)
+## Méthode des doubles différences échelonnées simples
 
-Pour réaliser un diff-in-diff, on va utiliser la méthode de différence de différences échelonnées élaboréé par Callaway et Sant'Anna [-@callaway2021] et diffusée dans la librairie {did} [@did].
+Pour réaliser un diff-in-diff, on va utiliser la méthode de différence de différences échelonnées (staggered matching) élaboréé par Callaway et Sant'Anna [-@callaway2021] et diffusée dans la librairie {did} [@did].
+
+### Application aux polygones d'aires protégées
 
 La spécification employée peut se traduire de la manière suivante :
 
@@ -39,7 +41,7 @@ gt(slice(ap_did, 20:30)) %>%
   tab_source_note("Source : Aires protégées d'AP Vahatra, données TMF")
 ```
 
-Pour rappel, on récapitule les années d'assignation : 
+Pour rappel, on récapitule les années d'assignation :
 
 ```{r}
 ap_did %>%
@@ -51,9 +53,6 @@ ap_did %>%
   gt() %>%
   tab_header(title = "Années de création des aires protégées")
 ```
-
-
-## Double différences pour la déforestation
 
 On passe maintenant à l'estimation pour la déforestation.
 
@@ -69,9 +68,10 @@ ggdid(attgt_apmada_def) +
   theme(axis.text.x =  element_text(angle = 45, hjust = 1))
 ```
 
-Peu d'effet ressortent graphiquement. 
+Peu d'effet ressortent graphiquement.
 
 On aggrège les effets de traitment pour l'ensemble de la période
+
 ```{r}
 agg.simple <- aggte(attgt_apmada_def, type = "simple", na.rm = TRUE)
 
@@ -84,78 +84,69 @@ summary(agg.simple)
 
 Pour la déforestation, on ne voit aucun effet net des aires protégées (ATT très faible et non significativement différent de 0). Mais la taille de l'échantillon est extrêmement restreinte et il est on ne peut pas vraiment en tirer d'interprétation.
 
-## Double différence pour la dégradation
+> **Mise en garde :** l'échantillon utilisé à titre d'exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d'observation, par exemple en se focalisant sur des pixels ou des cellules.
 
-On modifie la spécification en remplaçant la variable à expliquer "déforestation" par "dégradation" (cf. présentation des sources dans @sec-recap_donnees).
+### Application aux données par mailles
+
+L'analyse reposant par aire protégée rassemble un nombre trop faible d'observations. On va donc procéder en réalisant l'analyse par maille. On va donc avoir une observation par hexagone de 5 km^2^, pour lequel on dispose du couvert forestier par année, de l'année de création de l'aire protégée. La première analyse est une première régression simple n'incluant pas de variables de contrôle. On commence par visualiser les tendances.
 
 ```{r}
 #| fig-height: 20
-attgt_apmada_deg <- att_gt(yname = "deg_ratio",
-                        tname = "annee",
-                        idname = "num_atlas",
-                        gname = "annee_creation",
-                        data = ap_did,
-                       control_group = "notyettreated")
-ggdid(attgt_apmada_deg) +
+library(sf)
+load("data/grille_mada_AP.rds") # On charge les données préparées au chapitre 4
+
+# On "déplie" les données de déforestation, ce qui produit un format long
+grille_mada_AP_long <- grille_mada_AP %>%
+  unnest(cols = treecover_area_and_emissions)
+
+# On passe ces paramètres au package did
+att_mailles_def <- att_gt(yname = "treecover",
+                         tname = "years",
+                         idname = "assetid",
+                         gname = "an_creation",
+                         data = grille_mada_AP_long,
+                         control_group = "notyettreated")
+# On visualise les résultats.
+ggdid(att_mailles_def) +
+  theme(axis.text.x =  element_text(angle = 45, hjust = 1))
+
+```
+
+On aggrège à nouveau les résultats de traitements pour l'ensemble de la période, ce qui produit le résumé suivant.
+
+```{r}
+agg.simple <- aggte(att_mailles_def, type = "simple", na.rm = TRUE)
+
+summary(agg.simple)
+```
+
+Les résultats indiquent une baisse de la déforestation. TODO : coefficents à interpréter.
+
+## Doubles différences échelonnées avec contrôles
+
+L'analyse précédente ne tient pas compte de certains facteurs dont on a vu qu'ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l'altitude, la qualité des sols, le temps de parcours à la ville la plus proche, ou encore le caractère accidenté du terrain. On va rajouter ces variables comme contrôles, en continuant à comparer les aires protégées créées avant 2015 avec celles créées en 2015.
+
+```{r}
+# On passe ces paramètres au package did
+att_mailles_def_crtl <- att_gt(yname = "treecover",
+                               tname = "years",
+                               idname = "assetid",
+                               gname = "an_creation",
+                               xformla = ~ distance_minutes_5k_110mio + 
+                                 mean_clay_5_15cm + tri_mean + elevation_mean,
+                               data = grille_mada_AP_long,
+                               control_group = "notyettreated")
+# On visualise les résultats.
+ggdid(att_mailles_def_crtl) +
   theme(axis.text.x =  element_text(angle = 45, hjust = 1))
 ```
 
-On aggrège les résultats :
+On aggrège les résultats.
 
 ```{r}
-agg.simple <- aggte(attgt_apmada_deg, type = "simple", na.rm = TRUE)
+agg.simple <- aggte(att_mailles_def_crtl, type = "simple", na.rm = TRUE)
 
 summary(agg.simple)
-# gt(summary(agg.simple)) %>%
-#   tab_header(title = "Effet aggrégé pour les traités de 1991 à 2011") %>%
-#   tab_footnote("Résultats encore préliminaire à confirmer (erreurs possibles)")
-
 ```
 
-Là encore, l'effet mesuré est très faible et non significativement différent de 0.
-
-> **Mise en garde :** l'échantillon utilisé à titre d'exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d'observation, par exemple en se focalisant sur des pixels ou des cellules.
-
-# Données par maille
-
-On lance l'analyse pour les données par mailles. 
-```{r}
-library(sf)
-library(wdpar)
-WDPA_Mada <- wdpa_read("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")
-load("data/grille_mada_donnees_raster.rds")
-load("data/grille_mada_summary_AP.rds")
-
-# Reprendre les dates de création
-
-infos_vahatra <- AP_Vahatra %>%
-  st_drop_geometry() %>%
-  select(nom_wdpa, cat_iucn_vahatra = cat__iucn, date_creation) %>%
-  mutate(an_creation_vahatra = year(date_creation)) %>%
-  select(-date_creation)
-
-date_statut <- WDPA_Mada %>%
-  st_drop_geometry() %>%
-  select(id_wdpa= WDPAID, nom_wdpa = NAME, cat_iucn_wdpa = IUCN_CAT, 
-         an_creation_wdpa = STATUS_YR) %>%
-  left_join(infos_vahatra, by = "nom_wdpa") %>% # Garde catégorie selon Vahatra
-  mutate(cat_iucn = ifelse(!is.na(cat_iucn_vahatra),  cat_iucn_vahatra, 
-                           cat_iucn_wdpa),
-         an_creation = ifelse(!is.na(an_creation_vahatra), an_creation_vahatra, 
-                              an_creation_wdpa)) %>%
-  select(id_wdpa, nom_wdpa, cat_iucn, an_creation)
-
-
-
-grille_mada_summary <- grille_mada %>%
-  # On met à plat les données de distance
-  unnest(cols = c(traveltime, soilproperties, tri, elevation),
-         names_repair = "universal") %>%
-  select(-distance, -layer, -depth, -stat,  -active_fire_counts, 
-         -active_fire_properties) %>%
-  rename(distance_minutes_5k_110mio = minutes_mean, mean_clay_5_15cm = mean) %>%
-  grille_mada_summary2 <- grille_mada_summary %>%
-  unnest(cols = treecover_area_and_emissions)
-
-
-```
+Une autre solution consisterait à utiliser des matching pour utiliser comme contrefactuel des zones hors aires protégées..

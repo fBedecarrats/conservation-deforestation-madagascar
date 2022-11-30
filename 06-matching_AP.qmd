@@ -75,7 +75,7 @@ pscor <- traitement ~  surface_ha +
 On va maintenant réaliser une régression pour connaître l'influence de ces facteurs dans la désignation des aires comme protégées.
 
 ```{r}
-# On ré
+#| output: asis
 reg_select <- glm(formula = pscor,
                   family = binomial(link = "probit"),
                   data = rct_AP_Mada_noNA)
