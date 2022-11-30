@@ -9,10 +9,6 @@ La spécification employée peut se traduire de la manière suivante :
 On l'applique aux aires protégées et à leur déforestation entre 1990 et 2021. On commence par préparer le jeu de données tel qu'attendu par {did}, de sorte à obtenir :
 
 ```{r}
-# On installe le package {did} si pas encore installé
-if (!("did" %in% installed.packages())) {
-  install.packages("did")
-}
 library(did) # Pour des doubles-différences échelonnées
 library(tidyverse) # Pur faciliter la manipulation de données
 library(lubridate) # Pour modifier les dates
