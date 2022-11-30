@@ -119,3 +119,47 @@ summary(agg.simple)
 Là encore, l'effet mesuré est très faible et non significativement différent de 0.
 
 > **Mise en garde :** l'échantillon utilisé à titre d'exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d'observation, par exemple en se focalisant sur des pixels ou des cellules.
+
+# Données par maille
+
+On lance l'analyse pour les données par mailles. 
+```{r}
+library(sf)
+library(wdpar)
+WDPA_Mada <- wdpa_read("data/WDPA/WDPA_Oct2022_MDG-shapefile.zip")
+load("data/grille_mada_donnees_raster.rds")
+load("data/grille_mada_summary_AP.rds")
+
+# Reprendre les dates de création
+
+infos_vahatra <- AP_Vahatra %>%
+  st_drop_geometry() %>%
+  select(nom_wdpa, cat_iucn_vahatra = cat__iucn, date_creation) %>%
+  mutate(an_creation_vahatra = year(date_creation)) %>%
+  select(-date_creation)
+
+date_statut <- WDPA_Mada %>%
+  st_drop_geometry() %>%
+  select(id_wdpa= WDPAID, nom_wdpa = NAME, cat_iucn_wdpa = IUCN_CAT, 
+         an_creation_wdpa = STATUS_YR) %>%
+  left_join(infos_vahatra, by = "nom_wdpa") %>% # Garde catégorie selon Vahatra
+  mutate(cat_iucn = ifelse(!is.na(cat_iucn_vahatra),  cat_iucn_vahatra, 
+                           cat_iucn_wdpa),
+         an_creation = ifelse(!is.na(an_creation_vahatra), an_creation_vahatra, 
+                              an_creation_wdpa)) %>%
+  select(id_wdpa, nom_wdpa, cat_iucn, an_creation)
+
+
+
+grille_mada_summary <- grille_mada %>%
+  # On met à plat les données de distance
+  unnest(cols = c(traveltime, soilproperties, tri, elevation),
+         names_repair = "universal") %>%
+  select(-distance, -layer, -depth, -stat,  -active_fire_counts, 
+         -active_fire_properties) %>%
+  rename(distance_minutes_5k_110mio = minutes_mean, mean_clay_5_15cm = mean) %>%
+  grille_mada_summary2 <- grille_mada_summary %>%
+  unnest(cols = treecover_area_and_emissions)
+
+
+```
