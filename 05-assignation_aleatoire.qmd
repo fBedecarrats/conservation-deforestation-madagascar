@@ -6,7 +6,11 @@ editor_options:
 
 # Méthode randomisée
 
-[Cliquer ici pour la présentation méthodologique](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_RCT.pdf).
+```{=html}
+<iframe src="TVM_RCT.pdf" width="100%" height="400px"></iframe>
+```
+
+[Cliquer ici pour télécharger la présentation](TVM_RCT.pdf).
 
 > **ATTENTION :** Il va de soi que les AP malgaches n'ont à aucun moment été assignées aléatoirement. Lors de cette séquence, on fait "comme si", pour montrer la manière dont les données sont analysées quand il y a eu assignation aléatoire. On verra en fin de session les limites d'une telle approche et dans les suivantes des manières de construire des contrefactuels plus vraisemblables pour un sujet comme celui-ci.
 
