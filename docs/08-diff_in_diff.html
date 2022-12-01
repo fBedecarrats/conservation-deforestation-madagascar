@@ -287,12 +287,12 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#méthode-des-doubles-différences-échelonnées-simples" id="toc-méthode-des-doubles-différences-échelonnées-simples" class="nav-link active" data-scroll-target="#méthode-des-doubles-différences-échelonnées-simples"><span class="toc-section-number">10.1</span>  Méthode des doubles différences échelonnées simples</a>
+  <li><a href="#méthode-des-doubles-différences" id="toc-méthode-des-doubles-différences" class="nav-link active" data-scroll-target="#méthode-des-doubles-différences"><span class="toc-section-number">10.1</span>  Méthode des doubles différences</a></li>
+  <li><a href="#application-aux-polygones-daires-protégées" id="toc-application-aux-polygones-daires-protégées" class="nav-link" data-scroll-target="#application-aux-polygones-daires-protégées"><span class="toc-section-number">10.2</span>  Application aux polygones d’aires protégées</a>
   <ul class="collapse">
-  <li><a href="#application-aux-polygones-daires-protégées" id="toc-application-aux-polygones-daires-protégées" class="nav-link" data-scroll-target="#application-aux-polygones-daires-protégées"><span class="toc-section-number">10.1.1</span>  Application aux polygones d’aires protégées</a></li>
-  <li><a href="#application-aux-données-par-mailles" id="toc-application-aux-données-par-mailles" class="nav-link" data-scroll-target="#application-aux-données-par-mailles"><span class="toc-section-number">10.1.2</span>  Application aux données par mailles</a></li>
+  <li><a href="#application-aux-données-par-mailles" id="toc-application-aux-données-par-mailles" class="nav-link" data-scroll-target="#application-aux-données-par-mailles"><span class="toc-section-number">10.2.1</span>  Application aux données par mailles</a></li>
   </ul></li>
-  <li><a href="#doubles-différences-échelonnées-avec-contrôles" id="toc-doubles-différences-échelonnées-avec-contrôles" class="nav-link" data-scroll-target="#doubles-différences-échelonnées-avec-contrôles"><span class="toc-section-number">10.2</span>  Doubles différences échelonnées avec contrôles</a></li>
+  <li><a href="#doubles-différences-échelonnées-avec-contrôles" id="toc-doubles-différences-échelonnées-avec-contrôles" class="nav-link" data-scroll-target="#doubles-différences-échelonnées-avec-contrôles"><span class="toc-section-number">10.3</span>  Doubles différences échelonnées avec contrôles</a></li>
   </ul>
 </nav>
     </div>
@@ -315,11 +315,13 @@ div.csl-indent {
 
 </header>
 
-<section id="méthode-des-doubles-différences-échelonnées-simples" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="méthode-des-doubles-différences-échelonnées-simples"><span class="header-section-number">10.1</span> Méthode des doubles différences échelonnées simples</h2>
-<p>Pour réaliser un diff-in-diff, on va utiliser la méthode de différence de différences échelonnées (staggered matching) élaboréé par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="09-bibliographie.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> et diffusée dans la librairie {did}&nbsp;<span class="citation" data-cites="did">(<a href="09-bibliographie.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span>.</p>
-<section id="application-aux-polygones-daires-protégées" class="level3" data-number="10.1.1">
-<h3 data-number="10.1.1" class="anchored" data-anchor-id="application-aux-polygones-daires-protégées"><span class="header-section-number">10.1.1</span> Application aux polygones d’aires protégées</h3>
+<section id="méthode-des-doubles-différences" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="méthode-des-doubles-différences"><span class="header-section-number">10.1</span> Méthode des doubles différences</h2>
+<p><a href="https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_Double_difference.pdf">Cliquer ici pour télécharger le diaporama de présentation de la méthode diffusé en atelier</a>.</p>
+<p>Pour le cas d’études auquel on s’intéresse, on n’a pas une seule date de mise en oeuvre de l’intervention à évaluer, mais un échelonnement des dates de mises en oeuvre. En d’autres termes, les aires protégées ont été créées à des dates différentes. Pour ce type de cas, on va utiliser une variante de la méthode de différence de doubles différences, qui est dite “échelonnées” (staggered diff-in-diff). Cette méthode a été conceptualisée par Callaway et Sant’Anna <span class="citation" data-cites="callaway2021">(<a href="09-bibliographie.html#ref-callaway2021" role="doc-biblioref">2021b</a>)</span> et ces mêmes auteurs ont programmé mise en oeuvre pour R dans la librairie {did}&nbsp;<span class="citation" data-cites="did">(<a href="09-bibliographie.html#ref-did" role="doc-biblioref">Callaway and Sant’Anna 2021a</a>)</span>.</p>
+</section>
+<section id="application-aux-polygones-daires-protégées" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="application-aux-polygones-daires-protégées"><span class="header-section-number">10.2</span> Application aux polygones d’aires protégées</h2>
 <p>La spécification employée peut se traduire de la manière suivante :</p>
 <p>On l’applique aux aires protégées et à leur déforestation entre 1990 et 2021. On commence par préparer le jeu de données tel qu’attendu par {did}, de sorte à obtenir :</p>
 <div class="cell">
@@ -356,12 +358,12 @@ div.csl-indent {
 </details>
 <div class="cell-output-display">
 
-<div id="conyqqarpm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="nzevwfttrr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#conyqqarpm) .gt_table {
+:where(#nzevwfttrr) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -386,7 +388,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_heading {
+:where(#nzevwfttrr) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -398,12 +400,12 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_caption {
+:where(#nzevwfttrr) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#conyqqarpm) .gt_title {
+:where(#nzevwfttrr) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -415,7 +417,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-:where(#conyqqarpm) .gt_subtitle {
+:where(#nzevwfttrr) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -427,13 +429,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-:where(#conyqqarpm) .gt_bottom_border {
+:where(#nzevwfttrr) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_col_headings {
+:where(#nzevwfttrr) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -448,7 +450,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_col_heading {
+:where(#nzevwfttrr) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -468,7 +470,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#conyqqarpm) .gt_column_spanner_outer {
+:where(#nzevwfttrr) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -480,15 +482,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-:where(#conyqqarpm) .gt_column_spanner_outer:first-child {
+:where(#nzevwfttrr) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#conyqqarpm) .gt_column_spanner_outer:last-child {
+:where(#nzevwfttrr) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#conyqqarpm) .gt_column_spanner {
+:where(#nzevwfttrr) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -500,7 +502,7 @@ div.csl-indent {
   width: 100%;
 }
 
-:where(#conyqqarpm) .gt_group_heading {
+:where(#nzevwfttrr) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -526,7 +528,7 @@ div.csl-indent {
   text-align: left;
 }
 
-:where(#conyqqarpm) .gt_empty_group_heading {
+:where(#nzevwfttrr) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -541,15 +543,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-:where(#conyqqarpm) .gt_from_md > :first-child {
+:where(#nzevwfttrr) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#conyqqarpm) .gt_from_md > :last-child {
+:where(#nzevwfttrr) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#conyqqarpm) .gt_row {
+:where(#nzevwfttrr) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -568,7 +570,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#conyqqarpm) .gt_stub {
+:where(#nzevwfttrr) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -581,7 +583,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#conyqqarpm) .gt_stub_row_group {
+:where(#nzevwfttrr) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -595,11 +597,11 @@ div.csl-indent {
   vertical-align: top;
 }
 
-:where(#conyqqarpm) .gt_row_group_first td {
+:where(#nzevwfttrr) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#conyqqarpm) .gt_summary_row {
+:where(#nzevwfttrr) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -609,16 +611,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#conyqqarpm) .gt_first_summary_row {
+:where(#nzevwfttrr) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_first_summary_row.thick {
+:where(#nzevwfttrr) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#conyqqarpm) .gt_last_summary_row {
+:where(#nzevwfttrr) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -628,7 +630,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_grand_summary_row {
+:where(#nzevwfttrr) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -638,7 +640,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#conyqqarpm) .gt_first_grand_summary_row {
+:where(#nzevwfttrr) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -648,11 +650,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_striped {
+:where(#nzevwfttrr) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#conyqqarpm) .gt_table_body {
+:where(#nzevwfttrr) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -661,7 +663,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_footnotes {
+:where(#nzevwfttrr) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -675,7 +677,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_footnote {
+:where(#nzevwfttrr) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -684,7 +686,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#conyqqarpm) .gt_sourcenotes {
+:where(#nzevwfttrr) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -698,7 +700,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#conyqqarpm) .gt_sourcenote {
+:where(#nzevwfttrr) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -706,64 +708,64 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#conyqqarpm) .gt_left {
+:where(#nzevwfttrr) .gt_left {
   text-align: left;
 }
 
-:where(#conyqqarpm) .gt_center {
+:where(#nzevwfttrr) .gt_center {
   text-align: center;
 }
 
-:where(#conyqqarpm) .gt_right {
+:where(#nzevwfttrr) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#conyqqarpm) .gt_font_normal {
+:where(#nzevwfttrr) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#conyqqarpm) .gt_font_bold {
+:where(#nzevwfttrr) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#conyqqarpm) .gt_font_italic {
+:where(#nzevwfttrr) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#conyqqarpm) .gt_super {
+:where(#nzevwfttrr) .gt_super {
   font-size: 65%;
 }
 
-:where(#conyqqarpm) .gt_footnote_marks {
+:where(#nzevwfttrr) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#conyqqarpm) .gt_asterisk {
+:where(#nzevwfttrr) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#conyqqarpm) .gt_indent_1 {
+:where(#nzevwfttrr) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#conyqqarpm) .gt_indent_2 {
+:where(#nzevwfttrr) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#conyqqarpm) .gt_indent_3 {
+:where(#nzevwfttrr) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#conyqqarpm) .gt_indent_4 {
+:where(#nzevwfttrr) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#conyqqarpm) .gt_indent_5 {
+:where(#nzevwfttrr) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -951,12 +953,12 @@ div.csl-indent {
 </details>
 <div class="cell-output-display">
 
-<div id="aecosrqmzm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="wrswyiwbjh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#aecosrqmzm) .gt_table {
+:where(#wrswyiwbjh) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -981,7 +983,7 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_heading {
+:where(#wrswyiwbjh) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -993,12 +995,12 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_caption {
+:where(#wrswyiwbjh) .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-:where(#aecosrqmzm) .gt_title {
+:where(#wrswyiwbjh) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1010,7 +1012,7 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-:where(#aecosrqmzm) .gt_subtitle {
+:where(#wrswyiwbjh) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1022,13 +1024,13 @@ div.csl-indent {
   border-top-width: 0;
 }
 
-:where(#aecosrqmzm) .gt_bottom_border {
+:where(#wrswyiwbjh) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_col_headings {
+:where(#wrswyiwbjh) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1043,7 +1045,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_col_heading {
+:where(#wrswyiwbjh) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1063,7 +1065,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#aecosrqmzm) .gt_column_spanner_outer {
+:where(#wrswyiwbjh) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1075,15 +1077,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-:where(#aecosrqmzm) .gt_column_spanner_outer:first-child {
+:where(#wrswyiwbjh) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#aecosrqmzm) .gt_column_spanner_outer:last-child {
+:where(#wrswyiwbjh) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#aecosrqmzm) .gt_column_spanner {
+:where(#wrswyiwbjh) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1095,7 +1097,7 @@ div.csl-indent {
   width: 100%;
 }
 
-:where(#aecosrqmzm) .gt_group_heading {
+:where(#wrswyiwbjh) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1121,7 +1123,7 @@ div.csl-indent {
   text-align: left;
 }
 
-:where(#aecosrqmzm) .gt_empty_group_heading {
+:where(#wrswyiwbjh) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1136,15 +1138,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-:where(#aecosrqmzm) .gt_from_md > :first-child {
+:where(#wrswyiwbjh) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#aecosrqmzm) .gt_from_md > :last-child {
+:where(#wrswyiwbjh) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#aecosrqmzm) .gt_row {
+:where(#wrswyiwbjh) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1163,7 +1165,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-:where(#aecosrqmzm) .gt_stub {
+:where(#wrswyiwbjh) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1176,7 +1178,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#aecosrqmzm) .gt_stub_row_group {
+:where(#wrswyiwbjh) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1190,11 +1192,11 @@ div.csl-indent {
   vertical-align: top;
 }
 
-:where(#aecosrqmzm) .gt_row_group_first td {
+:where(#wrswyiwbjh) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#aecosrqmzm) .gt_summary_row {
+:where(#wrswyiwbjh) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1204,16 +1206,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#aecosrqmzm) .gt_first_summary_row {
+:where(#wrswyiwbjh) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_first_summary_row.thick {
+:where(#wrswyiwbjh) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#aecosrqmzm) .gt_last_summary_row {
+:where(#wrswyiwbjh) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1223,7 +1225,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_grand_summary_row {
+:where(#wrswyiwbjh) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1233,7 +1235,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#aecosrqmzm) .gt_first_grand_summary_row {
+:where(#wrswyiwbjh) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1243,11 +1245,11 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_striped {
+:where(#wrswyiwbjh) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#aecosrqmzm) .gt_table_body {
+:where(#wrswyiwbjh) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1256,7 +1258,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_footnotes {
+:where(#wrswyiwbjh) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1270,7 +1272,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_footnote {
+:where(#wrswyiwbjh) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -1279,7 +1281,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#aecosrqmzm) .gt_sourcenotes {
+:where(#wrswyiwbjh) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1293,7 +1295,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-:where(#aecosrqmzm) .gt_sourcenote {
+:where(#wrswyiwbjh) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1301,64 +1303,64 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-:where(#aecosrqmzm) .gt_left {
+:where(#wrswyiwbjh) .gt_left {
   text-align: left;
 }
 
-:where(#aecosrqmzm) .gt_center {
+:where(#wrswyiwbjh) .gt_center {
   text-align: center;
 }
 
-:where(#aecosrqmzm) .gt_right {
+:where(#wrswyiwbjh) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#aecosrqmzm) .gt_font_normal {
+:where(#wrswyiwbjh) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#aecosrqmzm) .gt_font_bold {
+:where(#wrswyiwbjh) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#aecosrqmzm) .gt_font_italic {
+:where(#wrswyiwbjh) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#aecosrqmzm) .gt_super {
+:where(#wrswyiwbjh) .gt_super {
   font-size: 65%;
 }
 
-:where(#aecosrqmzm) .gt_footnote_marks {
+:where(#wrswyiwbjh) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#aecosrqmzm) .gt_asterisk {
+:where(#wrswyiwbjh) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#aecosrqmzm) .gt_indent_1 {
+:where(#wrswyiwbjh) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#aecosrqmzm) .gt_indent_2 {
+:where(#wrswyiwbjh) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#aecosrqmzm) .gt_indent_3 {
+:where(#wrswyiwbjh) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#aecosrqmzm) .gt_indent_4 {
+:where(#wrswyiwbjh) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#aecosrqmzm) .gt_indent_5 {
+:where(#wrswyiwbjh) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1437,7 +1439,7 @@ aggte(MP = attgt_apmada_def, type = "simple", na.rm = TRUE)
 Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
 
      ATT    Std. Error     [ 95%  Conf. Int.] 
- -0.0001        0.0009    -0.0019      0.0017 
+ -0.0001         0.001     -0.002      0.0018 
 
 
 ---
@@ -1457,9 +1459,8 @@ Estimation Method:  Doubly Robust</code></pre>
 <blockquote class="blockquote">
 <p><strong>Mise en garde :</strong> l’échantillon utilisé à titre d’exemple ici est trop petit pour cette méthode. Il convient de préférer une analyse avec un plus grand nombre d’observation, par exemple en se focalisant sur des pixels ou des cellules.</p>
 </blockquote>
-</section>
-<section id="application-aux-données-par-mailles" class="level3" data-number="10.1.2">
-<h3 data-number="10.1.2" class="anchored" data-anchor-id="application-aux-données-par-mailles"><span class="header-section-number">10.1.2</span> Application aux données par mailles</h3>
+<section id="application-aux-données-par-mailles" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="application-aux-données-par-mailles"><span class="header-section-number">10.2.1</span> Application aux données par mailles</h3>
 <p>L’analyse reposant par aire protégée rassemble un nombre trop faible d’observations. On va donc procéder en réalisant l’analyse par maille. On va donc avoir une observation par hexagone de 5 km<sup>2</sup>, pour lequel on dispose du couvert forestier par année, de l’année de création de l’aire protégée. La première analyse est une première régression simple n’incluant pas de variables de contrôle. On commence par visualiser les tendances.</p>
 <div class="cell">
 <details>
@@ -1502,7 +1503,7 @@ aggte(MP = att_mailles_def, type = "simple", na.rm = TRUE)
 Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
 
      ATT    Std. Error     [ 95%  Conf. Int.]  
- -3.4758         0.648    -4.7458     -2.2059 *
+ -3.4758        0.7462    -4.9384     -2.0132 *
 
 
 ---
@@ -1515,8 +1516,8 @@ Estimation Method:  Doubly Robust</code></pre>
 <p>Les résultats indiquent une baisse de la déforestation. TODO : coefficents à interpréter.</p>
 </section>
 </section>
-<section id="doubles-différences-échelonnées-avec-contrôles" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="doubles-différences-échelonnées-avec-contrôles"><span class="header-section-number">10.2</span> Doubles différences échelonnées avec contrôles</h2>
+<section id="doubles-différences-échelonnées-avec-contrôles" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="doubles-différences-échelonnées-avec-contrôles"><span class="header-section-number">10.3</span> Doubles différences échelonnées avec contrôles</h2>
 <p>L’analyse précédente ne tient pas compte de certains facteurs dont on a vu qu’ils pouvaient influencer à la fois la sélection, mais aussi la déforestation, en particulier l’altitude, la qualité des sols, le temps de parcours à la ville la plus proche, ou encore le caractère accidenté du terrain. On va rajouter ces variables comme contrôles, en continuant à comparer les aires protégées créées avant 2015 avec celles créées en 2015.</p>
 <div class="cell">
 <details>
@@ -1553,8 +1554,8 @@ aggte(MP = att_mailles_def_crtl, type = "simple", na.rm = TRUE)
 
 Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
 
-     ATT    Std. Error     [ 95%  Conf. Int.] 
- -2.2241        1.2049    -4.5856      0.1374 
+     ATT    Std. Error     [ 95%  Conf. Int.]  
+ -2.2241        1.1319    -4.4426     -0.0056 *
 
 
 ---
