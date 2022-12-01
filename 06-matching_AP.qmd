@@ -75,13 +75,24 @@ pscor <- traitement ~  surface_ha +
 On va maintenant réaliser une régression pour connaître l'influence de ces facteurs dans la désignation des aires comme protégées.
 
 ```{r}
-#| output: asis
+#| output: false
 reg_select <- glm(formula = pscor,
                   family = binomial(link = "probit"),
                   data = rct_AP_Mada_noNA)
 
-stargazer(reg_select, type = "text")
+match_out1 <- stargazer(reg_select, type = "html") %>%
+  str_replace_all("\\*", "\\\\*") 
+
+# Dans un bloc plus bas et non affiché, on a le code suivant
+# cat(match_out1)
 ```
+```{r}
+#| output: asis
+#| echo: false
+
+cat(match_out1)
+```
+
 
 On va maintenant utiliser ce modèle pour comparer les aires protégées traitées en premier par rapport à celles traitées plus récemment.
 
@@ -146,6 +157,8 @@ estimp <- `Déforestation 1996-2016 (%)` ~
 On va donc réaliser une régression, en tenant compte des pondérations générées par l'algorithme d'appariement (variable "weight").
 
 ```{r}
+#| output: false
+
 # On extrait les données de l'appariement
 def_96_16_match_data <- match.data(def_96_16_match)
 # On effectue une régression simple avec la formule précédente
@@ -153,8 +166,19 @@ def_96_16_match_est <- lm(formula = estimp,
                           data = def_96_16_match_data,
                           weights = weights)
 # On visualise les résultats
-stargazer(def_96_16_match_est, type = "text")
+match_out2 <- stargazer(def_96_16_match_est, type = "html") %>%
+  str_replace_all("\\*", "\\\\*") 
+
+# Pour afficher le rendu (dans un bloc juste après et pas affiché)
+# cat(match_out2)
 ```
+```{r}
+#| output: asis
+#| echo: false
+
+cat(match_out2)
+```
+
 
 ### Exercice simple
 
