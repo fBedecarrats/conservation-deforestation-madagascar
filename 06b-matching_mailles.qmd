@@ -1,8 +1,8 @@
 # Appariement de mailles dans/hors aires protégées {#sec-matching_mailles}
 
-## Procédure en avec/sans
+> **Attention : ** Ce chapitre est encore en cours d'élaboration.
 
-Dans l'analyse par aire protégée, on a mené une analyse avant/après, c'est-à-dire qu'on a
+## Procédure en avec/sans
 
 Une procédure détaillée est proposée dans <https://github.com/openkfw/mapme.protectedareas>
 
