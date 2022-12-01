@@ -2,7 +2,11 @@
 
 ## Méthode des doubles différences
 
-[Cliquer ici pour télécharger le diaporama de présentation de la méthode diffusé en atelier](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_Double_difference.pdf).
+```{=html}
+<iframe src="TVM_Double_difference.pdf" width="100%" height="400px"></iframe>
+```
+
+[Cliquer ici pour télécharger la présentation](TVM_Double_difference.pdf).
 
 Pour le cas d'études auquel on s'intéresse, on n'a pas une seule date de mise en oeuvre de l'intervention à évaluer, mais un échelonnement des dates de mises en oeuvre. En d'autres termes, les aires protégées ont été créées à des dates différentes. Pour ce type de cas, on va utiliser une variante de la méthode de différence de doubles différences, qui est dite "échelonnées" (staggered diff-in-diff). Cette méthode a été conceptualisée par Callaway et Sant'Anna [-@callaway2021] et ces mêmes auteurs ont programmé mise en oeuvre pour R dans la librairie {did} [@did].
 
