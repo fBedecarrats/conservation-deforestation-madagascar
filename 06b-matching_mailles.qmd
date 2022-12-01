@@ -40,7 +40,7 @@ df <- grille_mada_summary_AP %>%
 On analyse maintenant le score de propension.
 
 ```{r}
-#| output: asis
+#| output: false
 # Get propensity scores
 glm_out <- glm(treatment ~ 
                  distance_minutes_5k_110mio + 
@@ -51,11 +51,21 @@ glm_out <- glm(treatment ~
                family = binomial(link = "probit"),
                data = df)
 
-stargazer(glm_out,
-          summary = TRUE,
-          type = "html",
-          title = "Probit regression for matching frame ")
+cellmatch_out1 <- stargazer(glm_out,
+                            summary = TRUE,
+                            type = "html",
+                            title = "Probit regression for matching frame ") %>%
+  str_replace_all("\\*", "\\\\*") 
+# Dans un bloc plus bas et non affiché, on a le code suivant
+# cat(cellmatch_out1)
 ```
+```{r}
+#| echo: false
+#| output: asis
+
+cat(cellmatch_out1)
+```
+
 
 On visualise la localisation des cellules utilisées comme contrôles.
 
@@ -98,7 +108,7 @@ tm_shape(contour_mada) +
 On réalise la régression.
 
 ```{r}
-#| output: asis
+#| output: false
 
 modele <- lm(formula = var_treecover ~
                treatment +
@@ -109,5 +119,15 @@ modele <- lm(formula = var_treecover ~
                treecover_2000,
              data = m_data,
              weights = weights)
-stargazer(modele, type = "html")
+cellmatch_out2 <- stargazer(modele, type = "html") %>%
+  str_replace_all("\\*", "\\\\*") 
+# Dans un bloc plus bas et non affiché, on a le code suivant
+# cat(cellmatch_out2)
 ```
+```{r}
+#| output: asis
+#| echo: false
+
+cat(cellmatch_out2)
+```
+
