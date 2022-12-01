@@ -151,4 +151,10 @@ agg.simple <- aggte(att_mailles_def_crtl, type = "simple", na.rm = TRUE)
 summary(agg.simple)
 ```
 
-Une autre solution consisterait à utiliser des matching pour utiliser comme contrefactuel des zones hors aires protégées..
+L'ajout des quatre variables de contrôle (temps de trajet à une ville, altitude, caractère accidenté du terrain et teneur en argile du sol) réduit l'effet moyen sur les traités (ATT) estimé et conduit l'intervalle de confiance à englober 0, ce qui nous empêche de conclure avec assurance à la présence d'effets significatifs.
+
+On doit toutefois souligner : 
+1) Qu'on s'appuie ici sur les données GFC et qu'on ne dispose donc de recul que depuis 2000, à la différence des données TMF qui démarrent en 1990, avec toutefois une fiabilité limitée pour la première décennie ;
+2) que la méthode prenant comme contrefactuel les zones situées dans des aires protégées en 2015 réduit la taille d'échantillon et la période d'observation, par opposition à l'approche consistant à utiliser comme contrefactuel des zones non traitées, par exemples celles désignées par matching dans le [Chapitre @sec-matching_mailles 
+
+Une autre solution consisterait à utiliser des matching pour utiliser comme contrefactuel des zones hors aires protégées.
