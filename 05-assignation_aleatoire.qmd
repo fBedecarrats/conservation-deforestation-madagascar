@@ -104,32 +104,26 @@ comparaison_apres  %>%
 On peut également réaliser une régression simple, qu'on présente selon le format courant pour la littérature en économie grâce au package {stargazer} [@hlavac2022].
 
 ```{r}
+#| output: false
 def_96_06 <- lm(`Déforestation 1996-2006 (%)`  ~ Groupe, data = rct_AP_Mada)
 def_06_16 <- lm(`Déforestation 2006-2016 (%)`  ~ Groupe, data = rct_AP_Mada)
 def_96_16 <- lm(`Déforestation 1996-2016 (%)`  ~ Groupe, data = rct_AP_Mada)
 
-# tidy(def_96_06) %>%
-#   gt() %>%
-#   tab_header(title = "Déforestation 1996-2006 (%)",
-#              subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
-#   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
-# 
-# tidy(def_06_16) %>%
-#   gt() %>%
-#   tab_header(title = "Déforestation 2006-2016 (%)",
-#              subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
-#   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
-# 
-# tidy(def_96_16) %>%
-#   gt() %>%
-#   tab_header(title = "Déforestation 1996-2016 (%)",
-#              subtitle = "(exercice : \"comme si\" c'était une RCT)") %>%
-#   tab_source_note("Source : Association Vahatra et Carvalho et al. 2018")
-
-stargazer(def_96_06, def_06_16, def_96_16, type = "text",
+rct_out1 <- stargazer(def_96_06, def_06_16, def_96_16, type = "html",
           title = "Impact de la conservation sur la perte de couvert forestier",
-          notes = "Données : Association Vahatra et Carvalho et al. 2018")
+          notes = "Données : Association Vahatra et Carvalho et al. 2018") %>%
+  str_replace_all("\\*", "\\\\*") 
+
+# Dans un bloc plus bas et non affiché, on a le code suivant
+# cat(rct_out1)
 ```
+```{r}
+#| output: asis
+#| echo: false
+
+cat(rct_out1)
+```
+
 
 On analyse ensuite la relation aux variables topologiques (altitude, indice de terrain accidenté) et de temps de trajet à la ville la plus proche en 2015. Le seuil retenu ici pour considérer une localité comme une ville est qu'elle ait au moins 5000 habitants.
 
@@ -166,11 +160,25 @@ Le temps de trajet aux villes est significativement distinct entre les deux grou
 On essaye de limiter ce biais en ajoutant le temps de trajet à une ville comme variables de contrôle à notre régression.
 
 ```{r}
+#| output: false
+
 def_96_16_controle <- lm(`Déforestation 1996-2016 (%)` ~ 
                            Groupe + dist_ville, 
                          data = rct_AP_Mada)
 
-stargazer(def_96_16, def_96_16_controle, type = "text")
+rct_out2 <- stargazer(def_96_16, def_96_16_controle, type = "html")  %>%
+  str_replace_all("\\*", "\\\\*") 
+
+# Dans un bloc plus bas et non affiché, on a le code suivant
+# cat(rct_out1)
 ```
+```{r}
+#| output: asis
+#| echo: false
+
+cat(rct_out2)
+```
+
+
 
 Apparemment, le traitement reste significatif une fois que l'on contrôle pour la distance aux villes.
