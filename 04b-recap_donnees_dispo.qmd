@@ -2,7 +2,11 @@
 
 ## Discussion sur la construction, portée et limites de ces données
 
-[Cliquer sur ce lien pour la présentation générale des données mobilisées](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM2022_PresentationDesDonnees.pdf).
+```{=html}
+<iframe src="TVM2022_PresentationDesDonnees.pdf" width="100%" height="400px"></iframe>
+```
+
+[Cliquer ici pour télécharger la présentation](TVM2022_PresentationDesDonnees.pdf).
 
 Un point crucial à retenir est l'importance de toujours accompagner l'analyse d'une discussion critique des données mobilisées : quelles définitions sont utilisées pour établir les catégories que j'utilise (dans notre exemple, quelle définition de la forêt a été retenue) ? Y a-t-il des différences ou des nuances entre ce qui est mesuré et le phénomène que je veux analyser (dans notre exemple, la variation du couvert forestier n'est pas à proprement parler de la déforestation) ? Quels problèmes de qualité affectent mes données (dans notre exemple, les erreurs ou approximations qui affectent les données WDPA) ? etc.
 
