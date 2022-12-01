@@ -112,7 +112,7 @@ options(scipen =999)
 ## Cadrage général pour les méthodes d'évaluation
 
 ```{=html}
-<iframe src="https://github.com/fBedecarrats/conservation-deforestation-madagascar/blob/master/TVM_Intro_generale.pdf" width="100%" height="400px"></iframe>
+<iframe src="https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_Intro_generale.pdf" width="100%" height="400px"></iframe>
 ```
 
-[Cliquer ici pour télécharger la présentation](https://github.com/fBedecarrats/conservation-deforestation-madagascar/blob/master/TVM_Intro_generale.pdf)
+[Cliquer ici pour télécharger la présentation](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_Intro_generale.pdf)
