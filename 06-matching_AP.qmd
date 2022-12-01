@@ -6,7 +6,11 @@ editor_options:
 
 # Méthode d'appariement
 
-[Cliquer ici pour télécharger le diaporama présenté en atelier](https://github.com/fBedecarrats/conservation-deforestation-madagascar/raw/master/TVM_Matching.pdf).
+```{=html}
+<iframe src="TVM_Matching.pdf" width="100%" height="400px"></iframe>
+```
+
+[Cliquer ici pour télécharger la présentation](TVM_Matching.pdf).
 
 On a vu dans le chapitre précédent que les comparaisons simples réalisées entre les premières et les dernières aires à avoir été formellement protégées pose problème.
 
