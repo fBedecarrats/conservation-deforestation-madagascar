@@ -10,6 +10,8 @@
 
 Pour le cas d'études auquel on s'intéresse, on n'a pas une seule date de mise en oeuvre de l'intervention à évaluer, mais un échelonnement des dates de mises en oeuvre. En d'autres termes, les aires protégées ont été créées à des dates différentes. Pour ce type de cas, on va utiliser une variante de la méthode de différence de doubles différences, qui est dite "échelonnées" (staggered diff-in-diff). Cette méthode a été conceptualisée par Callaway et Sant'Anna [-@callaway2021] et ces mêmes auteurs ont programmé mise en oeuvre pour R dans la librairie {did} [@did].
 
+> **Attention :** les sections qui suivent sont encore en cours d'élaboration. 
+
 ## Application aux polygones d'aires protégées
 
 La spécification employée peut se traduire de la manière suivante :
