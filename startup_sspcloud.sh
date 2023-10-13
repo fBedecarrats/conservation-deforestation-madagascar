@@ -17,6 +17,7 @@ chown -R onyxia:users $WORK_DIR
 
 # copy files from S3 
 mc cp -r s3/fbedecarrats/diffusion/deforestation_madagascar/data $WORK_DIR
+mc cp -r s3/fbedecarrats/diffusion/mapme_biodiversity ${WORK_DIR}/data
 
 # Again to give ritghs also in the data subfolder 
 chown -R onyxia:users $WORK_DIR
